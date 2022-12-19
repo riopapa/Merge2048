@@ -31,14 +31,12 @@ public class GameLoop extends Thread{
     }
 
     public void startLoop() {
-        Log.w("GameLoop.java", "startLoop()");
         isRunning = true;
         start();
     }
 
     @Override
     public void run() {
-        Log.w("GameLoop.java", "run()");
         super.run();
 
         // Declare time and cycle count variables

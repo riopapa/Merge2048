@@ -13,13 +13,12 @@ import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;
 
 public class BlockImage {
-    private final int idx;
-    private final int number;
+    public int idx;
+    public int number;
 
     public Bitmap bitmap;
-
     public Bitmap [] smallMaps;
-
+    public Bitmap halfMap;
 
     public BlockImage(int idx, int number, int color, GameInfo gameInfo, Context context) {
         this.idx = idx;
@@ -30,6 +29,12 @@ public class BlockImage {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawRoundRect(0,0, gameInfo.xBlockInSize, gameInfo.yBlockInSize, gameInfo.xBlockInSize/8,gameInfo.yBlockInSize/8, paint);
+
+        int delta = gameInfo.xBlockOutSize / 16;
+        paint.setColor(color & 0xFFE0E0E0);
+        canvas.drawRoundRect(delta,delta,
+                gameInfo.xBlockInSize - delta,
+                gameInfo.yBlockInSize - delta, gameInfo.xBlockInSize/6,gameInfo.yBlockInSize/6, paint);
 
         if (idx == 0)
             return;
@@ -44,6 +49,7 @@ public class BlockImage {
         tPaint.setTextAlign(Paint.Align.CENTER);
         tPaint.setColor(Color.BLACK);
         tPaint.getTextBounds(s, 0, s.length(), rect);
+
         int width = rect.width();
         while ((width - 24) > gameInfo.xBlockInSize) {
             txtSize = txtSize * 8/10;
@@ -56,17 +62,15 @@ public class BlockImage {
         int yOffset = gameInfo.yBlockOutSize/2 + rect.height()/2-16;
         canvas.drawText(s, (float) xOffset, (float) yOffset, tPaint);
 
-        smallMaps = new Bitmap[5];
+        smallMaps = new Bitmap[7];
         smallMaps[0] = bitmapSmall(bitmap, gameInfo, 85);
         smallMaps[1] = bitmapSmall(bitmap, gameInfo, 70);
         smallMaps[2] = bitmapSmall(bitmap, gameInfo, 70);
         smallMaps[3] = bitmapSmall(bitmap, gameInfo, 85);
         smallMaps[4] = bitmapSmall(bitmap, gameInfo, 90);
 
-
-//        tPaint.setColor(Color.BLACK);
-//        tPaint.setStrokeWidth(0);
-//        canvas.drawText(s, (float) xOffset, (float) yOffset, tPaint);
+        halfMap = Bitmap.createScaledBitmap(bitmap,
+                gameInfo.xBlockInSize/2, gameInfo.yBlockInSize/2,false);
     }
 
     private Bitmap bitmapSmall(Bitmap bitmap, GameInfo gameInfo, int pct) {
@@ -82,9 +86,5 @@ public class BlockImage {
 
     public void draw(Canvas canvas, int xPos, int yPos) {
         canvas.drawBitmap(bitmap, xPos, yPos, null);
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
     }
 }

@@ -1,8 +1,6 @@
 package com.urrecliner.merge2048;
 
-import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class GameInfo {
 
@@ -11,25 +9,32 @@ public class GameInfo {
     public int yBlockInSize, yBlockOutSize;
     public int iConSize;
     public int xBlockCnt, yBlockCnt;
-    public int yUpOffset = 300, yDownOffset = 300;
-    public Paint backPaint;
-    private final int xBlockGap, yBlockGap;
+    public int xOffset,yUpOffset = 400, yDownOffset = 300;
+    public int scoreNow;
+    public int xNextPos, yNextPos;
 
-    public GameInfo (int screenXSize, int screenYSize, int xBlockCnt, int yBlockCnt, Paint backPaint) {
+    public GameInfo (int screenXSize, int screenYSize, int xBlockCnt, int yBlockCnt) {
         this.screenXSize = screenXSize;
         this.screenYSize = screenYSize;
         this.xBlockCnt = xBlockCnt;
         this.yBlockCnt = yBlockCnt;
-        this.backPaint = backPaint;
-        xBlockOutSize = screenXSize / (xBlockCnt+1);
+        yUpOffset = 40;
+        yDownOffset = 700;
+        xBlockOutSize = (screenXSize-120) / xBlockCnt;
         yBlockOutSize = (screenYSize - yUpOffset - yDownOffset) / (yBlockCnt+1);
-        xBlockGap = xBlockOutSize / 16;
-        yBlockGap = yBlockOutSize / 16;
+        int xBlockGap = xBlockOutSize / 48;
+        int yBlockGap = yBlockOutSize / 48;
         xBlockInSize = xBlockOutSize - xBlockGap - xBlockGap;
         yBlockInSize = yBlockOutSize - yBlockGap - yBlockGap;
+        iConSize = Math.min(xBlockInSize, yBlockInSize);
 
-        iConSize = (xBlockInSize < yBlockInSize) ? xBlockInSize : yBlockInSize;
-        Log.w("blockSize", xBlockInSize +" x "+ yBlockInSize +" i="+iConSize);
+        xOffset = (screenXSize - xBlockCnt * xBlockOutSize) / 2;
+        yDownOffset = yUpOffset + yBlockCnt * yBlockOutSize + 20;
+
+        xNextPos = (screenXSize - xBlockOutSize) / 2;
+        yNextPos = yDownOffset + 16;
+
+//        Log.w("blockSize", xBlockInSize +" x "+ yBlockInSize +" i="+iConSize);
     }
 
     public boolean outOfCanvas(int pos, int maxSize) {

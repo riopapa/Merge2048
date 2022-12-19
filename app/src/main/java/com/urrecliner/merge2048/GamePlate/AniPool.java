@@ -1,39 +1,48 @@
 package com.urrecliner.merge2048.GamePlate;
 
-import static com.urrecliner.merge2048.GamePlate.Grid.MOVE_SMOOTH;
+import static com.urrecliner.merge2048.GamePlate.Ani.MOVE_SMOOTH;
+
+import com.urrecliner.merge2048.GameInfo;
 
 public class AniPool {
-    public enum aniType {
-        ANI_MOVE,
-        ANI_DELETE
-    }
 
-    int aniType;
-    int xStart, yStart, xFinish, yFinish;   // move Start to Finish cell
-    int xIncrease, yIncrease, count;     // ani increments stack
-    boolean active;
+    Ani.STATE state;
+    int xS, yS, xF, yF;   // move Start to Finish cell
+    int xInc, yInc, count;     // ani increments stack
 
-    long delay = 100;   // redraw at every 100 mili sec
+    long delay = 20;   // redraw at every 100 mili sec
     long timeStamp = 0;
 
+    // state MOVING
+    public AniPool(Ani.STATE state, int xS, int yS, int xF, int yF, int xI, int yI) {
+        this.state = state;
+        this.xS = xS;
+        this.yS = yS;
+        this.xF = xF;
+        this.yF = yF;
+        this.xInc = xI;
+        this.yInc = yI;
 
-    public AniPool(int aniType, int xStart, int yStart, int xFinish, int yFinish, int xOSize, int yOSize) {
-        this.aniType = aniType;
-        this.xStart = xStart;
-        this.yStart = yStart;
-        this.xFinish = xFinish;
-        this.yFinish = yFinish;
-        xIncrease = xOSize / MOVE_SMOOTH;    // to make move smooth
-        yIncrease = yOSize / MOVE_SMOOTH;
-        if (xStart > xFinish)
-            xIncrease = -xIncrease;
-        else if (xStart == xFinish)
-            xIncrease = 0;
-        if (yStart > yFinish)
-            yIncrease = -yIncrease;
-        else if (yStart == yFinish)
-            yIncrease = 0;
         count = 0;
-        active = true;
+    }
+
+    // state EXPLODE
+    public AniPool(Ani.STATE state, int xS, int yS, int xInc, int yInc) {
+        this.state = state;
+        this.xS = xS;
+        this.yS = yS;
+        this.xInc = xInc;
+        this.yInc = yInc;
+        delay = 10;
+        count = 0;
+    }
+
+    // state MERGE
+    public AniPool(Ani.STATE state, int xS, int yS) {
+        this.state = state;
+        this.xS = xS;
+        this.yS = yS;
+        delay = 10;
+        count = 0;
     }
 }

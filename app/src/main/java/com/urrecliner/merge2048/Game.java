@@ -3,9 +3,9 @@ package com.urrecliner.merge2048;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -13,21 +13,33 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.urrecliner.merge2048.GameObject.BlockImage;
-import com.urrecliner.merge2048.GamePlate.Grid;
+import com.urrecliner.merge2048.GameObject.ExplodeImage;
+import com.urrecliner.merge2048.GameObject.MakeBlockImage;
+import com.urrecliner.merge2048.GamePlate.Ani;
+import com.urrecliner.merge2048.GamePlate.BackPlate;
+import com.urrecliner.merge2048.GamePlate.Cell;
+import com.urrecliner.merge2048.GamePlate.GameOver;
+import com.urrecliner.merge2048.GamePlate.NextBlocks;
+import com.urrecliner.merge2048.GamePlate.Score;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
-    private final GameInfo gameInfo;
-    private Grid grid;
+    public final GameInfo gameInfo;
+    private final Score score;
+    public final ExplodeImage explodeImage;
+    private final GameOver gameOver;
+    private final NextBlocks nextBlocks;
+    private Ani ani;
     private GameLoop gameLoop;
-    Paint p, backPaint;
-    int[][] xyValue;
     List<BlockImage> blockImages;
-    int xBlockCnt = 5, yBlockCnt = 8;
-    int nextNumber, nextNumber2;
+    int xBlockCnt = 5, yBlockCnt = 8;   // screen Size
+
+    boolean clicked = false;   // clicked means user clicked
+    int xIndex;               // user selected x Index (0 ~ xBlockCnt)
+    boolean isGameOver = false;
+    private BackPlate backPlate;
 
     public Game(Context context) {
         super(context);
@@ -37,55 +49,35 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        p = new android.graphics.Paint();
-        backPaint = new Paint();
-        backPaint.setColor(ContextCompat.getColor(context, R.color.c00000));
         gameInfo = new GameInfo(displayMetrics.widthPixels, displayMetrics.heightPixels,
-                xBlockCnt, yBlockCnt, backPaint);
-        buildBlockImage(context);
-        grid = new Grid(gameInfo, blockImages);
-        grid.clear();   // clea all cells
-        grid.makeRandom();
+                xBlockCnt, yBlockCnt);
+        blockImages = new MakeBlockImage().make(context, gameInfo);
+        explodeImage = new ExplodeImage(gameInfo, context);
+        ani = new Ani(gameInfo, blockImages, explodeImage, context);
+        nextBlocks = new NextBlocks(gameInfo, context);
+        score = new Score(gameInfo, context);
+        backPlate = new BackPlate(gameInfo, context);
+        gameOver = new GameOver(gameInfo, context);
+        newGame();
     }
 
-    private void buildBlockImage(Context context) {
-        int [] colors = {
-                ContextCompat.getColor(context, R.color.c00000),    // 0    blank
-                ContextCompat.getColor(context, R.color.c00002),    // 1    2
-                ContextCompat.getColor(context, R.color.c00004),    // 2    4
-                ContextCompat.getColor(context, R.color.c00008),    // 3    8
-                ContextCompat.getColor(context, R.color.c00016),    // 4    16
-                ContextCompat.getColor(context, R.color.c00032),    // 5    32
-                ContextCompat.getColor(context, R.color.c00064),    // 6    64
-                ContextCompat.getColor(context, R.color.c00128),    // 7    128
-                ContextCompat.getColor(context, R.color.c00256),    // 8    256
-                ContextCompat.getColor(context, R.color.c00512),    // 9    512
-                ContextCompat.getColor(context, R.color.c01024),    // 10   1024
-                ContextCompat.getColor(context, R.color.c02048),    // 11   2048
-                ContextCompat.getColor(context, R.color.c04096),    // 12   4096
-                ContextCompat.getColor(context, R.color.c08192),    // 13   8192
-                ContextCompat.getColor(context, R.color.c16384),    // 14   16384, just in case
-                ContextCompat.getColor(context, R.color.c32768),    // 15   32768
-                ContextCompat.getColor(context, R.color.c32768),    // 16   65536
-                ContextCompat.getColor(context, R.color.c32768),    // 17   65536
-                ContextCompat.getColor(context, R.color.c32768),    // 18   65536
-                ContextCompat.getColor(context, R.color.c32768),    // 19   65536
-                ContextCompat.getColor(context, R.color.c32768),    // 20   65536
-                0x000000
-        };
-        blockImages = new ArrayList<>();
-        int nbr = 0;
-        for (int i = 0 ; i < 20; i++) {
-            blockImages.add(new BlockImage(i, nbr, colors[i], gameInfo, context));
-            if (nbr == 0)
-                nbr = 1;
-            nbr += nbr;
+    void newGame() {
+        gameInfo.scoreNow = 0;
+        clear();   // clea all cells
+        nextBlocks.generateNextBlock();
+        isGameOver = false;
+    }
+
+    void clear() {
+        for (int y = 0; y < yBlockCnt; y++) {
+            for (int x = 0; x < xBlockCnt; x++) {
+                ani.cells[x][y] = new Cell(0); // 0 means null
+            }
         }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.w("Game.java", "surfaceCreated()");
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             SurfaceHolder surfaceHolder = getHolder();
             surfaceHolder.addCallback(this);
@@ -96,28 +88,238 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
 
-        if (new Random().nextInt(300) > 284) {
+        for (int y = yBlockCnt - 1; y >= 0; y--) {
+            for (int x = 0; x < xBlockCnt; x++) {
+                if (ani.cells[x][y].state == Ani.STATE.EXPLODE) {
+                    return; // wait till all exploded
+                }
+            }
+        }
+        for (int y = 0; y < yBlockCnt; y++) {
+            for (int x = 0; x < xBlockCnt; x++) {
+                switch (ani.cells[x][y].state) {
+                    case PAUSED:
+                    case MOVING:
+                        break;
 
-            int xStart = new Random().nextInt(gameInfo.xBlockCnt);
-            int yStart = new Random().nextInt(gameInfo.yBlockCnt);
-            int x = new Random().nextInt(3) - 1;
-            int y = new Random().nextInt(3) - 1;
-            if ((xStart+x) >= 0 && (xStart+x) < gameInfo.xBlockCnt
-                    && (yStart+y) >= 0 && (yStart+y) < gameInfo.yBlockCnt
-                && (x != 0 & y != 0)) {
-                grid.moveCell(xStart, yStart, x,y);
+                    case CHECK:
+                        if (y > 0) {    // check for going up
+                            int yUp = 0;
+                            for (int yy = y - 1; yy >= 0; yy--) {
+                                if (ani.cells[x][yy].index != 0) {
+                                    yUp = yy + 1;
+                                    break;
+                                }
+                            }
+                            if (yUp != y) {
+                                ani.cells[x][y].state = Ani.STATE.MOVING;
+                                ani.addMove(x, y, x, yUp);
+                                Log.w("Add",y+" > "+yUp);
+                                break;
+                            }
+                        }
+                        ani.cells[x][y].state = Ani.STATE.PAUSED;
+//                        cellDump("paused", ani.cells[x][y], x, y);
+                        break;
+                    case STOP:  // stoped moving so check Cross
+                        int index = ani.cells[x][y].index;
+                        int indexR = -1, indexL = -1, indexU = -1, number;
+
+                        if (x < xBlockCnt - 1)
+                            indexR = ani.cells[x+1][y].index;
+                        if (x > 0)
+                            indexL = ani.cells[x-1][y].index;
+                        if (y > 0)
+                            indexU = ani.cells[x][y-1].index;
+                        if (index == indexL && index == indexR && index == indexU) {
+                            index += 3; number = calcNumber(index);
+                            ani.cells[x][y-1].index = index;
+                            ani.cells[x][y-1].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y-1);
+                            explodeThis(x-1, y, x, y-1);
+                            explodeThis(x+1, y, x, y-1);
+                            explodeThis(x, y, x, y-1);
+                            break;
+                        }
+                        if (index == indexL && index == indexR) {
+                            index += 2; number = calcNumber(index);
+                            ani.cells[x][y].index = index;
+                            ani.cells[x][y].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y);
+                            explodeThis(x-1, y, x, y);
+                            explodeThis(x+1, y, x, y);
+                            break;
+                        }
+                        if (index == indexL && index == indexU) {
+                            index += 2; number = calcNumber(index);
+                            ani.cells[x][y-1].index = index;
+                            ani.cells[x][y-1].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y-1);
+                            explodeThis(x-1, y, x, y-1);
+                            explodeThis(x, y, x, y-1);
+                            break;
+                        }
+                        if (index == indexR && index == indexU) {
+                            index += 2; number = calcNumber(index);
+                            ani.cells[x][y-1].index = index;
+                            ani.cells[x][y-1].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y-1);
+                            explodeThis(x + 1, y, x, y-1);
+                            explodeThis(x, y, x, y-1);
+                            break;
+                        }
+                        if (index == indexL) {
+                            index += 1; number = calcNumber(index);
+                            ani.cells[x][y].index = index;
+                            ani.cells[x][y].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y);
+                            explodeThis(x-1, y, x, y);
+                            break;
+                        }
+                        if (index == indexR) {
+                            index += 1; number = calcNumber(index);
+                            ani.cells[x][y].index = index;
+                            ani.cells[x][y].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y);
+                            explodeThis(x+1, y, x, y);
+                            break;
+                        }
+                        if (index == indexU) {
+                            index += 1; number = calcNumber(index);
+                            ani.cells[x][y-1].index = index;
+                            ani.cells[x][y-1].number = number;
+                            gameInfo.scoreNow += number;
+                            mergeThis(x,y-1);
+                            explodeThis(x, y, x, y-1);
+                            break;
+                        }
+                        ani.cells[x][y].state = Ani.STATE.PAUSED;
+                        break;
+
+                    case ENDMERGE:
+                        ani.cells[x][y].state = Ani.STATE.STOP;
+                        break;
+
+                    case ENDEXPLODE:
+                        ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED);
+                        checkDown2Up(x,y);
+                        break;
+
+                    case MERGE:
+                    default:
+                        cellDump("unknown", ani.cells[x][y], x, y);
+                        break;
+                }
+            }
+        }
+        checkGameOver();
+        if (!isGameOver && clicked)
+            start2Move();
+
+    }
+
+    private void checkDown2Up(int xNow, int yNow) {
+        if (yNow < yBlockCnt - 1) {
+            for (int y = yNow + 1; y < yBlockCnt; y++) {
+                if (ani.cells[xNow][y].index > 0) {
+                    ani.addMove(xNow, y, xNow, y-1);
+                } else
+                    break;
             }
         }
     }
 
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        drawBackGround(canvas);
-        grid.draw(canvas);
+    private void mergeThis(int x, int y) {
+        ani.cells[x][y].state = Ani.STATE.MERGE;
+        ani.addMerge(x,y);
     }
 
-    private void drawBackGround(Canvas canvas) {
-        canvas.drawRect(0, 0, gameInfo.screenXSize, gameInfo.screenYSize, backPaint);
+    private void explodeThis(int x, int y, int xTo, int yTo) {
+        ani.cells[x][y].state = Ani.STATE.EXPLODE;
+        ani.addExplode(x,y, xTo, yTo);
+    }
+
+    private void start2Move() {
+        Cell cell = ani.cells[xIndex][yBlockCnt-1];
+        if (cell.index == 0) {  // empty cell, move start
+            clicked = false;
+            ani.cells[xIndex][yBlockCnt-1] = new Cell(nextBlocks.nextIndex, Ani.STATE.CHECK);
+            nextBlocks.generateNextBlock();
+        }
+    }
+
+    private void cellDump(String s, Cell cell, int x, int y) {
+        Log.w("ani "+s,"state="+cell.state+" idx="+cell.index+" num="+cell.number+" (" + x+ " x "+y+")" );
+    }
+
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        backPlate.draw(canvas);
+        nextBlocks.draw(canvas, ani.blockImages.get(nextBlocks.nextIndex).bitmap,
+                ani.blockImages.get(nextBlocks.nNextIndex).halfMap);
+        ani.draw(canvas);
+        score.draw(canvas);
+        if (isGameOver)
+            gameOver.draw(canvas);
+    }
+
+    private int calcNumber(int index) {
+        int number;
+        if (index != 0) {
+            number = 1;
+            while (index-- > 0)
+                number = number + number;
+        } else
+            number = 0;
+        return number;
+    }
+
+    void checkGameOver() {
+        for (int x = 0; x < xBlockCnt; x++) {
+            if (ani.cells[x][yBlockCnt-1].index == 0 ||
+                ani.cells[x][yBlockCnt-1].index == nextBlocks.nextIndex)
+                return;
+        }
+        isGameOver = true;
+
+    }
+    int xTouchPos, yTouchPos;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // Handle user input touch event actions
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                if (ani.aniPools.size() != 0) // if animation not completed
+                    return true;              // ignore touch Up
+                xTouchPos = (int) event.getX();
+                yTouchPos = (int) event.getY();
+                if (yTouchPos > gameInfo.yDownOffset) {
+                    xTouchPos -= gameInfo.xOffset;
+                    if (xTouchPos > 0) {
+                        xTouchPos /= gameInfo.xBlockOutSize;
+                        if (xTouchPos < xBlockCnt) {
+                            clicked = true;
+                            xIndex = xTouchPos;
+                            Log.w("touch", "xindex="+xIndex);
+                        }
+                    }
+                }
+                return true;
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                return true;
+        }
+
+        return super.onTouchEvent(event);
     }
 
     @Override
