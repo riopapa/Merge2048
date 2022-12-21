@@ -10,7 +10,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.urrecliner.merge2048.GameObject.BlockImage;
 import com.urrecliner.merge2048.GameObject.ExplodeImage;
@@ -22,7 +21,6 @@ import com.urrecliner.merge2048.GamePlate.GameOver;
 import com.urrecliner.merge2048.GamePlate.NextBlocks;
 import com.urrecliner.merge2048.GamePlate.Score;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -31,15 +29,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public final ExplodeImage explodeImage;
     private final GameOver gameOver;
     private final NextBlocks nextBlocks;
-    private Ani ani;
+    private final Ani ani;
+    private final BackPlate backPlate;
     private GameLoop gameLoop;
     List<BlockImage> blockImages;
-    int xBlockCnt = 5, yBlockCnt = 8;   // screen Size
+    int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
 
     boolean clicked = false;   // clicked means user clicked
-    int xIndex;               // user selected x Index (0 ~ xBlockCnt)
+    int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     boolean isGameOver = false;
-    private BackPlate backPlate;
 
     public Game(Context context) {
         super(context);
@@ -58,10 +56,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         score = new Score(gameInfo, context);
         backPlate = new BackPlate(gameInfo, context);
         gameOver = new GameOver(gameInfo, context);
-        newGame();
+        gameStart();
+
     }
 
-    void newGame() {
+    void gameStart() {
         gameInfo.scoreNow = 0;
         clear();   // clea all cells
         nextBlocks.generateNextBlock();
@@ -71,7 +70,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     void clear() {
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
-                ani.cells[x][y] = new Cell(0); // 0 means null
+                ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED); // 0 means null
             }
         }
     }
@@ -100,106 +99,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 switch (ani.cells[x][y].state) {
                     case PAUSED:
                     case MOVING:
+                    case MERGE:
+                    case EXPLODE:
                         break;
 
                     case CHECK:
-                        if (y > 0) {    // check for going up
-                            int yUp = 0;
-                            for (int yy = y - 1; yy >= 0; yy--) {
-                                if (ani.cells[x][yy].index != 0) {
-                                    yUp = yy + 1;
-                                    break;
-                                }
-                            }
-                            if (yUp != y) {
-                                ani.cells[x][y].state = Ani.STATE.MOVING;
-                                ani.addMove(x, y, x, yUp);
-                                Log.w("Add",y+" > "+yUp);
-                                break;
-                            }
-                        }
-                        ani.cells[x][y].state = Ani.STATE.PAUSED;
-//                        cellDump("paused", ani.cells[x][y], x, y);
+                        checkIfGoingUpPossible(x, y);
                         break;
-                    case STOP:  // stoped moving so check Cross
-                        int index = ani.cells[x][y].index;
-                        int indexR = -1, indexL = -1, indexU = -1, number;
 
-                        if (x < xBlockCnt - 1)
-                            indexR = ani.cells[x+1][y].index;
-                        if (x > 0)
-                            indexL = ani.cells[x-1][y].index;
-                        if (y > 0)
-                            indexU = ani.cells[x][y-1].index;
-                        if (index == indexL && index == indexR && index == indexU) {
-                            index += 3; number = calcNumber(index);
-                            ani.cells[x][y-1].index = index;
-                            ani.cells[x][y-1].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y-1);
-                            explodeThis(x-1, y, x, y-1);
-                            explodeThis(x+1, y, x, y-1);
-                            explodeThis(x, y, x, y-1);
-                            break;
-                        }
-                        if (index == indexL && index == indexR) {
-                            index += 2; number = calcNumber(index);
-                            ani.cells[x][y].index = index;
-                            ani.cells[x][y].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y);
-                            explodeThis(x-1, y, x, y);
-                            explodeThis(x+1, y, x, y);
-                            break;
-                        }
-                        if (index == indexL && index == indexU) {
-                            index += 2; number = calcNumber(index);
-                            ani.cells[x][y-1].index = index;
-                            ani.cells[x][y-1].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y-1);
-                            explodeThis(x-1, y, x, y-1);
-                            explodeThis(x, y, x, y-1);
-                            break;
-                        }
-                        if (index == indexR && index == indexU) {
-                            index += 2; number = calcNumber(index);
-                            ani.cells[x][y-1].index = index;
-                            ani.cells[x][y-1].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y-1);
-                            explodeThis(x + 1, y, x, y-1);
-                            explodeThis(x, y, x, y-1);
-                            break;
-                        }
-                        if (index == indexL) {
-                            index += 1; number = calcNumber(index);
-                            ani.cells[x][y].index = index;
-                            ani.cells[x][y].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y);
-                            explodeThis(x-1, y, x, y);
-                            break;
-                        }
-                        if (index == indexR) {
-                            index += 1; number = calcNumber(index);
-                            ani.cells[x][y].index = index;
-                            ani.cells[x][y].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y);
-                            explodeThis(x+1, y, x, y);
-                            break;
-                        }
-                        if (index == indexU) {
-                            index += 1; number = calcNumber(index);
-                            ani.cells[x][y-1].index = index;
-                            ani.cells[x][y-1].number = number;
-                            gameInfo.scoreNow += number;
-                            mergeThis(x,y-1);
-                            explodeThis(x, y, x, y-1);
-                            break;
-                        }
-                        ani.cells[x][y].state = Ani.STATE.PAUSED;
+                    case STOP:
+                        checkIfSameNearItem(x, y);
                         break;
 
                     case ENDMERGE:
@@ -207,11 +116,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         break;
 
                     case ENDEXPLODE:
-                        ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED);
-                        checkDown2Up(x,y);
+                        checkIfPullNextUp(x, y);
                         break;
 
-                    case MERGE:
                     default:
                         cellDump("unknown", ani.cells[x][y], x, y);
                         break;
@@ -224,38 +131,136 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    private void checkDown2Up(int xNow, int yNow) {
-        if (yNow < yBlockCnt - 1) {
-            for (int y = yNow + 1; y < yBlockCnt; y++) {
-                if (ani.cells[xNow][y].index > 0) {
-                    ani.addMove(xNow, y, xNow, y-1);
+    private void checkIfSameNearItem(int x, int y) {
+
+        int index = ani.cells[x][y].index;
+        int indexR = -1, indexL = -1, indexU = -1, number;
+
+        if (x < xBlockCnt - 1)
+            indexR = ani.cells[x +1][y].index;
+        if (x > 0)
+            indexL = ani.cells[x -1][y].index;
+        if (y > 0)
+            indexU = ani.cells[x][y -1].index;
+        if (index == indexL && index == indexR && index == indexU) {
+            index += 3;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x -1, y, x, y -1);
+            explodeThis(x +1, y, x, y -1);
+            explodeThis(x, y, x, y -1);
+            mergeToHere(x, y -1, index);
+            return;
+        }
+        if (index == indexL && index == indexR) {
+            index += 2;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x -1, y, x, y);
+            explodeThis(x +1, y, x, y);
+            mergeToHere(x, y, index);
+            return;
+        }
+        if (index == indexL && index == indexU) {
+            index += 2;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x -1, y, x, y -1);
+            explodeThis(x, y, x, y -1);
+            mergeToHere(x, y -1, index);
+            return;
+        }
+        if (index == indexR && index == indexU) {
+            index += 2;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x + 1, y, x, y -1);
+            explodeThis(x, y, x, y -1);
+            mergeToHere(x, y -1, index);
+            return;
+        }
+        if (index == indexL) {
+            index++;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x -1, y, x, y);
+            mergeToHere(x, y, index);
+            return;
+        }
+        if (index == indexR) {
+            index++;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x +1, y, x, y);
+            mergeToHere(x, y, index);
+            return;
+        }
+        if (index == indexU) {
+            if (index == 1) {
+                Log.w("Index ","2");
+            }
+            index++;
+            gameInfo.scoreNow += calcNumber(index);
+            explodeThis(x, y, x, y -1);
+            mergeToHere(x, y -1, index);
+            return;
+        }
+        ani.cells[x][y].state = Ani.STATE.PAUSED;
+    }
+
+    private void checkIfGoingUpPossible(int x, int y) {
+        if (y > 0) {
+            int yUp = 0;
+            for (int yy = y - 1; yy >= 0; yy--) {
+                if (ani.cells[x][yy].index != 0) {
+                    yUp = yy + 1;
+                    break;
+                }
+            }
+            if (yUp != y) {
+                ani.cells[x][y].state = Ani.STATE.MOVING;
+                ani.addMove(x, y, x, yUp);
+//                Log.w("Add", y +" > "+yUp);
+                return;
+            }
+        }
+        ani.cells[x][y].state = Ani.STATE.STOP;
+    }
+
+    private void checkIfPullNextUp(int x, int y) {
+        // this cell is exploded, so check whether below item can be moved up
+        ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED);
+        if (y < yBlockCnt - 1) {
+            for (int yy = y + 1; yy < yBlockCnt; yy++) {
+                if (ani.cells[x][yy].index > 0) {
+                    ani.addMove(x, yy, x, yy-1);
                 } else
                     break;
             }
         }
     }
 
-    private void mergeThis(int x, int y) {
+    private void mergeToHere(int x, int y, int index) {
         ani.cells[x][y].state = Ani.STATE.MERGE;
-        ani.addMerge(x,y);
+        ani.addMerge(x,y, index);
     }
 
     private void explodeThis(int x, int y, int xTo, int yTo) {
         ani.cells[x][y].state = Ani.STATE.EXPLODE;
+        ani.cells[x][y].index = 0;
         ani.addExplode(x,y, xTo, yTo);
     }
 
     private void start2Move() {
-        Cell cell = ani.cells[xIndex][yBlockCnt-1];
-        if (cell.index == 0) {  // empty cell, move start
+        Cell cell = ani.cells[touchIndex][yBlockCnt-1];
+        if (cell.index == 0) {  // empty cell, so start to move
             clicked = false;
-            ani.cells[xIndex][yBlockCnt-1] = new Cell(nextBlocks.nextIndex, Ani.STATE.CHECK);
+            ani.cells[touchIndex][yBlockCnt-1] = new Cell(nextBlocks.nextIndex, Ani.STATE.CHECK);
             nextBlocks.generateNextBlock();
+        } else if (cell.index == nextBlocks.nextIndex) {    // bottom but same index
+            ani.cells[touchIndex][yBlockCnt-1].index = cell.index + 1;
+            ani.cells[touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
+        } else {
+            clicked = false;    // cannot move, ignore this try
         }
     }
 
     private void cellDump(String s, Cell cell, int x, int y) {
-        Log.w("ani "+s,"state="+cell.state+" idx="+cell.index+" num="+cell.number+" (" + x+ " x "+y+")" );
+        Log.w("ani "+s,"state="+cell.state+" idx="+cell.index+" (" + x+ " x "+y+")" );
     }
 
     public void draw(Canvas canvas) {
@@ -283,6 +288,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     void checkGameOver() {
         for (int x = 0; x < xBlockCnt; x++) {
             if (ani.cells[x][yBlockCnt-1].index == 0 ||
+                ani.cells[x][yBlockCnt-1].state != Ani.STATE.PAUSED ||
                 ani.cells[x][yBlockCnt-1].index == nextBlocks.nextIndex)
                 return;
         }
@@ -297,18 +303,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                if (ani.aniPools.size() != 0) // if animation not completed
+                if (ani.poolAnis.size() != 0) // if animation not completed
                     return true;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
                 if (yTouchPos > gameInfo.yDownOffset) {
                     xTouchPos -= gameInfo.xOffset;
                     if (xTouchPos > 0) {
-                        xTouchPos /= gameInfo.xBlockOutSize;
-                        if (xTouchPos < xBlockCnt) {
+                        touchIndex = xTouchPos / gameInfo.blockOutSize;
+                        if (touchIndex < xBlockCnt) {
                             clicked = true;
-                            xIndex = xTouchPos;
-                            Log.w("touch", "xindex="+xIndex);
+//                            Log.w("touch", "xindex="+ touchIndex);
                         }
                     }
                 }

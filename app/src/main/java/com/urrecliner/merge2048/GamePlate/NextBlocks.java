@@ -33,16 +33,18 @@ public class NextBlocks {
 
         nextXPos = gameInfo.xNextPos-4;
         nextYPos = gameInfo.yNextPos-4;
-        nextNXPos = nextXPos + (gameInfo.xBlockOutSize/4);
-        nextNYPos = nextYPos + gameInfo.yBlockOutSize;
+        nextNXPos = nextXPos + (gameInfo.blockOutSize /4);
+        nextNYPos = nextYPos + gameInfo.blockOutSize;
 
-        nextIndex = new Random().nextInt(4) + 1;
+        nextIndex = new Random().nextInt(3) + 1;
         nNextIndex = new Random().nextInt(4) + 1;
     }
 
     public void generateNextBlock() {
         nextIndex = nNextIndex;
-        nNextIndex = new Random().nextInt(6) + 1;
+        nNextIndex = new Random().nextInt(4) + 1;
+        if (new Random().nextInt(4) > 2)
+            nNextIndex = new Random().nextInt(6) + 1;
     }
 
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {

@@ -2,12 +2,8 @@ package com.urrecliner.merge2048.GameObject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-
-import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;
@@ -20,49 +16,21 @@ public class BlockImage {
     public Bitmap [] smallMaps;
     public Bitmap halfMap;
 
+
     public BlockImage(int idx, int number, int color, GameInfo gameInfo, Context context) {
         this.idx = idx;
         this.number = number;
-
-        bitmap = Bitmap.createBitmap(gameInfo.xBlockInSize, gameInfo.yBlockInSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        paint.setColor(color);
-        canvas.drawRoundRect(0,0, gameInfo.xBlockInSize, gameInfo.yBlockInSize, gameInfo.xBlockInSize/8,gameInfo.yBlockInSize/8, paint);
-
-        int delta = gameInfo.xBlockOutSize / 16;
-        paint.setColor(color & 0xFFE0E0E0);
-        canvas.drawRoundRect(delta,delta,
-                gameInfo.xBlockInSize - delta,
-                gameInfo.yBlockInSize - delta, gameInfo.xBlockInSize/6,gameInfo.yBlockInSize/6, paint);
-
-        if (idx == 0)
-            return;
-        String s = " "+number+" ";
-        int txtSize = 120;
-        Rect rect = new Rect();
-        Paint tPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        tPaint.setTypeface(ResourcesCompat.getFont(context, R.font.campus_a));
-        tPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        tPaint.setTextSize(txtSize);
-        tPaint.setStrokeWidth(0);
-        tPaint.setTextAlign(Paint.Align.CENTER);
-        tPaint.setColor(Color.BLACK);
-        tPaint.getTextBounds(s, 0, s.length(), rect);
-
-        int width = rect.width();
-        while ((width - 24) > gameInfo.xBlockInSize) {
-            txtSize = txtSize * 8/10;
-            tPaint.setTextSize(txtSize);
-            tPaint.getTextBounds(s, 0, s.length(), rect);
-            width = rect.width();
-        }
-        tPaint.setTextSize(txtSize);
-        int xOffset = gameInfo.xBlockOutSize/2-16;
-        int yOffset = gameInfo.yBlockOutSize/2 + rect.height()/2-16;
-        canvas.drawText(s, (float) xOffset, (float) yOffset, tPaint);
-
-        smallMaps = new Bitmap[7];
+        int [] orgMapId = {
+            R.drawable.i0_0, R.drawable.i1_2, R.drawable.i2_4, R.drawable.i3_8, R.drawable.i4_16,
+            R.drawable.i5_32, R.drawable.i6_64,R.drawable.i7_128, R.drawable.i8_256,
+            R.drawable.i9_512, R.drawable.i10_1024,R.drawable.i11_2048, R.drawable.i12_4096,
+            R.drawable.i13_8192, R.drawable.i14_16384,R.drawable.i15_32768, R.drawable.i16_65536,
+            R.drawable.i17_131072, R.drawable.i18_262144,R.drawable.i19_524288,R.drawable.i19_524288
+        };
+        bitmap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(), orgMapId[idx]),
+                gameInfo.blockInSize, gameInfo.blockInSize, false);
+        smallMaps = new Bitmap[5];
         smallMaps[0] = bitmapSmall(bitmap, gameInfo, 85);
         smallMaps[1] = bitmapSmall(bitmap, gameInfo, 70);
         smallMaps[2] = bitmapSmall(bitmap, gameInfo, 70);
@@ -70,17 +38,17 @@ public class BlockImage {
         smallMaps[4] = bitmapSmall(bitmap, gameInfo, 90);
 
         halfMap = Bitmap.createScaledBitmap(bitmap,
-                gameInfo.xBlockInSize/2, gameInfo.yBlockInSize/2,false);
+                gameInfo.blockInSize /2, gameInfo.blockInSize /2,false);
     }
 
     private Bitmap bitmapSmall(Bitmap bitmap, GameInfo gameInfo, int pct) {
-        int xScale = gameInfo.xBlockInSize * pct / 100;
-        int yScale = gameInfo.yBlockInSize * pct / 100;
+        int xScale = gameInfo.blockInSize * pct / 100;
+        int yScale = gameInfo.blockInSize * pct / 100;
         Bitmap newMap = Bitmap.createScaledBitmap(bitmap, xScale, yScale,false);
-        Bitmap smallMap = Bitmap.createBitmap(gameInfo.xBlockInSize, gameInfo.yBlockInSize, Bitmap.Config.ARGB_8888);
+        Bitmap smallMap = Bitmap.createBitmap(gameInfo.blockInSize, gameInfo.blockInSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(smallMap);
-        canvas.drawBitmap(newMap, (gameInfo.xBlockInSize - xScale)/2f,
-                (gameInfo.yBlockInSize - yScale)/2f, null);
+        canvas.drawBitmap(newMap, (gameInfo.blockInSize - xScale)/2f,
+                (gameInfo.blockInSize - yScale)/2f, null);
         return smallMap;
     }
 

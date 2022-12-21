@@ -1,10 +1,6 @@
 package com.urrecliner.merge2048.GamePlate;
 
-import static com.urrecliner.merge2048.GamePlate.Ani.MOVE_SMOOTH;
-
-import com.urrecliner.merge2048.GameInfo;
-
-public class AniPool {
+public class PoolAni {
 
     Ani.STATE state;
     int xS, yS, xF, yF;   // move Start to Finish cell
@@ -14,7 +10,7 @@ public class AniPool {
     long timeStamp = 0;
 
     // state MOVING
-    public AniPool(Ani.STATE state, int xS, int yS, int xF, int yF, int xI, int yI) {
+    public PoolAni(Ani.STATE state, int xS, int yS, int xF, int yF, int xI, int yI) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
@@ -27,7 +23,7 @@ public class AniPool {
     }
 
     // state EXPLODE
-    public AniPool(Ani.STATE state, int xS, int yS, int xInc, int yInc) {
+    public PoolAni(Ani.STATE state, int xS, int yS, int xInc, int yInc) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
@@ -38,10 +34,11 @@ public class AniPool {
     }
 
     // state MERGE
-    public AniPool(Ani.STATE state, int xS, int yS) {
+    public PoolAni(Ani.STATE state, int xS, int yS, int index) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
+        this.xF = index;
         delay = 10;
         count = 0;
     }

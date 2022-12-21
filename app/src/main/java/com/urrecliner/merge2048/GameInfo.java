@@ -1,15 +1,13 @@
 package com.urrecliner.merge2048;
 
-import android.graphics.Paint;
+import android.util.Log;
 
 public class GameInfo {
 
     public int screenXSize, screenYSize;
-    public int xBlockInSize, xBlockOutSize;
-    public int yBlockInSize, yBlockOutSize;
-    public int iConSize;
+    public int blockInSize, blockOutSize;
     public int xBlockCnt, yBlockCnt;
-    public int xOffset,yUpOffset = 400, yDownOffset = 300;
+    public int xOffset,yUpOffset, yDownOffset;
     public int scoreNow;
     public int xNextPos, yNextPos;
 
@@ -18,28 +16,17 @@ public class GameInfo {
         this.screenYSize = screenYSize;
         this.xBlockCnt = xBlockCnt;
         this.yBlockCnt = yBlockCnt;
-        yUpOffset = 40;
-        yDownOffset = 700;
-        xBlockOutSize = (screenXSize-120) / xBlockCnt;
-        yBlockOutSize = (screenYSize - yUpOffset - yDownOffset) / (yBlockCnt+1);
-        int xBlockGap = xBlockOutSize / 48;
-        int yBlockGap = yBlockOutSize / 48;
-        xBlockInSize = xBlockOutSize - xBlockGap - xBlockGap;
-        yBlockInSize = yBlockOutSize - yBlockGap - yBlockGap;
-        iConSize = Math.min(xBlockInSize, yBlockInSize);
+        yUpOffset = 16;
+        blockOutSize = (screenXSize-180) / xBlockCnt;
+        blockInSize = blockOutSize - blockOutSize/24;
 
-        xOffset = (screenXSize - xBlockCnt * xBlockOutSize) / 2;
-        yDownOffset = yUpOffset + yBlockCnt * yBlockOutSize + 20;
+        xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
+        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 20;
 
-        xNextPos = (screenXSize - xBlockOutSize) / 2;
+        xNextPos = (screenXSize - blockOutSize) / 2;
         yNextPos = yDownOffset + 16;
 
-//        Log.w("blockSize", xBlockInSize +" x "+ yBlockInSize +" i="+iConSize);
+        Log.w("blockSize", "out="+blockOutSize +" in="+ blockInSize);
     }
-
-    public boolean outOfCanvas(int pos, int maxSize) {
-        return (pos > maxSize - iConSize || pos < 0);
-    }
-
 
 }
