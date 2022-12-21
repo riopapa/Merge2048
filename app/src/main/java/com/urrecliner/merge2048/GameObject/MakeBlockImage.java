@@ -40,7 +40,7 @@ public class MakeBlockImage {
         List<BlockImage> blockImages = new ArrayList<>();
         int nbr = 0;
         for (int i = 0 ; i < 20; i++) {
-            blockImages.add(new BlockImage(i, nbr, colors[i], gameInfo, context));
+            blockImages.add(new BlockImage(i, nbr, gameInfo, context));
             if (nbr == 0)
                 nbr = 1;
             nbr += nbr;

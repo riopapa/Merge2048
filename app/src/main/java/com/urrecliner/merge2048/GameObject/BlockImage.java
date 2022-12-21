@@ -16,16 +16,16 @@ public class BlockImage {
     public Bitmap [] smallMaps;
     public Bitmap halfMap;
 
-
-    public BlockImage(int idx, int number, int color, GameInfo gameInfo, Context context) {
+    public BlockImage(int idx, int number, GameInfo gameInfo, Context context) {
         this.idx = idx;
         this.number = number;
         int [] orgMapId = {
-            R.drawable.i0_0, R.drawable.i1_2, R.drawable.i2_4, R.drawable.i3_8, R.drawable.i4_16,
-            R.drawable.i5_32, R.drawable.i6_64,R.drawable.i7_128, R.drawable.i8_256,
-            R.drawable.i9_512, R.drawable.i10_1024,R.drawable.i11_2048, R.drawable.i12_4096,
-            R.drawable.i13_8192, R.drawable.i14_16384,R.drawable.i15_32768, R.drawable.i16_65536,
-            R.drawable.i17_131072, R.drawable.i18_262144,R.drawable.i19_524288,R.drawable.i19_524288
+            R.drawable.i00_0, R.drawable.i01_2, R.drawable.i02_4, R.drawable.i03_8,
+                R.drawable.i04_16, R.drawable.i05_32, R.drawable.i06_64,R.drawable.i07_128,
+                R.drawable.i08_256, R.drawable.i09_512, R.drawable.i10_1024,R.drawable.i11_2048,
+                R.drawable.i12_4096, R.drawable.i13_8192, R.drawable.i14_16384,R.drawable.i15_32768,
+                R.drawable.i16_65536, R.drawable.i17_131072, R.drawable.i18_262144,
+                R.drawable.i19_524288
         };
         bitmap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), orgMapId[idx]),

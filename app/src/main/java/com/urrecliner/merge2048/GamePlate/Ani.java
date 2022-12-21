@@ -39,7 +39,6 @@ public class Ani {
     ExplodeImage explodeImage;
     GameInfo gameInfo;
     Paint explodePaint;
-    int nextBlock, nextNBlock;  // next and next,next Block Index
 
     public Ani(GameInfo gameInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, Context context){
         this.gameInfo = gameInfo;
@@ -59,6 +58,11 @@ public class Ani {
 
         explodePaint = new Paint();
         explodePaint.setAlpha(180);
+
+    }
+
+    public void eraseAll() {
+        poolAnis = new ArrayList<>();
 
     }
 

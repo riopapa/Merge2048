@@ -31,10 +31,10 @@ public class NextBlocks {
         nextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         nextPaint.setStrokeWidth(4);
 
-        nextXPos = gameInfo.xNextPos-4;
+        nextXPos = gameInfo.xNextPos-2;
         nextYPos = gameInfo.yNextPos-4;
         nextNXPos = nextXPos + (gameInfo.blockOutSize /4);
-        nextNYPos = nextYPos + gameInfo.blockOutSize;
+        nextNYPos = nextYPos + gameInfo.blockOutSize + 12;
 
         nextIndex = new Random().nextInt(3) + 1;
         nNextIndex = new Random().nextInt(4) + 1;

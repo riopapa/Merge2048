@@ -3,6 +3,7 @@ package com.urrecliner.merge2048;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -23,7 +24,7 @@ public class MainActivity extends Activity {
 
         );
 
-        game = new Game(this);
+        game = new Game(this, new View(this));
         setContentView(game);
     }
 
