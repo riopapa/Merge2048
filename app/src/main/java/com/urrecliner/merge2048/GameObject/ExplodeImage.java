@@ -32,8 +32,6 @@ public class ExplodeImage {
 
     private Bitmap bitmapSmall(Bitmap bitmap, int pct) {
 
-//        Paint paint = new Paint();
-//        paint.setAlpha(200);
         int xScale = bitmap.getWidth() * pct / 100;
         int yScale = bitmap.getHeight() * pct / 100;
         Bitmap newMap = Bitmap.createScaledBitmap(bitmap, xScale, yScale,false);

@@ -1,7 +1,5 @@
 package com.urrecliner.merge2048;
 
-import android.util.Log;
-
 import com.urrecliner.merge2048.GamePlate.Ani;
 
 public class CheckNearItem {
@@ -19,7 +17,7 @@ public class CheckNearItem {
     public void check(int x, int y) {
 
         int index = ani.cells[x][y].index;
-        int indexR = -1, indexL = -1, indexU = -1, number;
+        int indexR = -1, indexL = -1, indexU = -1;
 
         if (x < xBlockCnt - 1)
             indexR = ani.cells[x +1][y].index;

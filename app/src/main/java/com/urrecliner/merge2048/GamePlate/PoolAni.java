@@ -6,7 +6,7 @@ public class PoolAni {
     int xS, yS, xF, yF;   // move Start to Finish cell
     int xInc, yInc, count;     // ani increments stack
 
-    long delay = 20;   // redraw at every 100 mili sec
+    long delay = 20;   // redraw at every 100 milli sec
     long timeStamp = 0;
 
     // state MOVING

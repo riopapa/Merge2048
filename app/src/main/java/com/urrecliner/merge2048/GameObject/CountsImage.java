@@ -3,7 +3,6 @@ package com.urrecliner.merge2048.GameObject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;

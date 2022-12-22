@@ -3,22 +3,13 @@ package com.urrecliner.merge2048.GamePlate;
 /*
  * Purpose of this Ani module is to draw, animate Game Plate
  */
+
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
-
-import androidx.core.content.ContextCompat;
 
 import com.urrecliner.merge2048.GameInfo;
-import com.urrecliner.merge2048.GameObject.BlockImage;
-import com.urrecliner.merge2048.GameObject.ExplodeImage;
-import com.urrecliner.merge2048.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameOver {
 

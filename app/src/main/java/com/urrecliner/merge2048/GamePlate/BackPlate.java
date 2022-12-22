@@ -19,11 +19,10 @@ public class BackPlate {
     private final int xBlockCnt;
     private final int blockOutSize;
     private final int xOffset;
-    private final int yDownOffset;
     private final int yNextPos;
-    private final int xLeft, yTop, xRight, yBottom, yNextBottom;
+    private final int xLeft, yTop, yBottom, yNextBottom;
     private final int xNewPos, yNewPos, xYesPos, xNopPos;
-    private final Bitmap newMap, yesMap, nopMap, nextNoMap;
+    private final Bitmap newMap, yesMap, nopMap;
 
     public BackPlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
@@ -36,7 +35,6 @@ public class BackPlate {
         blockOutSize = gameInfo.blockOutSize;
         xOffset = gameInfo.xOffset;
         int yUpOffset = gameInfo.yUpOffset;
-        yDownOffset = gameInfo.yDownOffset;
         yNextPos = gameInfo.yNextPos;
         vPath1Paint = new Paint();
         vPath1Paint.setColor(ContextCompat.getColor(context, R.color.ver_line));
@@ -44,7 +42,6 @@ public class BackPlate {
         vPath2Paint.setColor(ContextCompat.getColor(context, R.color.ver_line) & 0xffF0F0F0);
 
         xLeft = xOffset-4; yTop = yUpOffset -4;
-        xRight = xOffset + blockOutSize * xBlockCnt + 4;
         yBottom = yTop + 8 + blockOutSize * yBlockCnt;
         yNextBottom = yNextPos + blockOutSize + 4;
 
@@ -54,11 +51,6 @@ public class BackPlate {
         newMap = buildMap (R.drawable.i_new);
         yesMap = buildMap (R.drawable.i_yes);
         nopMap = buildMap (R.drawable.i_no);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.i_next);
-
-        nextNoMap = Bitmap.createScaledBitmap(bitmap, blockOutSize/2, blockOutSize/2, false);
 
     }
 
@@ -88,8 +80,9 @@ public class BackPlate {
         }
         canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
         if (gameInfo.newGamePressed) {
+            int xNewGameLeft = xNopPos+blockOutSize*2/3;
             canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
-            canvas.drawBitmap(nopMap, xNopPos+blockOutSize*2/3, yNewPos,null);
+            canvas.drawBitmap(nopMap, xNewGameLeft, yNewPos,null);
         }
 
     }

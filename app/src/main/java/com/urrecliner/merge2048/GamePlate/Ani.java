@@ -20,16 +20,7 @@ import java.util.List;
 public class Ani {
 
     public enum STATE {
-        PAUSED,
-        MOVING,
-        ENDMOVE,
-        STOP,
-        CHECK,
-        MERGE,
-        ENDMERGE,
-        EXPLODE,
-        GREAT,
-        ENDEXPLODE
+        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, GREAT, EXPLODED
     }
 
     Context context;
@@ -138,7 +129,7 @@ public class Ani {
                 case EXPLODE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = STATE.ENDEXPLODE;
+                            cells[ap.xS][ap.yS].state = STATE.EXPLODED;
                             poolAnis.remove(apI);
                             continue;
                         } else {
@@ -164,7 +155,7 @@ public class Ani {
                 case MERGE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = STATE.ENDMERGE;
+                            cells[ap.xS][ap.yS].state = STATE.MERGED;
                             cells[ap.xS][ap.yS].index = ap.xF;  // xF is new Index
                             poolAnis.remove(apI);
                             continue;
@@ -181,7 +172,7 @@ public class Ani {
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= gameInfo.greatCount) {    // smooth factor
                             poolAnis.remove(apI);
-                            gameInfo.scoreNow += gameInfo.greatStacked * gameInfo.greatIdx;
+                            gameInfo.scoreNow += (long) gameInfo.greatStacked * (long) gameInfo.greatIdx;
                             continue;
                         } else {
                             Bitmap bitmap = countsImage.countMaps[ap.xF];   // countIdx
@@ -198,8 +189,7 @@ public class Ani {
                     }
                     break;
 
-                case ENDMOVE:
-                case ENDEXPLODE:
+                case EXPLODED:
                 case CHECK:
                     break;
 

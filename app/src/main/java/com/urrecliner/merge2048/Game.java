@@ -27,18 +27,15 @@ import java.util.List;
 class Game extends SurfaceView implements SurfaceHolder.Callback {
     public final GameInfo gameInfo;
     private final Score score;
-    public final ExplodeImage explodeImage;
     private final GameOver gameOver;
     private final NextBlocks nextBlocks;
     private final Ani ani;
     private final BackPlate backPlate;
     private final CheckNearItem checkNearItem;
-    private final CountsImage countsImage;
     private GameLoop gameLoop;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
-    List<BlockImage> blockImages;
     int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
     boolean blockClicked = false;   // clicked means user clicked
     int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
@@ -54,9 +51,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gameInfo = new GameInfo(displayMetrics.widthPixels, displayMetrics.heightPixels,
                 xBlockCnt, yBlockCnt);
-        blockImages = new MakeBlockImage().make(context, gameInfo);
-        explodeImage = new ExplodeImage(gameInfo, context);
-        countsImage = new CountsImage(gameInfo, context);
+
+        final List<BlockImage> blockImages = new MakeBlockImage().make(context, gameInfo);
+        final ExplodeImage explodeImage = new ExplodeImage(gameInfo, context);
+        final CountsImage countsImage = new CountsImage(gameInfo, context);
 
         ani = new Ani(gameInfo, blockImages, explodeImage, countsImage, context);
         nextBlocks = new NextBlocks(gameInfo, context);
@@ -147,16 +145,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
                         break;
 
-                    case ENDMERGE:
+                    case MERGED:
                         ani.cells[x][y].state = Ani.STATE.STOP;
                         break;
 
-                    case ENDEXPLODE:
+                    case EXPLODED:
                         checkIfPullNextUp(x, y);
                         break;
 
                     default:
-                        cellDump("unknown", ani.cells[x][y], x, y);
+                        Log.w("ani default","state="+ani.cells[x][y].state
+                                +" idx="+ani.cells[x][y].index+" (" + x+ " x "+y+")" );
                         break;
                 }
             }
@@ -218,10 +217,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             blockClicked = false;    // cannot move, ignore this try
         }
-    }
-
-    private void cellDump(String s, Cell cell, int x, int y) {
-        Log.w("ani "+s,"state="+cell.state+" idx="+cell.index+" (" + x+ " x "+y+")" );
     }
 
     public void draw(Canvas canvas) {
