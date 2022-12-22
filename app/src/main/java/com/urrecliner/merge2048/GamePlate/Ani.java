@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.GameObject.BlockImage;
+import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GameObject.CountsImage;
 import com.urrecliner.merge2048.GameObject.ExplodeImage;
 
@@ -24,7 +25,7 @@ public class Ani {
     }
 
     Context context;
-    public Cell [][] cells;
+    public Cell[][] cells;
     public List<PoolAni> poolAnis;
     int screenXSize, screenYSize;
     int xBlockCnt, yBlockCnt, xOffset, yUpOffset, xBlockOutSize, yBlockOutSize;

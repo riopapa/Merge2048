@@ -10,14 +10,14 @@ import androidx.core.content.res.ResourcesCompat;
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;
 
-public class Score {
+public class ScorePlate {
     Context context;
     Paint textPaint, scorePaint;
     public int sXPos, sYPos, tXPos, tYPos;
     GameInfo gameInfo;
-    final String scoreStr = "Score:";
+    final String scoreStr = "ScorePlate:";
 
-    public Score (GameInfo gameInfo, Context context) {
+    public ScorePlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
 

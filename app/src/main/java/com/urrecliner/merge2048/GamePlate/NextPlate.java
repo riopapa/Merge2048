@@ -15,7 +15,7 @@ import com.urrecliner.merge2048.R;
 
 import java.util.Random;
 
-public class NextBlocks {
+public class NextPlate {
 
     Context context;
     GameInfo gameInfo;
@@ -25,7 +25,7 @@ public class NextBlocks {
     public int nextIndex, nNextIndex;
     Bitmap nextNoMap;
 
-    public NextBlocks(GameInfo gameInfo, Context context) {
+    public NextPlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
         this.blockInSize = gameInfo.blockInSize;
@@ -53,9 +53,9 @@ public class NextBlocks {
 
     public void generateNextBlock() {
         nextIndex = nNextIndex;
-        nNextIndex = new Random().nextInt(4) + 1;
+        nNextIndex = new Random().nextInt(7) + 1;
         if (new Random().nextInt(4) > 2)
-            nNextIndex = new Random().nextInt(6) + 1;
+            nNextIndex = new Random().nextInt(9) + 1;
     }
 
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {

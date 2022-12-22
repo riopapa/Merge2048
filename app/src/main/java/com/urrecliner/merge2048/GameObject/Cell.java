@@ -1,4 +1,6 @@
-package com.urrecliner.merge2048.GamePlate;
+package com.urrecliner.merge2048.GameObject;
+
+import com.urrecliner.merge2048.GamePlate.Ani;
 
 public class Cell {
 

@@ -2,6 +2,10 @@ package com.urrecliner.merge2048;
 
 import android.util.Log;
 
+import com.urrecliner.merge2048.GameObject.HighMember;
+
+import java.util.List;
+
 public class GameInfo {
 
     public int screenXSize, screenYSize;
@@ -9,6 +13,7 @@ public class GameInfo {
     public int xBlockCnt, yBlockCnt;
     public int xOffset,yUpOffset, yDownOffset;
     public long scoreNow;
+    public List<HighMember> highMembers;
     public int xNextPos, yNextPos, xNewPos, yNewPosS, xNextNextPos, yNextNextPos;
     public boolean newGamePressed = false, newGameStart = false, showNext = true;
     public int greatIdx, greatStacked = 0, greatCount = 8;

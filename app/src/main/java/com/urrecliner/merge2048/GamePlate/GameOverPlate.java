@@ -11,14 +11,14 @@ import android.graphics.Paint;
 
 import com.urrecliner.merge2048.GameInfo;
 
-public class GameOver {
+public class GameOverPlate {
 
     Context context;
     GameInfo gameInfo;
     Paint overPaint;
     int overXPos, overYPos;
 
-    public GameOver(GameInfo gameInfo, Context context){
+    public GameOverPlate(GameInfo gameInfo, Context context){
         this.gameInfo = gameInfo;
         this.context = context;
 
