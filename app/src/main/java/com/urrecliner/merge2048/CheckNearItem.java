@@ -1,6 +1,6 @@
 package com.urrecliner.merge2048;
 
-import com.urrecliner.merge2048.GamePlate.Ani;
+import com.urrecliner.merge2048.GameObject.Ani;
 
 public class CheckNearItem {
     Ani ani;

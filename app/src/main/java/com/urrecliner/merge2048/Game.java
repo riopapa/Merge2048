@@ -11,11 +11,11 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import com.urrecliner.merge2048.GameObject.BlockImage;
-import com.urrecliner.merge2048.GameObject.CountsImage;
-import com.urrecliner.merge2048.GameObject.ExplodeImage;
-import com.urrecliner.merge2048.GameObject.MakeBlockImage;
-import com.urrecliner.merge2048.GamePlate.Ani;
+import com.urrecliner.merge2048.GameImage.BlockImage;
+import com.urrecliner.merge2048.GameImage.CountsImage;
+import com.urrecliner.merge2048.GameImage.ExplodeImage;
+import com.urrecliner.merge2048.GameImage.MakeBlockImage;
+import com.urrecliner.merge2048.GameObject.Ani;
 import com.urrecliner.merge2048.GamePlate.BackPlate;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.GameOverPlate;

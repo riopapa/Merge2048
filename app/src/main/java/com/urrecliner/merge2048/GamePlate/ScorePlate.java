@@ -15,7 +15,7 @@ public class ScorePlate {
     Paint textPaint, scorePaint;
     public int sXPos, sYPos, tXPos, tYPos;
     GameInfo gameInfo;
-    final String scoreStr = "ScorePlate:";
+    final String scoreStr = "Score: ";
 
     public ScorePlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;

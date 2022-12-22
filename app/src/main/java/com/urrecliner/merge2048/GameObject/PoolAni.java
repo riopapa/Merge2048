@@ -1,4 +1,4 @@
-package com.urrecliner.merge2048.GamePlate;
+package com.urrecliner.merge2048.GameObject;
 
 public class PoolAni {
 

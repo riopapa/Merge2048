@@ -1,6 +1,8 @@
-package com.urrecliner.merge2048.GameObject;
+package com.urrecliner.merge2048.GameImage;
 
 import android.content.Context;
+
+import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.GameInfo;
 
 import java.util.ArrayList;

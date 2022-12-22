@@ -1,4 +1,4 @@
-package com.urrecliner.merge2048.GameObject;
+package com.urrecliner.merge2048.GameImage;
 
 import android.content.Context;
 import android.graphics.Bitmap;

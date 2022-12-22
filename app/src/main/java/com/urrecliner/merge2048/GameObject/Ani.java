@@ -1,4 +1,4 @@
-package com.urrecliner.merge2048.GamePlate;
+package com.urrecliner.merge2048.GameObject;
 
 /*
  * Purpose of this Ani module is to draw, animate Game Plate
@@ -9,11 +9,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.urrecliner.merge2048.GameImage.BlockImage;
+import com.urrecliner.merge2048.GameImage.CountsImage;
+import com.urrecliner.merge2048.GameImage.ExplodeImage;
 import com.urrecliner.merge2048.GameInfo;
-import com.urrecliner.merge2048.GameObject.BlockImage;
-import com.urrecliner.merge2048.GameObject.Cell;
-import com.urrecliner.merge2048.GameObject.CountsImage;
-import com.urrecliner.merge2048.GameObject.ExplodeImage;
 
 import java.util.ArrayList;
 import java.util.List;
