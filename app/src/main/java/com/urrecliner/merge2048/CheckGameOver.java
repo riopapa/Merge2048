@@ -28,14 +28,19 @@ public class CheckGameOver {
                     ani.cells[x][yBlockCnt-1].index == nextPlate.nextIndex)
                 return false;
         }
+        if (gameInfo.isGameOver)
+            return true;
+        updateHighScore();
+        return true;
+    }
 
+    public void updateHighScore() {
         List<HighMember> mbrList = gameInfo.highMembers;
         mbrList.add(new HighMember(gameInfo.scoreNow, "Me"));
-        mbrList.sort(Comparator.comparingLong(HighMember::getWhen).reversed());
+        mbrList.sort(Comparator.comparingLong(HighMember::getScore).reversed());
         while (mbrList.size() > 4)
-            mbrList.remove(3);
+            mbrList.remove(4);
         gameInfo.highMembers = mbrList;
-        return true;
     }
 
 }

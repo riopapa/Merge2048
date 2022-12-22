@@ -53,9 +53,9 @@ public class NextPlate {
 
     public void generateNextBlock() {
         nextIndex = nNextIndex;
-        nNextIndex = new Random().nextInt(7) + 1;
-        if (new Random().nextInt(4) > 2)
-            nNextIndex = new Random().nextInt(9) + 1;
+        nNextIndex = new Random().nextInt(4) + 1;
+        if (new Random().nextInt(5) > 3)
+            nNextIndex = new Random().nextInt(6) + 1;
     }
 
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {

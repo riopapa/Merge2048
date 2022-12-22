@@ -41,7 +41,7 @@ public class PoolAni {
         this.yS = yS;
         this.xInc = xInc;
         this.yInc = yInc;
-        delay = 10;
+        delay = 8;
         count = 0;
     }
 

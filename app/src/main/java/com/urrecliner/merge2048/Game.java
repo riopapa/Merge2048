@@ -41,7 +41,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
     boolean blockClicked = false;   // clicked means user clicked
     int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
-    boolean isGameOver = false;
+    boolean isGameGone = false;
 
     public Game(Context context) {
         super(context);
@@ -60,12 +60,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         ani = new Ani(gameInfo, blockImages, explodeImage, countsImage, context);
         nextPlate = new NextPlate(gameInfo, context);
-        scorePlate = new ScorePlate(gameInfo, context);
         backPlate = new BackPlate(gameInfo, context);
         gameOverPlate = new GameOverPlate(gameInfo, context);
         checkNearItem = new CheckNearItem(gameInfo, ani);
         manageHighScore = new ManageHighScore(gameInfo, context);
         manageHighScore.get();
+        scorePlate = new ScorePlate(gameInfo, context);
         checkGameOver = new CheckGameOver(gameInfo, nextPlate,ani);
 
         xOffset = gameInfo.xOffset; yDownOffset = gameInfo.yDownOffset;
@@ -83,16 +83,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         xNextNextPosE = xNextNextPosS + blockOutSize/2;
         yNextNextPosE = yNextNextPosS + blockOutSize/2;
 
-        gameStart();
+        newGameStart();
     }
 
-    void gameStart() {
+    void newGameStart() {
         gameInfo.scoreNow = 0;
         clearCells();   // clea all cells
         nextPlate.generateNextBlock();
-        isGameOver = false;
+        gameInfo.isGameOver = false;
         gameInfo.greatIdx = 0;
         gameInfo.greatStacked = 0;
+        isGameGone = false;
     }
 
     void clearCells() {
@@ -117,7 +118,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gameInfo.newGameStart) {
             gameInfo.newGameStart = false;
-            gameStart();
+            checkGameOver.updateHighScore();
+            newGameStart();
         }
         for (int y = yBlockCnt - 1; y >= 0; y--) {
             for (int x = 0; x < xBlockCnt; x++) {
@@ -164,12 +166,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        isGameOver = checkGameOver.isOver();
-        if (isGameOver) {
-            manageHighScore.put();
-        } else if (blockClicked)
-            start2Move();
-
+        if (!isGameGone) {
+            isGameGone = checkGameOver.isOver();
+            if (isGameGone && !gameInfo.isGameOver) {
+                gameInfo.isGameOver = true;
+                isGameGone = false;
+                manageHighScore.put();
+            } else if (blockClicked)
+                start2Move();
+        }
     }
 
     private void showGreat(int x, int y) {
@@ -232,7 +237,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 ani.blockImages.get(nextPlate.nNextIndex).halfMap);
         ani.draw(canvas);
         scorePlate.draw(canvas);
-        if (isGameOver)
+        if (gameInfo.isGameOver)
             gameOverPlate.draw(canvas);
     }
 
@@ -279,7 +284,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                                 blockClicked = true;
                             }
                         }
+
+                    } else if (yTouchPos > yNextBottom + 200){
+                        dumpCells();
+
                     }
+
                 }
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -291,6 +301,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         return super.onTouchEvent(event);
     }
 
+    void dumpCells() {
+        Log.w("d", "       0        1        2        3        4");
+        for (int y = 0; y < yBlockCnt; y++) {
+            String s = y+") ";
+            for (int x = 0; x < xBlockCnt; x++) {
+                s += ani.cells[x][y].index+" "+ani.cells[x][y].state+" ";
+            }
+            Log.w("d",s);
+        }
+    }
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {}
 

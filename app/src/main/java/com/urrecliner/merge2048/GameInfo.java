@@ -17,6 +17,8 @@ public class GameInfo {
     public int xNextPos, yNextPos, xNewPos, yNewPosS, xNextNextPos, yNextNextPos;
     public boolean newGamePressed = false, newGameStart = false, showNext = true;
     public int greatIdx, greatStacked = 0, greatCount = 8;
+    public boolean isGameOver = false;
+
 
     public GameInfo (int screenXSize, int screenYSize, int xBlockCnt, int yBlockCnt) {
         this.screenXSize = screenXSize;
@@ -31,7 +33,7 @@ public class GameInfo {
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 24;
 
         xNextPos = (screenXSize - blockOutSize) / 2;
-        yNextPos = yDownOffset + 32;
+        yNextPos = yDownOffset + 12;
 
         xNewPos = xNextPos + blockOutSize - 16;
         yNewPosS = yNextPos + blockOutSize + 32;

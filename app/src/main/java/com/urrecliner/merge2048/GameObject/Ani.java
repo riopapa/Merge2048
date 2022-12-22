@@ -7,6 +7,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
@@ -135,15 +137,10 @@ public class Ani {
                         } else {
                             Bitmap explodeMap = explodeImage.smallMaps[ap.count];
                             int xPos = gameInfo.xOffset + ap.xS * gameInfo.blockOutSize
-                                    + ap.xInc * ap.count;
+                                    + ap.xInc * ap.count - 16;
                             int yPos = gameInfo.yUpOffset + ap.yS * gameInfo.blockOutSize
-                                    + ap.yInc * ap.count;
-                            BlockImage blockImage = blockImages.get(cells[ap.xS][ap.yS].index);
-                            canvas.drawBitmap(blockImage.smallMaps[ap.count],
-                                    xPos, yPos, null);
-                            xPos -= explodeImage.explodeGap;
-                            yPos -= explodeImage.explodeGap;
-                            canvas.drawBitmap(explodeMap, xPos, yPos,explodePaint);
+                                    + ap.yInc * ap.count - 16;
+                            canvas.drawBitmap(explodeMap, xPos, yPos, null);
                             ap.count++;
                             ap.timeStamp = System.currentTimeMillis() + ap.delay;
                             poolAnis.set(apI, ap);

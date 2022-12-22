@@ -15,7 +15,7 @@ public class ExplodeImage {
     public ExplodeImage(GameInfo gameInfo, Context context) {
 
         Bitmap explodeMap = BitmapFactory.decodeResource(context.getResources(),
-                R.mipmap.explosion);
+                R.drawable.explosion);
 
         Bitmap bitmap = Bitmap.createScaledBitmap(explodeMap,
                 gameInfo.blockInSize + explodeGap + explodeGap,
@@ -23,10 +23,10 @@ public class ExplodeImage {
 
         smallMaps = new Bitmap[5];
         smallMaps[0] = bitmapSmall(bitmap, 100);
-        smallMaps[1] = bitmapSmall(bitmap, 90);
-        smallMaps[2] = bitmapSmall(bitmap, 80);
-        smallMaps[3] = bitmapSmall(bitmap, 90);
-        smallMaps[4] = bitmapSmall(bitmap, 100);
+        smallMaps[1] = bitmapSmall(bitmap, 75);
+        smallMaps[2] = bitmapSmall(bitmap, 60);
+        smallMaps[3] = bitmapSmall(bitmap, 45);
+        smallMaps[4] = bitmapSmall(bitmap, 40);
 
     }
 

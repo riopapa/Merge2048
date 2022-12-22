@@ -2,7 +2,6 @@ package com.urrecliner.merge2048.GameObject;
 
 public class HighMember {
 
-
     public long score;
     public long when;
     public String who;
@@ -13,6 +12,5 @@ public class HighMember {
         this.who = who;
     }
 
-    public long getWhen() {return when;}
-
+    public long getScore() {return score;}
 }
