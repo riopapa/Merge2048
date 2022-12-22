@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.urrecliner.merge2048.GameObject.BlockImage;
+import com.urrecliner.merge2048.GameObject.CountsImage;
 import com.urrecliner.merge2048.GameObject.ExplodeImage;
 import com.urrecliner.merge2048.GameObject.MakeBlockImage;
 import com.urrecliner.merge2048.GamePlate.Ani;
@@ -33,6 +34,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Ani ani;
     private final BackPlate backPlate;
     private final CheckNearItem checkNearItem;
+    private final CountsImage countsImage;
     private GameLoop gameLoop;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
@@ -42,11 +44,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     boolean isGameOver = false;
     boolean newGamePressed = false;
-    final View gameView;
 
-    public Game(Context context, View gameView) {
+    public Game(Context context) {
         super(context);
-        this.gameView = gameView;
         SurfaceHolder surfaceHolder =getHolder();
         surfaceHolder.addCallback(this);
         gameLoop = new GameLoop(this, surfaceHolder);
@@ -57,12 +57,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 xBlockCnt, yBlockCnt);
         blockImages = new MakeBlockImage().make(context, gameInfo);
         explodeImage = new ExplodeImage(gameInfo, context);
+        countsImage = new CountsImage(gameInfo, context);
+
         ani = new Ani(gameInfo, blockImages, explodeImage, context);
         nextBlocks = new NextBlocks(gameInfo, context);
         score = new Score(gameInfo, context);
         backPlate = new BackPlate(gameInfo, context);
         gameOver = new GameOver(gameInfo, context);
         checkNearItem = new CheckNearItem(gameInfo, context, ani);
+
         xOffset = gameInfo.xOffset; yDownOffset = gameInfo.yDownOffset;
         blockOutSize = gameInfo.blockOutSize;
 
@@ -83,6 +86,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         clearCells();   // clea all cells
         nextBlocks.generateNextBlock();
         isGameOver = false;
+        gameInfo.countIdx = 0;
+
     }
 
     void clearCells() {

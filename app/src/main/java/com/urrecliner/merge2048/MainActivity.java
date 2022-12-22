@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 
         );
 
-        game = new Game(this, new View(this));
+        game = new Game(this);
         setContentView(game);
     }
 

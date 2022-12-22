@@ -11,6 +11,7 @@ public class GameInfo {
     public int scoreNow;
     public int xNextPos, yNextPos, xNewPos, yNewPosS;
     public boolean newGamePressed = false, newGameStart = false;
+    public int countIdx;
 
     public GameInfo (int screenXSize, int screenYSize, int xBlockCnt, int yBlockCnt) {
         this.screenXSize = screenXSize;
