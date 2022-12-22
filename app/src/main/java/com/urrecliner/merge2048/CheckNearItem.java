@@ -1,21 +1,19 @@
 package com.urrecliner.merge2048;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.urrecliner.merge2048.GamePlate.Ani;
 
 public class CheckNearItem {
     Ani ani;
-    Context context;
     GameInfo gameInfo;
     final int xBlockCnt, yBlockCnt;
-    public CheckNearItem(GameInfo gameInfo, Context context, Ani ani) {
+
+    public CheckNearItem(GameInfo gameInfo, Ani ani) {
         this.gameInfo = gameInfo;
         this.xBlockCnt = gameInfo.xBlockCnt;
         this.yBlockCnt = gameInfo.yBlockCnt;
         this.ani = ani;
-        this.context = context;
     }
 
     public void check(int x, int y) {
@@ -77,9 +75,6 @@ public class CheckNearItem {
             return;
         }
         if (index == indexU) {
-            if (index == 1) {
-                Log.w("Index ","2");
-            }
             index++;
             gameInfo.scoreNow += calcNumber(index);
             explodeThis(x, y, x, y -1);
@@ -90,6 +85,7 @@ public class CheckNearItem {
     }
 
     private void mergeToHere(int x, int y, int index) {
+        gameInfo.greatIdx++;
         ani.cells[x][y].state = Ani.STATE.MERGE;
         ani.addMerge(x,y, index);
     }
@@ -108,6 +104,9 @@ public class CheckNearItem {
                 number = number + number;
         } else
             number = 0;
+        if (!gameInfo.showNext)
+            number += number;
+        gameInfo.greatStacked += number;
         return number;
     }
 

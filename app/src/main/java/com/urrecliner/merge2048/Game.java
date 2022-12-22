@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -37,13 +36,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CountsImage countsImage;
     private GameLoop gameLoop;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
+    private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
     List<BlockImage> blockImages;
     int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
     boolean blockClicked = false;   // clicked means user clicked
     int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     boolean isGameOver = false;
-    boolean newGamePressed = false;
 
     public Game(Context context) {
         super(context);
@@ -59,12 +58,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         explodeImage = new ExplodeImage(gameInfo, context);
         countsImage = new CountsImage(gameInfo, context);
 
-        ani = new Ani(gameInfo, blockImages, explodeImage, context);
+        ani = new Ani(gameInfo, blockImages, explodeImage, countsImage, context);
         nextBlocks = new NextBlocks(gameInfo, context);
         score = new Score(gameInfo, context);
         backPlate = new BackPlate(gameInfo, context);
         gameOver = new GameOver(gameInfo, context);
-        checkNearItem = new CheckNearItem(gameInfo, context, ani);
+        checkNearItem = new CheckNearItem(gameInfo, ani);
 
         xOffset = gameInfo.xOffset; yDownOffset = gameInfo.yDownOffset;
         blockOutSize = gameInfo.blockOutSize;
@@ -76,6 +75,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         yNewPosS = gameInfo.yNewPosS;
         yNewPosE = yNewPosS+ gameInfo.blockOutSize*2/3;
 
+        xNextNextPosS = gameInfo.xNextNextPos;
+        yNextNextPosS = gameInfo.yNextNextPos;
+        xNextNextPosE = xNextNextPosS + blockOutSize/2;
+        yNextNextPosE = yNextNextPosS + blockOutSize/2;
+
         gameStart();
 
 
@@ -86,8 +90,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         clearCells();   // clea all cells
         nextBlocks.generateNextBlock();
         isGameOver = false;
-        gameInfo.countIdx = 0;
-
+        gameInfo.greatIdx = 0;
+        gameInfo.greatStacked = 0;
     }
 
     void clearCells() {
@@ -121,6 +125,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
                 switch (ani.cells[x][y].state) {
@@ -136,6 +141,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
                     case STOP:
                         checkNearItem.check(x, y);
+                        if (ani.poolAnis.size() == 0 && gameInfo.greatIdx > 0) {
+                            showGreat(x, y);
+                        }
+
                         break;
 
                     case ENDMERGE:
@@ -155,9 +164,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         checkGameOver();
         if (!isGameOver && blockClicked)
             start2Move();
-        if (newGamePressed) {
 
-        }
+    }
+
+    private void showGreat(int x, int y) {
+        if (gameInfo.greatIdx > 2)
+            ani.addGreat(x, y, gameInfo.greatIdx -2);
+        gameInfo.greatIdx = 0;
+        gameInfo.greatStacked = 0;
     }
 
     private void checkIfGoingUpPossible(int x, int y) {
@@ -258,9 +272,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                                 gameInfo.newGameStart = false;
                         }
 
+                    } else if (xTouchPos >= xNextNextPosS && xTouchPos <= xNextNextPosE &&
+                            yTouchPos >= yNextNextPosS && yTouchPos <= yNextNextPosE) {
+                        gameInfo.showNext = !gameInfo.showNext;
+
                     } else if (xTouchPos >= xNewPosS && xTouchPos <= xNewPosE &&
                             yTouchPos >= yNewPosS && yTouchPos <= yNewPosE) {
                         gameInfo.newGamePressed = true;
+
                     } else if (yTouchPos <= yNextBottom){
                         xTouchPos -= xOffset;
                         if (xTouchPos > 0) {

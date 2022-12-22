@@ -23,12 +23,13 @@ public class CountsImage {
 
         countMapLen = orgMapId.length;
         countMaps = new Bitmap[countMapLen];
+        int blockSize = gameInfo.blockOutSize * 2;
         for (int i = 0; i < countMapLen ; i++) {
             Bitmap bitmap = Bitmap.createScaledBitmap(
                     BitmapFactory.decodeResource(context.getResources(), orgMapId[i]),
                     gameInfo.blockInSize, gameInfo.blockInSize, false);
             countMaps[i] = Bitmap.createScaledBitmap(bitmap,
-                    gameInfo.blockInSize /2, gameInfo.blockInSize /2,false);
+                    blockSize, blockSize,false);
         }
     }
 }

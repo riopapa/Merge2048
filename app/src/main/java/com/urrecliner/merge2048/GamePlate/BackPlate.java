@@ -23,7 +23,7 @@ public class BackPlate {
     private final int yNextPos;
     private final int xLeft, yTop, xRight, yBottom, yNextBottom;
     private final int xNewPos, yNewPos, xYesPos, xNopPos;
-    private final Bitmap newMap, yesMap, nopMap;
+    private final Bitmap newMap, yesMap, nopMap, nextNoMap;
 
     public BackPlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
@@ -54,6 +54,12 @@ public class BackPlate {
         newMap = buildMap (R.drawable.i_new);
         yesMap = buildMap (R.drawable.i_yes);
         nopMap = buildMap (R.drawable.i_no);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.i_next);
+
+        nextNoMap = Bitmap.createScaledBitmap(bitmap, blockOutSize/2, blockOutSize/2, false);
+
     }
 
     Bitmap buildMap(int resId) {

@@ -22,6 +22,18 @@ public class PoolAni {
         count = 0;
     }
 
+    // state GREAT
+    public PoolAni(Ani.STATE state, int xS, int yS, int xInc, int yInc, int countIdx) {
+        this.state = state;
+        this.xS = xS;
+        this.yS = yS;
+        this.xInc = xInc;
+        this.yInc = yInc;
+        this.xF = countIdx;
+        delay = 20;
+        count = 0;
+    }
+
     // state EXPLODE
     public PoolAni(Ani.STATE state, int xS, int yS, int xInc, int yInc) {
         this.state = state;

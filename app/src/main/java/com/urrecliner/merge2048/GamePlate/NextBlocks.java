@@ -1,15 +1,17 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- * Purpose of this Ani module is to draw, animate Game Plate
+ *
  */
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.R;
 
 import java.util.Random;
 
@@ -18,13 +20,16 @@ public class NextBlocks {
     Context context;
     GameInfo gameInfo;
     Paint nextPaint;
-    int xBlockOutSize, yBlockOutSize;
-    int nextXPos, nextYPos, nextNXPos, nextNYPos;
+    int blockOutSize, blockInSize;
+    int nextXPos, nextYPos, xNextNextPos, yNextNextPos;
     public int nextIndex, nNextIndex;
+    Bitmap nextNoMap;
 
     public NextBlocks(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
+        this.blockInSize = gameInfo.blockInSize;
+        this.blockOutSize = gameInfo.blockOutSize;
 
         nextPaint = new Paint();
         nextPaint.setColor(Color.WHITE);
@@ -32,12 +37,18 @@ public class NextBlocks {
         nextPaint.setStrokeWidth(4);
 
         nextXPos = gameInfo.xNextPos-2;
-        nextYPos = gameInfo.yNextPos-4;
-        nextNXPos = nextXPos + (gameInfo.blockOutSize /4);
-        nextNYPos = nextYPos + gameInfo.blockOutSize + 12;
-
+        nextYPos = gameInfo.yNextPos-2;
+        xNextNextPos = nextXPos + (blockOutSize /4);
+        yNextNextPos = nextYPos + blockOutSize + 24;
+        gameInfo.xNextNextPos = xNextNextPos;
+        gameInfo.yNextNextPos = yNextNextPos;
         nextIndex = new Random().nextInt(3) + 1;
         nNextIndex = new Random().nextInt(4) + 1;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.i_next);
+        nextNoMap = Bitmap.createScaledBitmap(bitmap, blockInSize/2, blockInSize/2, false);
+
     }
 
     public void generateNextBlock() {
@@ -50,17 +61,19 @@ public class NextBlocks {
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {
 
         canvas.drawRoundRect(nextXPos, nextYPos,
-                nextXPos + xBlockOutSize, nextYPos + yBlockOutSize,
-                xBlockOutSize/8f,yBlockOutSize/8f, nextPaint);
+                nextXPos + blockInSize, nextYPos + blockInSize,
+                blockInSize/8f,blockInSize/8f, nextPaint);
 
-        canvas.drawBitmap(blockMap, nextXPos+4, nextYPos+4,null);
+        canvas.drawBitmap(blockMap, nextXPos, nextYPos,null);
 
         // draw Next Next //
-        canvas.drawRoundRect(nextNXPos, nextNYPos,
-                nextNXPos+xBlockOutSize/2f, nextNYPos+yBlockOutSize/2f,
-                xBlockOutSize/16f,yBlockOutSize/16f, nextPaint);
-
-        canvas.drawBitmap(halfMap, nextNXPos+2, nextNYPos+2,null);
+        canvas.drawRoundRect(xNextNextPos, yNextNextPos,
+                xNextNextPos +blockInSize/2f, yNextNextPos +blockInSize/2f,
+                blockInSize/16f,blockInSize/16f, nextPaint);
+        if (gameInfo.showNext)
+            canvas.drawBitmap(halfMap, xNextNextPos, yNextNextPos,null);
+        else
+            canvas.drawBitmap(nextNoMap, xNextNextPos, yNextNextPos,null);
     }
 
 }
