@@ -289,7 +289,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         dumpCells();
 
                     }
-
                 }
                 return true;
             case MotionEvent.ACTION_MOVE:
