@@ -34,14 +34,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CheckNearItem checkNearItem;
     private final ManageHighScore manageHighScore;
     private final CheckGameOver checkGameOver;
+    private final TouchEvent touchEvent;
     private GameLoop gameLoop;
-    private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
-    private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
-    private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
-    int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
-    boolean blockClicked = false;   // clicked means user clicked
-    int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
-    boolean isGameGone = false;
+
+    private final int xBlockCnt, yBlockCnt;
 
     public Game(Context context) {
         super(context);
@@ -51,8 +47,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        gameInfo = new GameInfo(displayMetrics.widthPixels, displayMetrics.heightPixels,
-                xBlockCnt, yBlockCnt);
+        gameInfo = new GameInfo(displayMetrics.widthPixels, displayMetrics.heightPixels);
+
+        xBlockCnt = gameInfo.xBlockCnt; yBlockCnt = gameInfo.yBlockCnt;
 
         final List<BlockImage> blockImages = new MakeBlockImage().make(context, gameInfo);
         final ExplodeImage explodeImage = new ExplodeImage(gameInfo, context);
@@ -60,28 +57,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         ani = new Ani(gameInfo, blockImages, explodeImage, countsImage, context);
         nextPlate = new NextPlate(gameInfo, context);
-        backPlate = new BackPlate(gameInfo, context);
-        gameOverPlate = new GameOverPlate(gameInfo, context);
         checkNearItem = new CheckNearItem(gameInfo, ani);
         manageHighScore = new ManageHighScore(gameInfo, context);
         manageHighScore.get();
-        scorePlate = new ScorePlate(gameInfo, context);
         checkGameOver = new CheckGameOver(gameInfo, nextPlate,ani);
+        touchEvent = new TouchEvent(gameInfo);
 
-        xOffset = gameInfo.xOffset; yDownOffset = gameInfo.yDownOffset;
-        blockOutSize = gameInfo.blockOutSize;
-
-        yNextBottom = gameInfo.yNextPos + blockOutSize + 4;
-
-        xNewPosS = gameInfo.xNewPos;
-        xNewPosE = xNewPosS + gameInfo.blockOutSize*2/3;
-        yNewPosS = gameInfo.yNewPosS;
-        yNewPosE = yNewPosS+ gameInfo.blockOutSize*2/3;
-
-        xNextNextPosS = gameInfo.xNextNextPos;
-        yNextNextPosS = gameInfo.yNextNextPos;
-        xNextNextPosE = xNextNextPosS + blockOutSize/2;
-        yNextNextPosE = yNextNextPosS + blockOutSize/2;
+        backPlate = new BackPlate(gameInfo, context);
+        gameOverPlate = new GameOverPlate(gameInfo, context);
+        scorePlate = new ScorePlate(gameInfo, context);
 
         newGameStart();
     }
@@ -93,7 +77,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameInfo.isGameOver = false;
         gameInfo.greatIdx = 0;
         gameInfo.greatStacked = 0;
-        isGameGone = false;
+        gameInfo.isGameGone = false;
     }
 
     void clearCells() {
@@ -166,13 +150,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        if (!isGameGone) {
-            isGameGone = checkGameOver.isOver();
-            if (isGameGone && !gameInfo.isGameOver) {
+        if (!gameInfo.isGameGone) {
+            gameInfo.isGameGone = checkGameOver.isOver();
+            if (gameInfo.isGameGone && !gameInfo.isGameOver) {
                 gameInfo.isGameOver = true;
-                isGameGone = false;
+                gameInfo.isGameGone = false;
                 manageHighScore.put();
-            } else if (blockClicked)
+            } else if (gameInfo.blockClicked)
                 start2Move();
         }
     }
@@ -217,16 +201,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void start2Move() {
-        Cell cell = ani.cells[touchIndex][yBlockCnt-1];
+        Cell cell = ani.cells[touchEvent.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
-            blockClicked = false;
-            ani.cells[touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, Ani.STATE.CHECK);
+            gameInfo.blockClicked = false;
+            ani.cells[touchEvent.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, Ani.STATE.CHECK);
             nextPlate.generateNextBlock();
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
-            ani.cells[touchIndex][yBlockCnt-1].index = cell.index + 1;
-            ani.cells[touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
+            ani.cells[touchEvent.touchIndex][yBlockCnt-1].index = cell.index + 1;
+            ani.cells[touchEvent.touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
         } else {
-            blockClicked = false;    // cannot move, ignore this try
+            gameInfo.blockClicked = false;    // cannot move, ignore this try
         }
     }
 
@@ -246,70 +230,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        // Handle user input touch event actions
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_POINTER_DOWN:
-                if (ani.poolAnis.size() != 0) // if animation not completed
-                    return true;              // ignore touch Up
-                xTouchPos = (int) event.getX();
-                yTouchPos = (int) event.getY();
-                if (yTouchPos > yDownOffset) {
-                    if (gameInfo.newGamePressed) {
-                        if (xTouchPos >= xNewPosE &&
-                            xTouchPos <= xNewPosE + gameInfo.blockOutSize*2/3 &&
-                            yTouchPos >= yNewPosS && yTouchPos <= yNewPosE) {
-                            gameInfo.newGamePressed = false;
-                            gameInfo.newGameStart = true;
-                        } else if (xTouchPos >= xNewPosE + gameInfo.blockOutSize*2/3 &&
-                                    xTouchPos <= xNewPosE + gameInfo.blockOutSize*4/3 &&
-                                    yTouchPos >= yNewPosS && yTouchPos <= yNewPosE) {
-                                gameInfo.newGamePressed = false;
-                                gameInfo.newGameStart = false;
-                        }
-
-                    } else if (xTouchPos >= xNextNextPosS && xTouchPos <= xNextNextPosE &&
-                            yTouchPos >= yNextNextPosS && yTouchPos <= yNextNextPosE) {
-                        gameInfo.showNext = !gameInfo.showNext;
-
-                    } else if (xTouchPos >= xNewPosS && xTouchPos <= xNewPosE &&
-                            yTouchPos >= yNewPosS && yTouchPos <= yNewPosE) {
-                        gameInfo.newGamePressed = true;
-
-                    } else if (yTouchPos <= yNextBottom && ani.poolAnis.size() == 0){
-                        xTouchPos -= xOffset;
-                        if (xTouchPos > 0) {
-                            touchIndex = xTouchPos / blockOutSize;
-                            if (touchIndex < xBlockCnt) {
-                                blockClicked = true;
-                            }
-                        }
-
-                    } else if (yTouchPos > yNextBottom + 200){
-                        dumpCells();
-
-                    }
-                }
-                return true;
-            case MotionEvent.ACTION_MOVE:
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                return true;
-        }
-
+        touchEvent.check(event);
         return super.onTouchEvent(event);
     }
 
-    void dumpCells() {
-        Log.w("d", "       0        1        2        3        4");
-        for (int y = 0; y < yBlockCnt; y++) {
-            String s = y+") ";
-            for (int x = 0; x < xBlockCnt; x++) {
-                s += ani.cells[x][y].index+" "+ani.cells[x][y].state+" ";
-            }
-            Log.w("d",s);
-        }
-    }
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {}
 
@@ -321,4 +245,5 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void pause() {
         gameLoop.stopLoop();
     }
+
 }

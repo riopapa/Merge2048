@@ -22,7 +22,7 @@ public class BackPlate {
     private final int yNextPos;
     private final int xLeft, yTop, yBottom, yNextBottom;
     private final int xNewPos, yNewPos, xYesPos, xNopPos;
-    private final Bitmap newMap, yesMap, nopMap;
+    private final Bitmap newMap, yesMap, nopMap, quitMap;
 
     public BackPlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
@@ -46,11 +46,12 @@ public class BackPlate {
         yNextBottom = yNextPos + blockOutSize + 4;
 
         xNewPos = gameInfo.xNewPos; yNewPos = gameInfo.yNewPosS;
-        xYesPos = xNewPos + blockOutSize * 2/3;
-        xNopPos = xNewPos + blockOutSize * 2/3;
+        xYesPos = xNewPos + blockOutSize * 4/5;
+        xNopPos = xNewPos + blockOutSize * 8/5;
         newMap = buildMap (R.drawable.i_new);
         yesMap = buildMap (R.drawable.i_yes);
         nopMap = buildMap (R.drawable.i_no);
+        quitMap = buildMap (R.drawable.i_quit);
 
     }
 
@@ -78,11 +79,15 @@ public class BackPlate {
             canvas.drawRect(xLeft + blockOutSize * x, yNextPos,
                     xOffset + blockOutSize * (x+1), yNextBottom, vPath2Paint);
         }
-        canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
-        if (gameInfo.newGamePressed) {
-            int xNewGameLeft = xNopPos+blockOutSize*2/3;
+//        if (gameInfo.quitPressed)
+//            canvas.drawBitmap(quitMap, xNewPos, yNewPos,null);
+//        else
+            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+
+        if (!gameInfo.isGameOver && (gameInfo.newGamePressed || gameInfo.quitPressed)) {
+//            int xNewGameLeft = xNopPos+blockOutSize*2/3;
             canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
-            canvas.drawBitmap(nopMap, xNewGameLeft, yNewPos,null);
+            canvas.drawBitmap(nopMap, xNopPos, yNewPos,null);
         }
 
     }

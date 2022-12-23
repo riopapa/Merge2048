@@ -10,6 +10,7 @@ import android.view.WindowManager;
 /**
  * MainActivity is the entry point to our application.
  */
+
 public class MainActivity extends Activity {
 
     private Game game;
@@ -59,10 +60,12 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.w("MainActivity.java", "onBackPressed()");
-//        // Comment out "super.onBackPressed()" to disable button
-//        //super.onBackPressed();
-//    }
+    @Override
+    public void onBackPressed() {
+//        game.gameInfo.quitPressed = true;
+//        if (game.exitGame())
+//                finish();
+            super.onBackPressed();
+        // Comment out "super.onBackPressed()" to disable button
+    }
 }

@@ -33,7 +33,7 @@ public class ScorePlate {
         tXPos = 48;
         tYPos = gameInfo.yNextPos + gameInfo.blockOutSize + 112;
         textPaint = new Paint();
-        textPaint.setTypeface(ResourcesCompat.getFont(context, R.font.radioland_regular));
+        textPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(48);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -41,7 +41,7 @@ public class ScorePlate {
         sXPos = tXPos + 8 + (int) textPaint.measureText(scoreStr);
         sYPos = tYPos + 16;
         scorePaint = new Paint();
-        scorePaint.setTypeface(ResourcesCompat.getFont(context, R.font.radioland_regular));
+        scorePaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
         scorePaint.setColor(Color.MAGENTA);
         scorePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scorePaint.setTextSize(90);
@@ -60,8 +60,8 @@ public class ScorePlate {
         hTextPaint.setTextSize(64);
 
         hScorePaint = new Paint();
-        hScorePaint.setTypeface(ResourcesCompat.getFont(context, R.font.radioland_regular));
-        hScorePaint.setTextSize(54);
+        hScorePaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
+        hScorePaint.setTextSize(64);
         hScorePaint.setColor(Color.WHITE);
         hScorePaint.setTextAlign(Paint.Align.LEFT);
 

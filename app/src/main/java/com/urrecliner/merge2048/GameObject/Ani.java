@@ -24,6 +24,7 @@ public class Ani {
     public enum STATE {
         PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, GREAT, EXPLODED
     }
+    final int MOVE_SMOOTH = 4;
 
     Context context;
     public Cell[][] cells;
@@ -34,7 +35,6 @@ public class Ani {
     ExplodeImage explodeImage;
     CountsImage countsImage;
     GameInfo gameInfo;
-    Paint explodePaint;
 
     public Ani(GameInfo gameInfo, List<BlockImage> blockImages, ExplodeImage explodeImage,
                CountsImage countsImage, Context context){
@@ -53,9 +53,6 @@ public class Ani {
         this.explodeImage = explodeImage;
         this.countsImage = countsImage;
         poolAnis = new ArrayList<>();    // clear PoolAni
-
-        explodePaint = new Paint();
-        explodePaint.setAlpha(180);
 
     }
 
@@ -93,13 +90,13 @@ public class Ani {
                 }
             }
         }
-        // draw Animation
-        drawAni(canvas);
-    }
+        if (gameInfo.dumpCellClicked) {
+            gameInfo.dumpCellClicked = false;
+            dumpCells();
+        }
 
-    public static final int MOVE_SMOOTH = 4;
-
-    private void drawAni(Canvas canvas) {
+        gameInfo.poolAniSize = poolAnis.size();
+        // draw Animation while ani active
         for (int apI = 0; apI < poolAnis.size();) {
             PoolAni ap = poolAnis.get(apI);
             switch (ap.state) {
@@ -196,4 +193,16 @@ public class Ani {
             }
         }
     }
+
+    public void dumpCells() {
+        Log.w("d", "       0        1        2        3        4");
+        for (int y = 0; y < yBlockCnt; y++) {
+            String s = y+") ";
+            for (int x = 0; x < xBlockCnt; x++) {
+                s += cells[x][y].index+" "+cells[x][y].state+" ";
+            }
+            Log.w("d",s);
+        }
+    }
+
 }

@@ -84,15 +84,6 @@ public class GameLoop extends Thread{
                 sleepTime = (long) (updateCount*UPS_PERIOD - elapsedTime);
             }
 
-//            // Calculate average UPS and FPS
-//            elapsedTime = System.currentTimeMillis() - startTime;
-//            if(elapsedTime >= 1000) {
-//                averageUPS = updateCount / (1E-3 * elapsedTime);
-//                averageFPS = frameCount / (1E-3 * elapsedTime);
-//                updateCount = 0;
-//                frameCount = 0;
-//                startTime = System.currentTimeMillis();
-//            }
         }
     }
 

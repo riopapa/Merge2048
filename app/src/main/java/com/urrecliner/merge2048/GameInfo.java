@@ -10,21 +10,23 @@ public class GameInfo {
 
     public int screenXSize, screenYSize;
     public int blockInSize, blockOutSize;
-    public int xBlockCnt, yBlockCnt;
+    public int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
     public int xOffset,yUpOffset, yDownOffset;
     public long scoreNow;
     public List<HighMember> highMembers;
     public int xNextPos, yNextPos, xNewPos, yNewPosS, xNextNextPos, yNextNextPos;
+    public int greatIdx, greatStacked = 0, greatCount = 12;
+    public boolean isGameOver = false, quitPressed = false, quitGame = false;
     public boolean newGamePressed = false, newGameStart = false, showNext = true;
-    public int greatIdx, greatStacked = 0, greatCount = 8;
-    public boolean isGameOver = false;
+    public boolean dumpCellClicked = false;
+    public boolean blockClicked = false;   // clicked means user clicked
+    public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
+    public boolean isGameGone = false;
+    public int poolAniSize = 0;
 
-
-    public GameInfo (int screenXSize, int screenYSize, int xBlockCnt, int yBlockCnt) {
+    public GameInfo (int screenXSize, int screenYSize) {
         this.screenXSize = screenXSize;
         this.screenYSize = screenYSize;
-        this.xBlockCnt = xBlockCnt;
-        this.yBlockCnt = yBlockCnt;
         yUpOffset = 32;
         blockOutSize = (screenXSize-180) / xBlockCnt;
         blockInSize = blockOutSize - blockOutSize/24;
