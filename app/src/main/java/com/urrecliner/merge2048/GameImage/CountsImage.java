@@ -14,10 +14,10 @@ public class CountsImage {
     public CountsImage(GameInfo gameInfo, Context context) {
 
         int [] orgMapId = {
-            R.drawable.i_x100, R.drawable.i_x101, R.drawable.i_x102, R.drawable.i_x103,
-                R.drawable.i_x104, R.drawable.i_x105, R.drawable.i_x106,R.drawable.i_x107,
-                R.drawable.i_x109, R.drawable.i_x110, R.drawable.i_x111,R.drawable.i_x112,
-                R.drawable.i_x113, R.drawable.i_x114
+            R.drawable.z100, R.drawable.z101, R.drawable.z102, R.drawable.z103,
+                R.drawable.z104, R.drawable.z105, R.drawable.z106,R.drawable.z107,
+                R.drawable.z109, R.drawable.z110, R.drawable.z111,R.drawable.z112,
+                R.drawable.z113, R.drawable.z114
         };
 
         countMapLen = orgMapId.length;

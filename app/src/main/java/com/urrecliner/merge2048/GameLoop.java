@@ -15,8 +15,6 @@ public class GameLoop extends Thread{
 
     private boolean isRunning = false;
 
-    public boolean newGame = false;
-
     public GameLoop(Game game, SurfaceHolder surfaceHolder) {
         this.game = game;
         this.surfaceHolder = surfaceHolder;

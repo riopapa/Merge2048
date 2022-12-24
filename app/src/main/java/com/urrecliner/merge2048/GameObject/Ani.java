@@ -73,6 +73,7 @@ public class Ani {
     }
 
     public void addGreat(int xS, int yS, int countIdx) {
+
         poolAnis.add(new PoolAni(STATE.GREAT, xS, yS,
                 gameInfo.blockOutSize * (- xS) / gameInfo.greatCount,
                 gameInfo.blockOutSize * (yBlockCnt - yS + 1)/ gameInfo.greatCount, countIdx));
@@ -134,9 +135,9 @@ public class Ani {
                         } else {
                             Bitmap explodeMap = explodeImage.smallMaps[ap.count];
                             int xPos = gameInfo.xOffset + ap.xS * gameInfo.blockOutSize
-                                    + ap.xInc * ap.count - 16;
+                                    + ap.xInc * ap.count - gameInfo.explodeGap;
                             int yPos = gameInfo.yUpOffset + ap.yS * gameInfo.blockOutSize
-                                    + ap.yInc * ap.count - 16;
+                                    + ap.yInc * ap.count - gameInfo.explodeGap;
                             canvas.drawBitmap(explodeMap, xPos, yPos, null);
                             ap.count++;
                             ap.timeStamp = System.currentTimeMillis() + ap.delay;

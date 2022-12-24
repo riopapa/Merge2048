@@ -18,7 +18,7 @@ public class PoolAni {
         this.yF = yF;
         this.xInc = xI;
         this.yInc = yI;
-
+        delay = 20;
         count = 0;
     }
 
@@ -30,7 +30,7 @@ public class PoolAni {
         this.xInc = xInc;
         this.yInc = yInc;
         this.xF = countIdx;
-        delay = 20;
+        delay = 30;
         count = 0;
     }
 
@@ -41,7 +41,7 @@ public class PoolAni {
         this.yS = yS;
         this.xInc = xInc;
         this.yInc = yInc;
-        delay = 8;
+        delay = 15;
         count = 0;
     }
 
@@ -51,7 +51,7 @@ public class PoolAni {
         this.xS = xS;
         this.yS = yS;
         this.xF = index;
-        delay = 10;
+        delay = 25; // a little more than explode
         count = 0;
     }
 }

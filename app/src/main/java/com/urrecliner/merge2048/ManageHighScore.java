@@ -23,7 +23,7 @@ public class ManageHighScore {
     public ManageHighScore(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
-        sharedPref = context.getSharedPreferences("sayText", MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences("merge2048", MODE_PRIVATE);
         sharedEditor = sharedPref.edit();
 
     }

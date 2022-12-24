@@ -11,6 +11,7 @@ public class TouchEvent {
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
+    private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
     public int touchIndex;
 
     public TouchEvent (GameInfo gameInfo) {
@@ -31,10 +32,12 @@ public class TouchEvent {
         xNextNextPosE = xNextNextPosS + blockOutSize/2;
         yNextNextPosE = yNextNextPosS + blockOutSize/2;
 
+        xSwingPosS = gameInfo.xNewPos; ySwingPosS = gameInfo.yNewPosS + gameInfo.blockIconSize;
+        xSwingPosE = xSwingPosS + gameInfo.blockIconSize; ySwingPosE = ySwingPosS + gameInfo.blockIconSize;
     }
     
     public void check(MotionEvent event) {
-        Log.w("touch check", event.getActionMasked()+"  "+event.getX()+" x "+event.getY());
+
         // Handle user input touch event actions
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -77,9 +80,11 @@ public class TouchEvent {
                             gameInfo.touchIndex = touchIndex;
                         }
                     }
-
-                } else if (yTouchPos > yNextBottom + 200){
-                    gameInfo.dumpCellClicked = true;
+                } else if (isSwingPressed()) {
+                    gameInfo.swingPressed = true;
+//
+//                } else if (yTouchPos > yNextBottom + 200){
+//                    gameInfo.dumpCellClicked = true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -106,13 +111,17 @@ public class TouchEvent {
                 (xTouchPos >= xNewPosE + gameInfo.blockOutSize*4/5 &&
                 xTouchPos <= xNewPosE + gameInfo.blockOutSize*8/5 &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
+    }
 
+    boolean isSwingPressed() {
+        return  (!gameInfo.isGameOver) &&
+                (xTouchPos >= xSwingPosS  && xTouchPos <= xSwingPosE &&
+                        yTouchPos >= ySwingPosS && yTouchPos <= ySwingPosE);
     }
 
     boolean isShootPressed() {
         return  (!gameInfo.isGameOver) && (yTouchPos <= yNextBottom);
     }
-
 
     boolean isNextPressed() {
         return (xTouchPos >= xNextNextPosS && xTouchPos <= xNextNextPosE &&

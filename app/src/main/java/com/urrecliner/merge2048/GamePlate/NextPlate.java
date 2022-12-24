@@ -22,7 +22,7 @@ public class NextPlate {
     Paint nextPaint;
     int blockOutSize, blockInSize;
     int nextXPos, nextYPos, xNextNextPos, yNextNextPos;
-    public int nextIndex, nNextIndex;
+    public int nextIndex, nextNextIndex;
     Bitmap nextNoMap;
 
     public NextPlate(GameInfo gameInfo, Context context) {
@@ -39,23 +39,25 @@ public class NextPlate {
         nextXPos = gameInfo.xNextPos-2;
         nextYPos = gameInfo.yNextPos-2;
         xNextNextPos = nextXPos + (blockOutSize /4);
-        yNextNextPos = nextYPos + blockOutSize + 24;
+        yNextNextPos = nextYPos + blockOutSize + 8;
         gameInfo.xNextNextPos = xNextNextPos;
         gameInfo.yNextNextPos = yNextNextPos;
-        nextIndex = new Random().nextInt(3) + 1;
-        nNextIndex = new Random().nextInt(4) + 1;
+        nextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
+        nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.i_next);
+                R.drawable.a_next);
         nextNoMap = Bitmap.createScaledBitmap(bitmap, blockInSize/2, blockInSize/2, false);
 
     }
 
     public void generateNextBlock() {
-        nextIndex = nNextIndex;
-        nNextIndex = new Random().nextInt(5) + 1;
-        if (new Random().nextInt(5) > 3)
-            nNextIndex = new Random().nextInt(6) + 2;
+        nextIndex = nextNextIndex;
+        nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
+        if (new Random().nextInt(8) == 0)
+            nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty+ 1) + 1;
+        if (new Random().nextInt(12) == 0)
+            nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty+ 3) + 1;
     }
 
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {

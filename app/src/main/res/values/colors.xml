@@ -8,7 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="ver_line">#3A6F75</color>
+    <color name="board0">#60849A</color>
+    <color name="board1">#3F6478</color>
+    <color name="score">#FF4443</color>
+
+
     <color name="c00000">#A5C6CA</color>
     <color name="c00002">#648E75</color>
     <color name="c00004">#448F15</color>
@@ -25,6 +29,5 @@
     <color name="c08192">#FFAB40</color>
     <color name="c16384">#FFAB40</color>
     <color name="c32768">#FFAB40</color>
-    <color name="score">#0D1E7E</color>
 
 </resources>

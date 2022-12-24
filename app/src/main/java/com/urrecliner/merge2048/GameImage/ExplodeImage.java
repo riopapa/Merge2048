@@ -11,11 +11,12 @@ import com.urrecliner.merge2048.R;
 public class ExplodeImage {
 
     public Bitmap [] smallMaps;
-    public final int explodeGap = 32;
+    public final int explodeGap = 64;
     public ExplodeImage(GameInfo gameInfo, Context context) {
 
+
         Bitmap explodeMap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.explosion);
+                R.drawable.a_explosion);
 
         Bitmap bitmap = Bitmap.createScaledBitmap(explodeMap,
                 gameInfo.blockInSize + explodeGap + explodeGap,
@@ -23,9 +24,9 @@ public class ExplodeImage {
 
         smallMaps = new Bitmap[5];
         smallMaps[0] = bitmapSmall(bitmap, 100);
-        smallMaps[1] = bitmapSmall(bitmap, 75);
-        smallMaps[2] = bitmapSmall(bitmap, 60);
-        smallMaps[3] = bitmapSmall(bitmap, 45);
+        smallMaps[1] = bitmapSmall(bitmap, 70);
+        smallMaps[2] = bitmapSmall(bitmap, 50);
+        smallMaps[3] = bitmapSmall(bitmap, 30);
         smallMaps[4] = bitmapSmall(bitmap, 40);
 
     }
