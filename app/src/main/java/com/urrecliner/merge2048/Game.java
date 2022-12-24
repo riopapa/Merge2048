@@ -1,9 +1,7 @@
 package com.urrecliner.merge2048;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -36,20 +34,18 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CheckGameOver checkGameOver;
     private final TouchEvent touchEvent;
     private GameLoop gameLoop;
-
+    private Context context;
     private final int xBlockCnt, yBlockCnt;
 
     public Game(Context context) {
 
         super(context);
+        this.context = context;
+
         SurfaceHolder surfaceHolder =getHolder();
         surfaceHolder.addCallback(this);
         gameLoop = new GameLoop(this, surfaceHolder);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        // note 20 ultra    1440 x 2819
-        // A32              1080 x 2194
-        gameInfo = new GameInfo(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        gameInfo = new GameInfo(context);
 
         xBlockCnt = gameInfo.xBlockCnt; yBlockCnt = gameInfo.yBlockCnt;
 
@@ -73,14 +69,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void newGameStart() {
-        gameInfo.scoreNow = 0;
-        clearCells();   // clea all cells
+
+        gameInfo.resetValues();
+        clearCells();   // clear all cells
         nextPlate.generateNextBlock();
-        gameInfo.isGameOver = false;
-        gameInfo.greatIdx = 0;
-        gameInfo.greatStacked = 0;
-        gameInfo.isGameGone = false;
-        gameInfo.gameDifficulty = 4;
+
     }
 
     void clearCells() {
@@ -103,8 +96,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
 
-        if (gameInfo.newGameStart) {
-            gameInfo.newGameStart = false;
+        if (gameInfo.startNewGame) {
+            gameInfo.newGamePressed = false;
+            gameInfo.startNewGame = false;
             checkGameOver.updateHighScore();
             newGameStart();
         }
@@ -156,35 +150,34 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         break;
 
                     default:
-                        Log.w("ani default","state="+ani.cells[x][y].state
-                                +" idx="+ani.cells[x][y].index+" (" + x+ " x "+y+")" );
+                        Log.w("ani default", "state=" + ani.cells[x][y].state
+                                + " idx=" + ani.cells[x][y].index + " (" + x + " x " + y + ")");
                         break;
                 }
             }
         }
 
-        if (!gameInfo.isGameGone) {
-            gameInfo.isGameGone = checkGameOver.isOver();
-            if (gameInfo.isGameGone && !gameInfo.isGameOver) {
-                gameInfo.isGameOver = true;
-                gameInfo.isGameGone = false;
-                manageHighScore.put();
-            } else if (gameInfo.blockClicked)
-                start2Move();
-        }
-
-        if (gameInfo.swingPressed) {
+        gameInfo.isGameOver = checkGameOver.isOver();
+        if (gameInfo.isGameOver) {
+            manageHighScore.put();
+        } else if (gameInfo.blockClicked) {
+            start2Move();
+        } else if (gameInfo.swingPressed) {
             gameInfo.swingPressed = false;
-            gameInfo.swing = !gameInfo.swing;
+            gameInfo.resetSwing();
         }
+        if (gameInfo.swing)
+            gameInfo.updateSwing();
 
     }
 
     private void showGreat(int x, int y) {
         if (gameInfo.greatIdx > 2) {
-            ani.addGreat(x, y, gameInfo.greatIdx - 2);
+            ani.addGreat(x, y, gameInfo.greatIdx - 2,
+                    gameInfo.greatCount + gameInfo.greatIdx);
             if (gameInfo.greatIdx > 5) {
                 gameInfo.gameDifficulty++;
+                gameInfo.swingDelay = 800 / (gameInfo.gameDifficulty+2);
             }
         }
         gameInfo.greatIdx = 0;
@@ -224,14 +217,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void start2Move() {
+        Log.w("Start","start2Move   -----");
         gameInfo.blockClicked = false;
-        Cell cell = ani.cells[touchEvent.touchIndex][yBlockCnt-1];
+        Cell cell = ani.cells[gameInfo.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
-            ani.cells[touchEvent.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, Ani.STATE.CHECK);
+            ani.cells[gameInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, Ani.STATE.CHECK);
             nextPlate.generateNextBlock();
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
-            ani.cells[touchEvent.touchIndex][yBlockCnt-1].index = cell.index + 1;
-            ani.cells[touchEvent.touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
+            ani.cells[gameInfo.touchIndex][yBlockCnt-1].index = cell.index + 1;
+            ani.cells[gameInfo.touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
         }
     }
 

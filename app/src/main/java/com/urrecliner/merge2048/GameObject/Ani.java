@@ -72,11 +72,11 @@ public class Ani {
                 gameInfo.blockOutSize * (yF - yS)/ MOVE_SMOOTH));
     }
 
-    public void addGreat(int xS, int yS, int countIdx) {
+    public void addGreat(int xS, int yS, int countIdx, int greatCount) {
 
-        poolAnis.add(new PoolAni(STATE.GREAT, xS, yS,
-                gameInfo.blockOutSize * (- xS) / gameInfo.greatCount,
-                gameInfo.blockOutSize * (yBlockCnt - yS + 1)/ gameInfo.greatCount, countIdx));
+        poolAnis.add(new PoolAni(STATE.GREAT, xS, yS, countIdx, greatCount,
+                gameInfo.blockOutSize * (- xS) / (gameInfo.greatCount+countIdx),
+                gameInfo.blockOutSize * (yBlockCnt - yS + 1)/ (gameInfo.greatCount+countIdx)));
     }
 
     public void draw(Canvas canvas) {
@@ -96,7 +96,10 @@ public class Ani {
             dumpCells();
         }
 
-        gameInfo.poolAniSize = poolAnis.size();
+        if (gameInfo.swing)
+            moveNextBlock();
+
+
         // draw Animation while ani active
         for (int apI = 0; apI < poolAnis.size();) {
             PoolAni ap = poolAnis.get(apI);
@@ -165,9 +168,9 @@ public class Ani {
 
                 case GREAT:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
-                        if (ap.count >= gameInfo.greatCount) {    // smooth factor
+                        if (ap.count >= ap.yF) {    // yF =great loop count
                             poolAnis.remove(apI);
-                            gameInfo.scoreNow += (long) gameInfo.greatStacked * (long) gameInfo.greatIdx;
+                            gameInfo.scoreNow += (long) gameInfo.greatStacked * (long) ap.xF; // xF = count
                             continue;
                         } else {
                             Bitmap bitmap = countsImage.countMaps[ap.xF];   // countIdx
@@ -193,8 +196,17 @@ public class Ani {
                     break;
             }
         }
+        gameInfo.poolAniSize = poolAnis.size();
     }
 
+    private void moveNextBlock() {
+        long nowTime = System.currentTimeMillis();
+        if (nowTime < gameInfo.swingTime)
+            return;
+
+
+
+    }
     public void dumpCells() {
         Log.w("d", "       0        1        2        3        4");
         for (int y = 0; y < yBlockCnt; y++) {

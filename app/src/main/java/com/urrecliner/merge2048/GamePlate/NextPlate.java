@@ -21,7 +21,7 @@ public class NextPlate {
     GameInfo gameInfo;
     Paint nextPaint;
     int blockOutSize, blockInSize;
-    int nextXPos, nextYPos, xNextNextPos, yNextNextPos;
+    int xNextNextPos, yNextNextPos;
     public int nextIndex, nextNextIndex;
     Bitmap nextNoMap;
 
@@ -36,14 +36,11 @@ public class NextPlate {
         nextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         nextPaint.setStrokeWidth(4);
 
-        nextXPos = gameInfo.xNextPos-2;
-        nextYPos = gameInfo.yNextPos-2;
-        xNextNextPos = nextXPos + (blockOutSize /4);
-        yNextNextPos = nextYPos + blockOutSize + 8;
-        gameInfo.xNextNextPos = xNextNextPos;
-        gameInfo.yNextNextPos = yNextNextPos;
         nextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
         nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
+
+        xNextNextPos = gameInfo.xNextPos + gameInfo.blockOutSize / 4;
+        yNextNextPos = gameInfo.yNewPosS;
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.a_next);
@@ -62,11 +59,12 @@ public class NextPlate {
 
     public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {
 
-        canvas.drawRoundRect(nextXPos, nextYPos,
-                nextXPos + blockInSize, nextYPos + blockInSize,
+        if (!gameInfo.swing)    // if on swing, no outer box
+            canvas.drawRoundRect(gameInfo.xNextPos, gameInfo.yNextPos,
+                    gameInfo.xNextPos + blockInSize, gameInfo.yNextPos + blockInSize,
                 blockInSize/8f,blockInSize/8f, nextPaint);
 
-        canvas.drawBitmap(blockMap, nextXPos, nextYPos,null);
+        canvas.drawBitmap(blockMap, gameInfo.xNextPos, gameInfo.yNextPos,null);
 
         // draw Next Next //
         canvas.drawRoundRect(xNextNextPos, yNextNextPos,

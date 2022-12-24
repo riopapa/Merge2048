@@ -12,7 +12,6 @@ public class TouchEvent {
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
-    public int touchIndex;
 
     public TouchEvent (GameInfo gameInfo) {
         this.gameInfo = gameInfo;
@@ -50,11 +49,9 @@ public class TouchEvent {
                     return;
                 if (gameInfo.newGamePressed) {
                     if (gameInfo.isGameOver || isYesPressed()) {
-                        gameInfo.newGamePressed = false;
-                        gameInfo.newGameStart = true;
+                        gameInfo.startNewGame = true;
                     } else if (isNoPressed()) {
-                        gameInfo.newGamePressed = false;
-                        gameInfo.newGameStart = false;
+                        gameInfo.startNewGame = false;
                     }
 
                 } else if (isNextPressed()) {
@@ -74,10 +71,18 @@ public class TouchEvent {
                 } else if (isShootPressed()) {
                     xTouchPos -= xOffset;
                     if (xTouchPos > 0) {
-                        touchIndex = xTouchPos / blockOutSize;
-                        if (touchIndex < xBlockCnt) {
-                            gameInfo.blockClicked = true;
-                            gameInfo.touchIndex = touchIndex;
+                        int touchIndex = xTouchPos / blockOutSize;
+                        if (touchIndex >= 0 && touchIndex < xBlockCnt) {
+                            if (gameInfo.swing) {
+                                if (xTouchPos >= gameInfo.xNextPos &&
+                                    xTouchPos < gameInfo.xNextPos + blockOutSize) {
+                                    gameInfo.blockClicked = true;
+                                    gameInfo.touchIndex = touchIndex;
+                                }
+                            } else {
+                                gameInfo.blockClicked = true;
+                                gameInfo.touchIndex = touchIndex;
+                            }
                         }
                     }
                 } else if (isSwingPressed()) {
@@ -120,7 +125,7 @@ public class TouchEvent {
     }
 
     boolean isShootPressed() {
-        return  (!gameInfo.isGameOver) && (yTouchPos <= yNextBottom);
+        return  yTouchPos <= yNextBottom;
     }
 
     boolean isNextPressed() {

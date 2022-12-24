@@ -19,7 +19,6 @@ public class BackPlate {
     private final int xBlockCnt;
     private final int blockOutSize, blockIconSize;
     private final int xOffset;
-    private final int yNextPos;
     private final int xLeft, yTop, yBottom, yNextBottom;
     private final int xNewPos, yNewPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
     private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap;
@@ -37,7 +36,6 @@ public class BackPlate {
 
         xOffset = gameInfo.xOffset;
         int yUpOffset = gameInfo.yUpOffset;
-        yNextPos = gameInfo.yNextPos;
         vPath1Paint = new Paint();
         vPath1Paint.setColor(ContextCompat.getColor(context, R.color.board0));
         vPath2Paint = new Paint();
@@ -45,7 +43,7 @@ public class BackPlate {
 
         xLeft = xOffset-4; yTop = yUpOffset -4;
         yBottom = yTop + 8 + blockOutSize * yBlockCnt;
-        yNextBottom = yNextPos + blockOutSize + 4;
+        yNextBottom = gameInfo.yNextPos + blockOutSize + 4;
 
         xNewPos = gameInfo.xNewPos; yNewPos = gameInfo.yNewPosS;
         xYesPos = xNewPos + blockIconSize;
@@ -69,28 +67,30 @@ public class BackPlate {
 
         // back ground display
         canvas.drawRect(0, 0, gameInfo.screenXSize, gameInfo.screenYSize, backPaint);
-        // top horizon line
-//        canvas.drawLine(xLeft, yTop, xRight, yTop, vPath1Paint);
-        // block vertical line
+
+        // block vertical lane
         for (int x = 0; x <= xBlockCnt -1; x += 2) {
             canvas.drawRect(xLeft + blockOutSize * x, yTop,
                     xLeft + blockOutSize * (x+1), yBottom, vPath1Paint);
-            canvas.drawRect(xLeft + blockOutSize * x, yNextPos,
+            canvas.drawRect(xLeft + blockOutSize * x, gameInfo.yNextPos,
                     xOffset + blockOutSize * (x+1), yNextBottom, vPath1Paint);
         }
         for (int x = 1; x <= xBlockCnt -1; x += 2) {
             canvas.drawRect(xLeft + blockOutSize * x, yTop,
                     xLeft + blockOutSize* (x+1), yBottom, vPath2Paint);
-            canvas.drawRect(xLeft + blockOutSize * x, yNextPos,
+            canvas.drawRect(xLeft + blockOutSize * x, gameInfo.yNextPos,
                     xOffset + blockOutSize * (x+1), yNextBottom, vPath2Paint);
         }
 
+        // next Icon
         canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
 
+        // yes, no
         if (!gameInfo.isGameOver && (gameInfo.newGamePressed || gameInfo.quitPressed)) {
             canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
             canvas.drawBitmap(nopMap, xNopPos, yNewPos,null);
         }
+
         if (gameInfo.swing)
             canvas.drawBitmap(swingOMap, xSwingPos, ySwingPos,null);
         else

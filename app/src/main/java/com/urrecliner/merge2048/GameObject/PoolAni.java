@@ -9,29 +9,22 @@ public class PoolAni {
     long delay = 20;   // redraw at every 100 milli sec
     long timeStamp = 0;
 
-    // state MOVING
+    // state MOVING, GREAT
     public PoolAni(Ani.STATE state, int xS, int yS, int xF, int yF, int xI, int yI) {
+
         this.state = state;
         this.xS = xS;
         this.yS = yS;
-        this.xF = xF;
-        this.yF = yF;
+        this.xF = xF;   // count
+        this.yF = yF;   // great count
         this.xInc = xI;
         this.yInc = yI;
-        delay = 20;
         count = 0;
-    }
-
-    // state GREAT
-    public PoolAni(Ani.STATE state, int xS, int yS, int xInc, int yInc, int countIdx) {
-        this.state = state;
-        this.xS = xS;
-        this.yS = yS;
-        this.xInc = xInc;
-        this.yInc = yInc;
-        this.xF = countIdx;
-        delay = 30;
-        count = 0;
+        if (state == Ani.STATE.MOVING) {
+            delay = 20;
+        } else  {
+            delay = 30;
+        }
     }
 
     // state EXPLODE
