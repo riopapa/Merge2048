@@ -38,7 +38,7 @@ public class GameInfo {
     public int gameDifficulty = 6;
 
     public enum STATE {
-        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, GREAT, EXPLODED
+        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
     }
 
     public GameInfo(Context context) {

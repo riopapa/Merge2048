@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;
 
-public class BackPlate {
+public class BasePlate {
 
     Context context;
     GameInfo gameInfo;
@@ -24,7 +24,7 @@ public class BackPlate {
     private final int xNewPos, yNewPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
     private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap;
 
-    public BackPlate(GameInfo gameInfo, Context context) {
+    public BasePlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
 
