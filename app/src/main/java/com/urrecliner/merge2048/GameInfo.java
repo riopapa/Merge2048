@@ -13,7 +13,7 @@ public class GameInfo {
 
     public final int screenXSize, screenYSize;
     public final int blockInSize, blockOutSize, blockIconSize, explodeGap;
-    public final int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
+    public final int xBlockCnt = 5, yBlockCnt = 6;
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public long scoreNow;
     public int score2Add;
@@ -28,7 +28,7 @@ public class GameInfo {
     public boolean showNext = true;
 
     public boolean swingPressed = false, swing = false;
-    public int swingXInc, swingXPosS, swingXPosE;
+    public int swingXInc, swingXPosLeft, swingXPosRight;
     public long swingTime, swingDelay;
 
     public boolean dumpCellClicked = false;
@@ -38,7 +38,7 @@ public class GameInfo {
     public int gameDifficulty = 6;
 
     public enum STATE {
-        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
+        PAUSED, MOVING, STOP, CHECK, MERGE, EXPLODE, EXPLODED
     }
 
     public GameInfo(Context context) {
@@ -53,15 +53,15 @@ public class GameInfo {
         screenYSize = metrics.heightPixels;
         yUpOffset = 32;
         blockOutSize = screenXSize * 90 / 100 / xBlockCnt;
-        blockInSize = blockOutSize - blockOutSize / 24;
+        blockInSize = blockOutSize - blockOutSize / 36;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
         blockIconSize = (blockOutSize * 2 + xOffset) / 3;
         explodeGap = blockOutSize / 5;
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
 
         swingXInc = blockOutSize / 5;
-        swingXPosS = xOffset - 16;
-        swingXPosE = xOffset + blockOutSize * (xBlockCnt - 1) + 16;
+        swingXPosLeft = xOffset - 32;
+        swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
 
         Log.w("GameInfo", "screen= " + screenXSize + " x " + screenYSize);
         Log.w("GameInfo", "out=" + blockOutSize + " in=" + blockInSize + " icon=" + blockIconSize);
@@ -88,7 +88,7 @@ public class GameInfo {
     public void resetSwing() {
         swing = !swing;
         xNextPos = (screenXSize - blockOutSize) / 2;
-        swingDelay = 400 / (gameDifficulty+2);
+        swingDelay = 300 / (gameDifficulty+2);
         swingXInc = blockOutSize / 6;
         swingTime = System.currentTimeMillis() + swingDelay;
     }
@@ -96,11 +96,11 @@ public class GameInfo {
     public void updateSwing() {
         if (System.currentTimeMillis() > swingTime) {   // start swing left, right
             xNextPos += swingXInc;
-            if (xNextPos > swingXPosE) {
-                xNextPos = swingXPosE;
+            if (xNextPos > swingXPosRight) {
+                xNextPos = swingXPosRight;
                 swingXInc = -swingXInc;
-            } else if (xNextPos < swingXPosS) {
-                xNextPos = swingXPosS;
+            } else if (xNextPos < swingXPosLeft) {
+                xNextPos = swingXPosLeft;
                 swingXInc = -swingXInc;
             }
             swingTime = System.currentTimeMillis() + swingDelay;

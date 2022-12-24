@@ -89,7 +89,7 @@ public class BasePlate {
                     xOffset + blockOutSize * (x+1), yNextBottom, vPath2Paint);
         }
 
-        // next Icon
+        // new Icon
         canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
 
         // yes, no

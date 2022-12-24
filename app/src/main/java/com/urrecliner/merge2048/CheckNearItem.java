@@ -104,6 +104,8 @@ public class CheckNearItem {
             number = 0;
         if (!gameInfo.showNext)
             number += number;
+        if (gameInfo.swing)
+            number += number / 2;
         gameInfo.greatStacked += number;
         return number;
     }

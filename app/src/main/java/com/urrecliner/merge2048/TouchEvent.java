@@ -72,7 +72,7 @@ public class TouchEvent {
                     }
                 } else if (isShootPressed()) {
                     xTouchPos -= xOffset;
-                    if (xTouchPos > 0) {
+                    if (xTouchPos >= 0) {
                         int touchIndex = xTouchPos / blockOutSize;
                         if (touchIndex >= 0 && touchIndex < xBlockCnt) {
                             if (gameInfo.swing) {

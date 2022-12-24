@@ -14,7 +14,6 @@ public class ExplodeImage {
     public final int explodeGap = 64;
     public ExplodeImage(GameInfo gameInfo, Context context) {
 
-
         Bitmap explodeMap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.a_explosion);
 

@@ -1,6 +1,7 @@
 package com.urrecliner.merge2048;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -72,7 +73,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameInfo.resetValues();
         clearCells();   // clear all cells
         nextPlate.generateNextBlock();
-
     }
 
     void clearCells() {
@@ -109,6 +109,19 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+        if (nextPlate.nextIndex == -1 && gameInfo.poolAniSize == 0) {
+            boolean getNext = true;
+            for (int y = 0; y < yBlockCnt; y++) {
+                for (int x = 0; x < xBlockCnt; x++) {
+                    if (ani.cells[x][y].state != GameInfo.STATE.PAUSED) {
+                        getNext = false;
+                        break;
+                    }
+                }
+            }
+            if (getNext)
+                nextPlate.generateNextBlock();
+        }
 
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
@@ -129,10 +142,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             showGreat(x, y);
                         }
 
-                        break;
-
-                    case MERGED:
-                        ani.cells[x][y].state = GameInfo.STATE.STOP;
                         break;
 
                     case EXPLODED:
@@ -209,10 +218,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private void start2Move() {
 
         gameInfo.blockClicked = false;
+        if (nextPlate.nextIndex == -1)
+            return;
         Cell cell = ani.cells[gameInfo.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
             ani.cells[gameInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GameInfo.STATE.CHECK);
-            nextPlate.generateNextBlock();
+            nextPlate.nextIndex = -1;   // wait while all moved;
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
             ani.cells[gameInfo.touchIndex][yBlockCnt-1].index = cell.index + 1;
             ani.cells[gameInfo.touchIndex][yBlockCnt-1].state = GameInfo.STATE.STOP;
@@ -222,13 +233,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         basePlate.draw(canvas);
-        nextPlate.draw(canvas, ani.blockImages.get(nextPlate.nextIndex).bitmap,
-                ani.blockImages.get(nextPlate.nextNextIndex).halfMap);
+        Bitmap nextItem = (nextPlate.nextIndex == -1) ? null:ani.blockImages.get(nextPlate.nextIndex).bitmap;
+        nextPlate.draw(canvas, nextItem, ani.blockImages.get(nextPlate.nextNextIndex).halfMap);
         ani.draw(canvas);
         scorePlate.draw(canvas);
         greatPlate.draw(canvas);
-        if (gameInfo.isGameOver)
-            gameOverPlate.draw(canvas);
+        gameOverPlate.draw(canvas);
     }
 
     @Override

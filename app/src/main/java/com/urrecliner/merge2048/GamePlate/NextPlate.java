@@ -33,7 +33,7 @@ public class NextPlate {
 
         nextPaint = new Paint();
         nextPaint.setColor(Color.WHITE);
-        nextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        nextPaint.setStyle(Paint.Style.STROKE);
         nextPaint.setStrokeWidth(4);
 
         nextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
@@ -57,21 +57,21 @@ public class NextPlate {
             nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty+ 3) + 1;
     }
 
-    public void draw(Canvas canvas, Bitmap blockMap, Bitmap halfMap) {
+    public void draw(Canvas canvas, Bitmap nextBlockMap, Bitmap nextNextHalfMap) {
 
         if (!gameInfo.swing)    // if on swing, no outer box
             canvas.drawRoundRect(gameInfo.xNextPos, gameInfo.yNextPos,
                     gameInfo.xNextPos + blockInSize, gameInfo.yNextPos + blockInSize,
                 blockInSize/8f,blockInSize/8f, nextPaint);
-
-        canvas.drawBitmap(blockMap, gameInfo.xNextPos, gameInfo.yNextPos,null);
+        if (nextBlockMap != null)
+            canvas.drawBitmap(nextBlockMap, gameInfo.xNextPos, gameInfo.yNextPos,null);
 
         // draw Next Next //
         canvas.drawRoundRect(xNextNextPos, yNextNextPos,
                 xNextNextPos +blockInSize/2f, yNextNextPos +blockInSize/2f,
                 blockInSize/16f,blockInSize/16f, nextPaint);
         if (gameInfo.showNext)
-            canvas.drawBitmap(halfMap, xNextNextPos, yNextNextPos,null);
+            canvas.drawBitmap(nextNextHalfMap, xNextNextPos, yNextNextPos,null);
         else
             canvas.drawBitmap(nextNoMap, xNextNextPos, yNextNextPos,null);
     }

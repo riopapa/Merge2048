@@ -74,14 +74,10 @@ public class Ani {
                 }
             }
         }
-        if (gameInfo.dumpCellClicked) {
-            gameInfo.dumpCellClicked = false;
-            dumpCells();
-        }
-
-        if (gameInfo.swing)
-            moveNextBlock();
-
+//        if (gameInfo.dumpCellClicked) {
+//            gameInfo.dumpCellClicked = false;
+//            dumpCells();
+//        }
 
         // draw Animation while ani active
         for (int apI = 0; apI < poolAnis.size();) {
@@ -136,7 +132,7 @@ public class Ani {
                 case MERGE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = GameInfo.STATE.MERGED;
+                            cells[ap.xS][ap.yS].state = GameInfo.STATE.STOP;
                             cells[ap.xS][ap.yS].index = ap.xF;  // xF is new Index
                             poolAnis.remove(apI);
                             continue;
@@ -161,23 +157,15 @@ public class Ani {
         gameInfo.poolAniSize = poolAnis.size();
     }
 
-    private void moveNextBlock() {
-        long nowTime = System.currentTimeMillis();
-        if (nowTime < gameInfo.swingTime)
-            return;
-
-
-
-    }
-    public void dumpCells() {
-        Log.w("d", "       0        1        2        3        4");
-        for (int y = 0; y < yBlockCnt; y++) {
-            String s = y+") ";
-            for (int x = 0; x < xBlockCnt; x++) {
-                s += cells[x][y].index+" "+cells[x][y].state+" ";
-            }
-            Log.w("d",s);
-        }
-    }
+//    public void dumpCells() {
+//        Log.w("d", "       0        1        2        3        4");
+//        for (int y = 0; y < yBlockCnt; y++) {
+//            String s = y+") ";
+//            for (int x = 0; x < xBlockCnt; x++) {
+//                s += cells[x][y].index+" "+cells[x][y].state+" ";
+//            }
+//            Log.w("d",s);
+//        }
+//    }
 
 }
