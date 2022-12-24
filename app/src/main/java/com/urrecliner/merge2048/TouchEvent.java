@@ -50,8 +50,10 @@ public class TouchEvent {
                 if (gameInfo.newGamePressed) {
                     if (gameInfo.isGameOver || isYesPressed()) {
                         gameInfo.startNewGame = true;
+                        gameInfo.newGamePressed = false;
                     } else if (isNoPressed()) {
                         gameInfo.startNewGame = false;
+                        gameInfo.newGamePressed = false;
                     }
 
                 } else if (isNextPressed()) {

@@ -16,6 +16,7 @@ public class GameInfo {
     public final int xBlockCnt = 5, yBlockCnt = 6;   // screen Size
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public long scoreNow;
+    public int score2Add;
     public List<HighMember> highMembers;
 
     public int xNextPos, yNextPos, xNewPos, yNewPosS, xNextNextPos, yNextNextPos;
@@ -55,8 +56,8 @@ public class GameInfo {
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
 
         swingXInc = blockOutSize / 5;
-        swingXPosS = xOffset;
-        swingXPosE = xOffset + blockOutSize * (xBlockCnt - 1);
+        swingXPosS = xOffset - 16;
+        swingXPosE = xOffset + blockOutSize * (xBlockCnt - 1) + 16;
 
         Log.w("GameInfo", "screen= " + screenXSize + " x " + screenYSize);
         Log.w("GameInfo", "out=" + blockOutSize + " in=" + blockInSize + " icon=" + blockIconSize);

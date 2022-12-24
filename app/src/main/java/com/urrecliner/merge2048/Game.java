@@ -34,13 +34,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CheckGameOver checkGameOver;
     private final TouchEvent touchEvent;
     private GameLoop gameLoop;
-    private Context context;
     private final int xBlockCnt, yBlockCnt;
 
     public Game(Context context) {
 
         super(context);
-        this.context = context;
 
         SurfaceHolder surfaceHolder =getHolder();
         surfaceHolder.addCallback(this);
@@ -99,7 +97,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gameInfo.startNewGame) {
             gameInfo.newGamePressed = false;
             gameInfo.startNewGame = false;
-            checkGameOver.updateHighScore();
+//            checkGameOver.updateHighScore();
             newGameStart();
         }
 
@@ -243,6 +241,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+        performClick();
         touchEvent.check(event);
         return super.onTouchEvent(event);
     }

@@ -27,7 +27,7 @@ public class CheckNearItem {
             indexU = ani.cells[x][y -1].index;
         if (index == indexL && index == indexR && index == indexU) {
             index += 3;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add += calcNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x +1, y, x, y -1);
             explodeThis(x, y, x, y -1);
@@ -36,7 +36,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexR) {
             index += 2;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add += calcNumber(index);
             explodeThis(x -1, y, x, y);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
@@ -44,7 +44,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexU) {
             index += 2;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add += calcNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -52,7 +52,7 @@ public class CheckNearItem {
         }
         if (index == indexR && index == indexU) {
             index += 2;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add +=calcNumber(index);
             explodeThis(x + 1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -60,21 +60,21 @@ public class CheckNearItem {
         }
         if (index == indexL) {
             index++;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add +=calcNumber(index);
             explodeThis(x -1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexR) {
             index++;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add +=calcNumber(index);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexU) {
             index++;
-            gameInfo.scoreNow += calcNumber(index);
+            gameInfo.score2Add +=calcNumber(index);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
             return;

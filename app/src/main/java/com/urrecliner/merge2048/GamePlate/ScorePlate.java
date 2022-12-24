@@ -19,11 +19,11 @@ import java.util.Locale;
 
 public class ScorePlate {
     Context context;
-    Paint scoreOPaint, scoreIPaint, hTextPaint, hScorePaint, board1Paint, board2Paint;
+    long scoreTimeStamp = 0;
+    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board1Paint, board2Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
     GameInfo gameInfo;
-    final String scoreStr = "Score:";
     List<HighMember> highMembers;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
 
@@ -35,25 +35,25 @@ public class ScorePlate {
         gameScoreXPos = gameInfo.xNextPos/2 + gameInfo.xOffset;
         gameScoreYPos = gameInfo.yNewPosS + gameInfo.blockInSize/2;
         scoreOPaint = new Paint();
-        scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
+        scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(120);
+        scoreOPaint.setTextSize(80);
         scoreOPaint.setStrokeWidth(12);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
         scoreOPaint.setStyle(Paint.Style.STROKE);
 
         scoreIPaint = new Paint();
-        scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
+        scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(120);
+        scoreIPaint.setTextSize(80);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
 
         xBoardPosLeft = calcPixel(48);
-        xBoardPosRight = gameInfo.xNewPos - 4;
+        xBoardPosRight = gameInfo.xNewPos - 8;
 
         yBoardPosTop = gameInfo.yNewPosS + gameInfo.blockInSize*4/5;
 
@@ -85,13 +85,22 @@ public class ScorePlate {
 
         xBoardPosScore = xBoardPosRight - (xBoardPosRight - xBoardPosTime - (int) hTextPaint.measureText("22-12-31 24:31"))/2;
 
-        hScorePaint = new Paint();
-        hScorePaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
-        hScorePaint.setTextSize(texSize);
-        hScorePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        hScorePaint.setLetterSpacing(0.05f);
-        hScorePaint.setColor(ContextCompat.getColor(context, R.color.score));
-        hScorePaint.setTextAlign(Paint.Align.CENTER);
+        hScoreOPaint = new Paint();
+        hScoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
+        hScoreOPaint.setTextSize(texSize);
+        hScoreOPaint.setStyle(Paint.Style.STROKE);
+        hScoreOPaint.setLetterSpacing(0.05f);
+        hScoreOPaint.setColor(Color.BLUE);
+        hScoreOPaint.setStrokeWidth(6);
+        hScoreOPaint.setTextAlign(Paint.Align.CENTER);
+
+        hScoreIPaint = new Paint();
+        hScoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
+        hScoreIPaint.setTextSize(texSize);
+        hScoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        hScoreIPaint.setLetterSpacing(0.05f);
+        hScoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
+        hScoreIPaint.setTextAlign(Paint.Align.CENTER);
 
     }
 
@@ -103,6 +112,17 @@ public class ScorePlate {
 
         canvas.drawText(""+ gameInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreOPaint);
         canvas.drawText(""+ gameInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreIPaint);
+
+        if (gameInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
+            scoreTimeStamp = System.currentTimeMillis() + 40;
+            int score = gameInfo.score2Add / 6;
+            if (score < 2)
+                score = 2;
+            else
+                score = (score / 2) * 2;
+            gameInfo.score2Add -= score;
+            gameInfo.scoreNow += score;
+        }
 
         for (int i = 0; i < highMembers.size(); i++) {
             int y = yBoardPosTop + i*yBoardSize;
@@ -116,7 +136,9 @@ public class ScorePlate {
             canvas.drawText(highMember.who, xBoardPosWho, y+yBoardSize-24, hTextPaint);
             hTextPaint.setTextAlign(Paint.Align.LEFT);
             canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, hTextPaint);
-            canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScorePaint);
+            canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScoreOPaint);
+            canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, hTextPaint);
+            canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScoreIPaint);
         }
 
     }
