@@ -79,17 +79,17 @@ public class CheckNearItem {
             mergeToHere(x, y -1, index);
             return;
         }
-        ani.cells[x][y].state = Ani.STATE.PAUSED;
+        ani.cells[x][y].state = GameInfo.STATE.PAUSED;
     }
 
     private void mergeToHere(int x, int y, int index) {
         gameInfo.greatIdx++;
-        ani.cells[x][y].state = Ani.STATE.MERGE;
+        ani.cells[x][y].state = GameInfo.STATE.MERGE;
         ani.addMerge(x,y, index);
     }
 
     private void explodeThis(int x, int y, int xTo, int yTo) {
-        ani.cells[x][y].state = Ani.STATE.EXPLODE;
+        ani.cells[x][y].state = GameInfo.STATE.EXPLODE;
         ani.cells[x][y].index = 0;
         ani.addExplode(x,y, xTo, yTo);
     }

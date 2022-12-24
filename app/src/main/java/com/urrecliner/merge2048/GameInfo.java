@@ -37,6 +37,10 @@ public class GameInfo {
     public int poolAniSize = 0;
     public int gameDifficulty = 6;
 
+    public enum STATE {
+        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, GREAT, EXPLODED
+    }
+
     public GameInfo(Context context) {
 
         DisplayMetrics metrics = new DisplayMetrics();

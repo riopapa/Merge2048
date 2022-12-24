@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
@@ -15,7 +16,7 @@ public class BackPlate {
 
     Context context;
     GameInfo gameInfo;
-    Paint backPaint, vPath1Paint, vPath2Paint;
+    final Paint backPaint, vPath1Paint, vPath2Paint, yesNoPaint;
     private final int xBlockCnt;
     private final int blockOutSize, blockIconSize;
     private final int xOffset;
@@ -50,9 +51,15 @@ public class BackPlate {
         xNopPos = xNewPos + blockIconSize * 2;
         xSwingPos = xNewPos; ySwingPos = yNewPos + blockIconSize;
 
+        yesNoPaint = new Paint();
+        yesNoPaint.setColor(Color.BLUE);
+        yesNoPaint.setStrokeWidth(6);
+        yesNoPaint.setStyle(Paint.Style.STROKE);
+
         newMap = buildMap (R.drawable.a_new);
         yesMap = buildMap (R.drawable.a_yes);
         nopMap = buildMap (R.drawable.a_no);
+
         swingOMap = buildMap(R.drawable.a_swing);
         swingFMap = buildMap(R.drawable.a_swing_f);
 
@@ -87,6 +94,9 @@ public class BackPlate {
 
         // yes, no
         if (!gameInfo.isGameOver && (gameInfo.newGamePressed || gameInfo.quitPressed)) {
+            canvas.drawRoundRect(xYesPos-2, yNewPos-2,
+                    xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
+                        4,4, yesNoPaint);
             canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
             canvas.drawBitmap(nopMap, xNopPos, yNewPos,null);
         }

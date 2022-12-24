@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory;
 import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.R;
 
-public class CountsImage {
+public class GreatImage {
 
     final public Bitmap [] countMaps;
     final public int countMapLen;
-    public CountsImage(GameInfo gameInfo, Context context) {
+    public GreatImage(GameInfo gameInfo, Context context) {
 
         int [] orgMapId = {
             R.drawable.z100, R.drawable.z101, R.drawable.z102, R.drawable.z103,

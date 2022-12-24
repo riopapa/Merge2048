@@ -10,13 +10,13 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
-import com.urrecliner.merge2048.GameImage.CountsImage;
 import com.urrecliner.merge2048.GameImage.ExplodeImage;
 import com.urrecliner.merge2048.GameImage.MakeBlockImage;
 import com.urrecliner.merge2048.GameObject.Ani;
 import com.urrecliner.merge2048.GamePlate.BackPlate;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.GameOverPlate;
+import com.urrecliner.merge2048.GamePlate.GreatPlate;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 
@@ -29,6 +29,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final NextPlate nextPlate;
     private final Ani ani;
     private final BackPlate backPlate;
+    private final GreatPlate greatPlate;
     private final CheckNearItem checkNearItem;
     private final ManageHighScore manageHighScore;
     private final CheckGameOver checkGameOver;
@@ -49,15 +50,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         final List<BlockImage> blockImages = new MakeBlockImage().make(context, gameInfo);
         final ExplodeImage explodeImage = new ExplodeImage(gameInfo, context);
-        final CountsImage countsImage = new CountsImage(gameInfo, context);
 
-        ani = new Ani(gameInfo, blockImages, explodeImage, countsImage, context);
+        ani = new Ani(gameInfo, blockImages, explodeImage, context);
         nextPlate = new NextPlate(gameInfo, context);
         checkNearItem = new CheckNearItem(gameInfo, ani);
         manageHighScore = new ManageHighScore(gameInfo, context);
         manageHighScore.get();
         checkGameOver = new CheckGameOver(gameInfo, nextPlate,ani);
         touchEvent = new TouchEvent(gameInfo);
+        greatPlate = new GreatPlate(gameInfo, context);
 
         backPlate = new BackPlate(gameInfo, context);
         gameOverPlate = new GameOverPlate(gameInfo, context);
@@ -77,7 +78,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     void clearCells() {
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
-                ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED); // 0 means null
+                ani.cells[x][y] = new Cell(0, GameInfo.STATE.PAUSED); // 0 means null
             }
         }
     }
@@ -103,7 +104,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         for (int y = yBlockCnt - 1; y >= 0; y--) {
             for (int x = 0; x < xBlockCnt; x++) {
-                if (ani.cells[x][y].state == Ani.STATE.EXPLODE) {
+                if (ani.cells[x][y].state == GameInfo.STATE.EXPLODE) {
                     return; // wait till all exploded
                 }
             }
@@ -140,7 +141,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         break;
 
                     case MERGED:
-                        ani.cells[x][y].state = Ani.STATE.STOP;
+                        ani.cells[x][y].state = GameInfo.STATE.STOP;
                         break;
 
                     case EXPLODED:
@@ -171,7 +172,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private void showGreat(int x, int y) {
         if (gameInfo.greatIdx > 2) {
-            ani.addGreat(x, y, gameInfo.greatIdx - 2,
+            greatPlate.addGreat(x, y, gameInfo.greatIdx - 2,
                     gameInfo.greatCount + gameInfo.greatIdx);
             if (gameInfo.greatIdx > 5) {
                 gameInfo.gameDifficulty++;
@@ -192,18 +193,18 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
             if (yUp != y) {
-                ani.cells[x][y].state = Ani.STATE.MOVING;
+                ani.cells[x][y].state = GameInfo.STATE.MOVING;
                 ani.addMove(x, y, x, yUp);
 //                Log.w("Add", y +" > "+yUp);
                 return;
             }
         }
-        ani.cells[x][y].state = Ani.STATE.STOP;
+        ani.cells[x][y].state = GameInfo.STATE.STOP;
     }
 
     private void checkIfPullNextUp(int x, int y) {
         // this cell is exploded, so check whether below item can be moved up
-        ani.cells[x][y] = new Cell(0, Ani.STATE.PAUSED);
+        ani.cells[x][y] = new Cell(0, GameInfo.STATE.PAUSED);
         if (y < yBlockCnt - 1) {
             for (int yy = y + 1; yy < yBlockCnt; yy++) {
                 if (ani.cells[x][yy].index > 0) {
@@ -219,11 +220,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameInfo.blockClicked = false;
         Cell cell = ani.cells[gameInfo.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
-            ani.cells[gameInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, Ani.STATE.CHECK);
+            ani.cells[gameInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GameInfo.STATE.CHECK);
             nextPlate.generateNextBlock();
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
             ani.cells[gameInfo.touchIndex][yBlockCnt-1].index = cell.index + 1;
-            ani.cells[gameInfo.touchIndex][yBlockCnt-1].state = Ani.STATE.STOP;
+            ani.cells[gameInfo.touchIndex][yBlockCnt-1].state = GameInfo.STATE.STOP;
         }
     }
 
@@ -234,6 +235,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 ani.blockImages.get(nextPlate.nextNextIndex).halfMap);
         ani.draw(canvas);
         scorePlate.draw(canvas);
+        greatPlate.draw(canvas);
         if (gameInfo.isGameOver)
             gameOverPlate.draw(canvas);
     }

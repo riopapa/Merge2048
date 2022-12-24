@@ -1,8 +1,10 @@
 package com.urrecliner.merge2048.GameObject;
 
+import com.urrecliner.merge2048.GameInfo;
+
 public class PoolAni {
 
-    Ani.STATE state;
+    GameInfo.STATE state;
     int xS, yS, xF, yF;   // move Start to Finish cell
     int xInc, yInc, count;     // ani increments stack
 
@@ -10,25 +12,21 @@ public class PoolAni {
     long timeStamp = 0;
 
     // state MOVING, GREAT
-    public PoolAni(Ani.STATE state, int xS, int yS, int xF, int yF, int xI, int yI) {
+    public PoolAni(GameInfo.STATE state, int xS, int yS, int xF, int yF, int xInc, int yInc) {
 
         this.state = state;
         this.xS = xS;
         this.yS = yS;
-        this.xF = xF;   // count
-        this.yF = yF;   // great count
-        this.xInc = xI;
-        this.yInc = yI;
+        this.xF = xF;
+        this.yF = yF;
+        this.xInc = xInc;
+        this.yInc = yInc;
         count = 0;
-        if (state == Ani.STATE.MOVING) {
-            delay = 20;
-        } else  {
-            delay = 30;
-        }
+        delay = 20;
     }
 
     // state EXPLODE
-    public PoolAni(Ani.STATE state, int xS, int yS, int xInc, int yInc) {
+    public PoolAni(GameInfo.STATE state, int xS, int yS, int xInc, int yInc) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
@@ -39,7 +37,7 @@ public class PoolAni {
     }
 
     // state MERGE
-    public PoolAni(Ani.STATE state, int xS, int yS, int index) {
+    public PoolAni(GameInfo.STATE state, int xS, int yS, int index) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;

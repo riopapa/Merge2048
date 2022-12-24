@@ -24,7 +24,7 @@ public class CheckGameOver {
     public boolean isOver() {
         for (int x = 0; x < xBlockCnt; x++) {
             if (ani.cells[x][yBlockCnt-1].index == 0 ||
-                    ani.cells[x][yBlockCnt-1].state != Ani.STATE.PAUSED ||
+                    ani.cells[x][yBlockCnt-1].state != GameInfo.STATE.PAUSED ||
                     ani.cells[x][yBlockCnt-1].index == nextPlate.nextIndex)
                 return false;
         }
