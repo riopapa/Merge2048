@@ -21,12 +21,12 @@ public class ExplodeImage {
                 gameInfo.blockInSize + explodeGap + explodeGap,
                 gameInfo.blockInSize + explodeGap + explodeGap, false);
 
-        smallMaps = new Bitmap[5];
+        smallMaps = new Bitmap[5];  // MOVE_SMOOTH
         smallMaps[0] = bitmapSmall(bitmap, 100);
-        smallMaps[1] = bitmapSmall(bitmap, 70);
-        smallMaps[2] = bitmapSmall(bitmap, 50);
-        smallMaps[3] = bitmapSmall(bitmap, 30);
-        smallMaps[4] = bitmapSmall(bitmap, 40);
+        smallMaps[1] = bitmapSmall(bitmap, 90);
+        smallMaps[2] = bitmapSmall(bitmap, 80);
+        smallMaps[3] = bitmapSmall(bitmap, 70);
+        smallMaps[4] = bitmapSmall(bitmap, 60);
 
     }
 

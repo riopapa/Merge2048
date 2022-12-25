@@ -12,7 +12,7 @@ import java.util.List;
 public class GameInfo {
 
     public final int screenXSize, screenYSize;
-    public final int blockInSize, blockOutSize, blockIconSize, explodeGap;
+    public final int blockInSize, blockOutSize, blockIconSize, blockFlyingGap, explodeGap;
     public final int xBlockCnt = 5, yBlockCnt = 6;
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public long scoreNow;
@@ -54,8 +54,9 @@ public class GameInfo {
         yUpOffset = 32;
         blockOutSize = screenXSize * 90 / 100 / xBlockCnt;
         blockInSize = blockOutSize - blockOutSize / 36;
+        blockFlyingGap = (blockOutSize * 120/100 - blockOutSize)/2;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
-        blockIconSize = (blockOutSize * 2 + xOffset) / 3;
+        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;
         explodeGap = blockOutSize / 5;
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
 

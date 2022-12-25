@@ -11,7 +11,7 @@ public class PoolAni {
     long delay = 20;   // redraw at every 100 milli sec
     long timeStamp = 0;
 
-    // state MOVING, GREAT
+    // state MOVING
     public PoolAni(GameInfo.STATE state, int xS, int yS, int xF, int yF, int xInc, int yInc) {
 
         this.state = state;
@@ -22,7 +22,7 @@ public class PoolAni {
         this.xInc = xInc;
         this.yInc = yInc;
         count = 0;
-        delay = 20;
+        delay = 15;
     }
 
     // state EXPLODE

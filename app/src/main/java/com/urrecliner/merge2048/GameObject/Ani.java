@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Ani {
 
-    final int MOVE_SMOOTH = 4;
+    final int MOVE_SMOOTH = 5;  // refer to flying map array
 
     Context context;
     public Cell[][] cells;
@@ -68,9 +68,9 @@ public class Ani {
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
                 if (cells[x][y].state == GameInfo.STATE.PAUSED && cells[x][y].index > 0) {
-                    BlockImage blockImage = blockImages.get(cells[x][y].index);
-                    blockImage.draw(canvas, xOffset + x * xBlockOutSize,
-                            yUpOffset + y * yBlockOutSize);
+                    Bitmap blockMap = blockImages.get(cells[x][y].index).bitmap;
+                    canvas.drawBitmap(blockMap, xOffset + x * xBlockOutSize,
+                            yUpOffset + y * yBlockOutSize, null);
                 }
             }
         }
@@ -93,12 +93,12 @@ public class Ani {
                             continue;
                         } else {
                             if (cells[ap.xS][ap.yS].index > 0) {
-                                BlockImage blockImage = blockImages.get(cells[ap.xS][ap.yS].index);
+                                Bitmap blockMap = blockImages.get(cells[ap.xS][ap.yS].index).flyMaps[ap.count];
                                 int xPos = gameInfo.xOffset + ap.xS * gameInfo.blockOutSize
-                                        + ap.xInc * ap.count;
+                                        + ap.xInc * ap.count - gameInfo.blockFlyingGap;
                                 int yPos = gameInfo.yUpOffset + ap.yS * gameInfo.blockOutSize
-                                        + ap.yInc * ap.count;
-                                canvas.drawBitmap(blockImage.smallMaps[ap.count], xPos, yPos, null);
+                                        + ap.yInc * ap.count - gameInfo.blockFlyingGap;
+                                canvas.drawBitmap(blockMap, xPos, yPos, null);
                                 ap.count++;
                                 ap.timeStamp = System.currentTimeMillis() + ap.delay;
                                 poolAnis.set(apI, ap);

@@ -94,7 +94,7 @@ public class CheckNearItem {
         ani.addExplode(x,y, xTo, yTo);
     }
 
-    private int calcNumber(int index) {
+    public int calcNumber(int index) {
         int number;
         if (index != 0) {
             number = 1;

@@ -3,6 +3,8 @@ package com.urrecliner.merge2048;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.urrecliner.merge2048.GameObject.Ani;
+
 public class TouchEvent {
 
     GameInfo gameInfo;
@@ -45,6 +47,8 @@ public class TouchEvent {
                     return;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
+                if (yTouchPos < 400 && xTouchPos < 400)
+                    gameInfo.dumpCellClicked = true;
                 if (yTouchPos < yDownOffset)
                     return;
                 if (gameInfo.newGamePressed) {
@@ -134,5 +138,6 @@ public class TouchEvent {
         return (xTouchPos >= xNextNextPosS && xTouchPos <= xNextNextPosE &&
                 yTouchPos >= yNextNextPosS && yTouchPos <= yNextNextPosE);
     }
+
 
 }

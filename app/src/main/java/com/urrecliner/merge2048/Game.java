@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.GameImage.ExplodeImage;
-import com.urrecliner.merge2048.GameImage.MakeBlockImage;
+import com.urrecliner.merge2048.GameImage.BlockImageMake;
 import com.urrecliner.merge2048.GameObject.Ani;
 import com.urrecliner.merge2048.GamePlate.BasePlate;
 import com.urrecliner.merge2048.GameObject.Cell;
@@ -49,7 +49,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         xBlockCnt = gameInfo.xBlockCnt; yBlockCnt = gameInfo.yBlockCnt;
 
-        final List<BlockImage> blockImages = new MakeBlockImage().make(context, gameInfo);
+        final List<BlockImage> blockImages = new BlockImageMake().make(context, gameInfo);
         final ExplodeImage explodeImage = new ExplodeImage(gameInfo, context);
 
         ani = new Ani(gameInfo, blockImages, explodeImage, context);
@@ -220,6 +220,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameInfo.blockClicked = false;
         if (nextPlate.nextIndex == -1)
             return;
+        if (gameInfo.dumpCellClicked)
+            dumpAllInfo();
         Cell cell = ani.cells[gameInfo.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
             ani.cells[gameInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GameInfo.STATE.CHECK);
@@ -228,6 +230,26 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             ani.cells[gameInfo.touchIndex][yBlockCnt-1].index = cell.index + 1;
             ani.cells[gameInfo.touchIndex][yBlockCnt-1].state = GameInfo.STATE.STOP;
         }
+    }
+
+    void dumpAllInfo() {
+        StringBuilder sb = new StringBuilder("      0     1     2     3     4 ");
+        for (int y = 0; y < gameInfo.yBlockCnt; y++) {
+            sb.append("\n "+ y+" ");
+            for (int x = 0; x < gameInfo.xBlockCnt; x++) {
+                int nbr = checkNearItem.calcNumber(ani.cells[x][y].index);
+                String sNbr = ""+nbr;
+                int space = (7 - sNbr.length())/2;
+                String s = ("       ").substring(0,space)+nbr+("       ").substring(0,space);
+                if (s.length()>6)
+                    s = s.substring(0,6);
+                sb.append(s); // .append(ani.cells[x][y].state);
+            }
+        }
+        sb.append("\n touch="+gameInfo.touchIndex);
+        sb.append(" block="+checkNearItem.calcNumber(nextPlate.nextIndex));
+
+        Log.w("dump", sb.toString());
     }
 
     public void draw(Canvas canvas) {
