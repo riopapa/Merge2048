@@ -29,12 +29,11 @@ public class GreatPlate {
         greatImage = new GreatImage(gameInfo, context);
     }
 
-
     public void addGreat(int xS, int yS, int idx, int loopCount) {
 
         greats.add(new Great(xS, yS, idx, loopCount,
                 gameInfo.blockOutSize * (- xS) / (gameInfo.greatCount+idx),
-                gameInfo.blockOutSize * (gameInfo.yBlockCnt - yS + 1)/ (gameInfo.greatCount+idx)));
+                gameInfo.blockOutSize * (gameInfo.yBlockCnt - yS + 1)/ (gameInfo.greatCount+idx), 30));
     }
 
     public void draw(Canvas canvas) {

@@ -6,13 +6,14 @@ public class PoolAni {
 
     GameInfo.STATE state;
     int xS, yS, xF, yF;   // move Start to Finish cell
-    int xInc, yInc, count;     // ani increments stack
+    int xInc, yInc, count, maxCount;     // ani increments stack
 
     long delay = 20;   // redraw at every 100 milli sec
     long timeStamp = 0;
 
     // state MOVING
-    public PoolAni(GameInfo.STATE state, int xS, int yS, int xF, int yF, int xInc, int yInc) {
+    public PoolAni(GameInfo.STATE state, int xS, int yS, int xF, int yF,
+                   int xInc, int yInc, int maxCount) {
 
         this.state = state;
         this.xS = xS;
@@ -21,6 +22,7 @@ public class PoolAni {
         this.yF = yF;
         this.xInc = xInc;
         this.yInc = yInc;
+        this.maxCount = maxCount;
         count = 0;
         delay = 15;
     }

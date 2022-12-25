@@ -14,6 +14,7 @@ import com.urrecliner.merge2048.GameInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Ani {
 
@@ -47,9 +48,11 @@ public class Ani {
     }
 
     public void addMove(int xS, int yS, int xF, int yF) {
+        int maxCount = (yF-yS > 2) ? (yF-yS) / 2: 1;
+        maxCount *= MOVE_SMOOTH;
         poolAnis.add(new PoolAni(GameInfo.STATE.MOVING, xS, yS, xF, yF,
-                gameInfo.blockOutSize * (xF - xS) / MOVE_SMOOTH,
-                gameInfo.blockOutSize * (yF - yS)/ MOVE_SMOOTH));
+                gameInfo.blockOutSize * (xF - xS) / maxCount,
+                gameInfo.blockOutSize * (yF - yS)/ maxCount, maxCount));
     }
 
     public void addMerge(int x, int y, int index) {
@@ -74,10 +77,6 @@ public class Ani {
                 }
             }
         }
-//        if (gameInfo.dumpCellClicked) {
-//            gameInfo.dumpCellClicked = false;
-//            dumpCells();
-//        }
 
         // draw Animation while ani active
         for (int apI = 0; apI < poolAnis.size();) {
@@ -100,7 +99,8 @@ public class Ani {
                                         + ap.yInc * ap.count - gameInfo.blockFlyingGap;
                                 canvas.drawBitmap(blockMap, xPos, yPos, null);
                                 ap.count++;
-                                ap.timeStamp = System.currentTimeMillis() + ap.delay;
+                                ap.timeStamp = System.currentTimeMillis() + ap.delay
+                                    + new Random().nextInt(30);
                                 poolAnis.set(apI, ap);
                             }
                         }
@@ -132,7 +132,7 @@ public class Ani {
                 case MERGE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = GameInfo.STATE.STOP;
+                            cells[ap.xS][ap.yS].state = GameInfo.STATE.MERGED;
                             cells[ap.xS][ap.yS].index = ap.xF;  // xF is new Index
                             poolAnis.remove(apI);
                             continue;

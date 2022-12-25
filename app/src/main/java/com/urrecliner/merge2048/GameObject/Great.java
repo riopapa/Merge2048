@@ -6,7 +6,7 @@ public class Great {
     public long timeStamp = 0;
 
     // GREAT
-    public Great(int xS, int yS, int idx, int loopCount, int xInc, int yInc) {
+    public Great(int xS, int yS, int idx, int loopCount, int xInc, int yInc, int delay) {
 
         this.xS = xS;
         this.yS = yS;
@@ -14,8 +14,8 @@ public class Great {
         this.loopCount = loopCount;   // great count
         this.xInc = xInc;
         this.yInc = yInc;
+        this.delay = delay;
         count = 0;
-        delay = 30;
         timeStamp = System.currentTimeMillis();
     }
 
