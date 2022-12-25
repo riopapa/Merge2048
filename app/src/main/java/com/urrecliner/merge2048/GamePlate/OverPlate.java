@@ -45,7 +45,6 @@ public class OverPlate {
             if (great.timeStamp < System.currentTimeMillis()) {
                 if (great.count >= great.loopCount) {
                     overs.remove(gI);
-//                    gameInfo.score2Add += gameInfo.greatStacked * great.idx;
                     continue;
                 } else {
                     Matrix matrix = new Matrix();

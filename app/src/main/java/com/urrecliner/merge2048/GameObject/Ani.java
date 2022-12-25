@@ -156,16 +156,4 @@ public class Ani {
         }
         gameInfo.poolAniSize = poolAnis.size();
     }
-
-//    public void dumpCells() {
-//        Log.w("d", "       0        1        2        3        4");
-//        for (int y = 0; y < yBlockCnt; y++) {
-//            String s = y+") ";
-//            for (int x = 0; x < xBlockCnt; x++) {
-//                s += cells[x][y].index+" "+cells[x][y].state+" ";
-//            }
-//            Log.w("d",s);
-//        }
-//    }
-
 }

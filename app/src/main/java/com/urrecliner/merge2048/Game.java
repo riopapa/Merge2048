@@ -34,7 +34,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final GreatPlate greatPlate;
     private final OverPlate overPlate;
     private final CheckNearItem checkNearItem;
-    private final ManageHighScore manageHighScore;
+    private final GetPutHighScore getPutHighScore;
     private final CheckGameOver checkGameOver;
     private final TouchEvent touchEvent;
     private GameLoop gameLoop;
@@ -57,8 +57,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         ani = new Ani(gameInfo, blockImages, explodeImage, context);
         nextPlate = new NextPlate(gameInfo, context);
         checkNearItem = new CheckNearItem(gameInfo, ani);
-        manageHighScore = new ManageHighScore(gameInfo, context);
-        manageHighScore.get();
+        getPutHighScore = new GetPutHighScore(gameInfo, context);
+        getPutHighScore.get();
         checkGameOver = new CheckGameOver(gameInfo, nextPlate,ani);
         touchEvent = new TouchEvent(gameInfo);
         greatPlate = new GreatPlate(gameInfo, context);
@@ -144,8 +144,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         break;
 
                     case MERGED:
-                        if (ani.cells[x][y].index >= 11) {
-                            overPlate.addOver(x, y, ani.cells[x][y].index, 12, 20);
+                        if (ani.cells[x][y].index >= 10) {
+                            overPlate.addOver(x, y, ani.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
                         if (ani.poolAnis.size() == 0 && gameInfo.greatIdx > 0) {
@@ -170,7 +170,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gameInfo.isGameOver = checkGameOver.isOver();
         if (gameInfo.isGameOver) {
-            manageHighScore.put();
+            getPutHighScore.put();
         } else if (gameInfo.blockClicked) {
             start2Move();
         } else if (gameInfo.swingPressed) {
@@ -295,4 +295,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop.stopLoop();
     }
 
+
+    void exitApp() {
+        gameLoop.stopLoop();
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-import androidx.core.content.ContextCompat;
-
 public class GameLoop extends Thread{
     public static final double MAX_UPS = 30.0;
     private static final double UPS_PERIOD = 1E+3/MAX_UPS;
@@ -31,7 +29,6 @@ public class GameLoop extends Thread{
 
         // Declare time and cycle count variables
         int updateCount = 0;
-        int frameCount = 0;
 
         long startTime;
         long elapsedTime;
@@ -56,7 +53,6 @@ public class GameLoop extends Thread{
                 if(canvas != null) {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
-                        frameCount++;
 					} catch(Exception e) {
                         e.printStackTrace();
                     }

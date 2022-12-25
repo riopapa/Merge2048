@@ -13,25 +13,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageHighScore {
+public class GetPutHighScore {
     GameInfo gameInfo;
     Context context;
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedEditor;
     final String highMember = "highMember";
 
-    public ManageHighScore(GameInfo gameInfo, Context context) {
+    public GetPutHighScore(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
         sharedPref = context.getSharedPreferences("merge2048", MODE_PRIVATE);
         sharedEditor = sharedPref.edit();
-
     }
 
     void get() {
         gameInfo.highMembers = new ArrayList<>();
         Gson gson = new Gson();
-        String json = sharedPref.getString("highMember", "");
+        String json = sharedPref.getString(highMember, "");
         if (!json.isEmpty()) {
             Type type = new TypeToken<List<HighMember>>() {
             }.getType();
@@ -42,11 +41,7 @@ public class ManageHighScore {
     void put() {
         Gson gson = new Gson();
         String json = gson.toJson(gameInfo.highMembers);
-        sharedEditor.putString("highMember", json);
+        sharedEditor.putString(highMember, json);
         sharedEditor.apply();
-
     }
-
-
-
 }

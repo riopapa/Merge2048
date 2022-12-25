@@ -12,8 +12,12 @@ import java.util.List;
 public class GameInfo {
 
     public final int screenXSize, screenYSize;
-    public final int blockInSize, blockOutSize, blockIconSize, blockFlyingGap, explodeGap;
     public final int xBlockCnt = 5, yBlockCnt = 6;
+    public final int blockOutSize;  // block Size with gaps
+    public final int blockInSize;   // block size itself;
+    public final int blockIconSize; // new, yes, no, ... icon size
+    public final int blockFlyingGap;    // bigger size while moving
+    public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public long scoreNow;
     public int score2Add;
@@ -38,7 +42,7 @@ public class GameInfo {
     public int gameDifficulty = 6;
 
     public enum STATE {
-        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED;
+        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
     }
 
     public GameInfo(Context context) {
@@ -65,7 +69,7 @@ public class GameInfo {
         swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
 
         Log.w("GameInfo", "screen= " + screenXSize + " x " + screenYSize);
-        Log.w("GameInfo", "out=" + blockOutSize + " in=" + blockInSize + " icon=" + blockIconSize);
+        Log.w("GameInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
 
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
         resetValues();
@@ -80,7 +84,7 @@ public class GameInfo {
         xNewPos = xNextPos + blockOutSize - 8;
         yNewPosS = yNextPos + blockOutSize + 16;
         scoreNow = 0;
-        gameDifficulty = 4;
+        gameDifficulty = 5;
         greatIdx = 0;
         greatStacked = 0;
         isGameOver = false;

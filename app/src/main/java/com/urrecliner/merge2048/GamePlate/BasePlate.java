@@ -22,7 +22,7 @@ public class BasePlate {
     private final int xOffset;
     private final int xLeft, yTop, yBottom, yNextBottom;
     private final int xNewPos, yNewPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
-    private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap;
+    private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap, quitMap;
 
     public BasePlate(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
@@ -63,6 +63,7 @@ public class BasePlate {
         swingOMap = buildMap(R.drawable.a_swing);
         swingFMap = buildMap(R.drawable.a_swing_f);
 
+        quitMap = buildMap(R.drawable.a_quit);
     }
 
     Bitmap buildMap(int resId) {
@@ -90,7 +91,10 @@ public class BasePlate {
         }
 
         // new Icon
-        canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+        if (gameInfo.quitGame)
+            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+        else
+            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
 
         // yes, no
         if (!gameInfo.isGameOver && (gameInfo.newGamePressed || gameInfo.quitPressed)) {
