@@ -16,7 +16,7 @@ public class GameOverPlate {
     Context context;
     GameInfo gameInfo;
     Paint overPaint;
-    boolean showSwich = false;
+    boolean showSwitch = false;
     int waitCount;
     final int xOverPos, yOverPosTop, yOverPosBottom;
     int  yOverPos, yOverInc;
@@ -46,7 +46,7 @@ public class GameOverPlate {
         waitCount++;
         if (waitCount > 10) {
             waitCount = 0;
-            showSwich = !showSwich;
+            showSwitch = !showSwitch;
         }
         yOverPos += yOverInc;
         if (yOverPos > yOverPosBottom || yOverPos < yOverPosTop) {
@@ -54,9 +54,9 @@ public class GameOverPlate {
         }
 
         overPaint.setStrokeWidth(64);
-        overPaint.setColor((showSwich) ? Color.BLUE : Color.RED);
+        overPaint.setColor((showSwitch) ? Color.BLUE : Color.RED);
         canvas.drawText("Game Over", xOverPos, yOverPos, overPaint);
-        overPaint.setColor((showSwich) ? Color.RED : Color.BLUE);
+        overPaint.setColor((showSwitch) ? Color.RED : Color.BLUE);
         overPaint.setStrokeWidth(0);
         canvas.drawText("Game Over", xOverPos, yOverPos, overPaint);
 

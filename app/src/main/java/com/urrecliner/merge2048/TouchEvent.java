@@ -47,8 +47,15 @@ public class TouchEvent {
                     return;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
-                if (yTouchPos < 400 && xTouchPos < 400)
-                    gameInfo.dumpCellClicked = true;
+                if (yTouchPos < 400 && xTouchPos < 400) {
+                    gameInfo.dumpCount++;
+                    if (gameInfo.dumpCount > 2) {
+                        gameInfo.msgHead = "참고";
+                        gameInfo.msgLine1 = "Dump Start..";
+                        gameInfo.msgLine2 = "Cell Arrays";
+                        gameInfo.msgTime = System.currentTimeMillis() + 1500;
+                    }
+                }
                 if (yTouchPos < yDownOffset)
                     return;
                 if (gameInfo.newGamePressed) {

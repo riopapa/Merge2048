@@ -19,14 +19,15 @@ public class GameInfo {
     public final int blockFlyingGap;    // bigger size while moving
     public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
+    public final int xNewPos, yNextPos;
+    public final int greatCount = 12;
+
     public long scoreNow;
     public int score2Add;
     public List<HighMember> highMembers;
 
-    public int xNextPos, yNextPos, xNewPos, yNewPosS, xNextNextPos, yNextNextPos;
-
+    public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
     public int greatIdx, greatStacked = 0;
-    public final int greatCount = 12;
     public boolean isGameOver = false, quitPressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGame = false;
     public boolean showNext = true;
@@ -35,11 +36,15 @@ public class GameInfo {
     public int swingXInc, swingXPosLeft, swingXPosRight;
     public long swingTime, swingDelay;
 
-    public boolean dumpCellClicked = false;
+    public int dumpCount = 0;
     public boolean blockClicked = false;   // clicked means user clicked
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     public int poolAniSize = 0;
     public int gameDifficulty = 6;
+
+    public String msgHead = "";
+    public String msgLine1 = "", msgLine2 = "";
+    public long msgTime = 0;
 
     public enum STATE {
         PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
@@ -55,14 +60,17 @@ public class GameInfo {
         // setUp final values
         screenXSize = metrics.widthPixels;
         screenYSize = metrics.heightPixels;
-        yUpOffset = 32;
         blockOutSize = screenXSize * 90 / 100 / xBlockCnt;
         blockInSize = blockOutSize - blockOutSize / 36;
         blockFlyingGap = (blockOutSize * 120/100 - blockOutSize)/2;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
+        yUpOffset = 32;
+        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
         blockIconSize = (screenXSize - blockOutSize) / 3 / 2;
         explodeGap = blockOutSize / 5;
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
+        xNewPos = xNextPosCenter + blockOutSize - 8;
+        yNextPos = yDownOffset + 16;
 
         swingXInc = blockOutSize / 5;
         swingXPosLeft = xOffset - 32;
@@ -71,23 +79,21 @@ public class GameInfo {
         Log.w("GameInfo", "screen= " + screenXSize + " x " + screenYSize);
         Log.w("GameInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
 
-        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
         resetValues();
     }
 
     public void resetValues() {
         xNextPos = xNextPosCenter;
-        yNextPos = yDownOffset + 16;
         xNextNextPos = xNextPos + (blockOutSize / 4);
         yNextNextPos = yNextPos + blockOutSize + 8;
 
-        xNewPos = xNextPos + blockOutSize - 8;
         yNewPosS = yNextPos + blockOutSize + 16;
         scoreNow = 0;
         gameDifficulty = 5;
         greatIdx = 0;
         greatStacked = 0;
         isGameOver = false;
+        dumpCount = 0;
     }
 
     public void resetSwing() {

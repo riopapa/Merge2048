@@ -85,11 +85,16 @@ public class Ani {
                 case MOVING:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xF][ap.yF] = cells[ap.xS][ap.yS];
-                            cells[ap.xF][ap.yF].state = GameInfo.STATE.STOP;
-                            cells[ap.xS][ap.yS] = new Cell(0, GameInfo.STATE.PAUSED);
-                            poolAnis.remove(apI);
-                            continue;
+                            if (cells[ap.xF][ap.yF].index == 0) {
+                                cells[ap.xF][ap.yF] = cells[ap.xS][ap.yS];
+                                cells[ap.xF][ap.yF].state = GameInfo.STATE.STOP;
+                                cells[ap.xS][ap.yS] = new Cell(0, GameInfo.STATE.PAUSED);
+                                poolAnis.remove(apI);
+                                continue;
+                            } else {
+                                Log.e("Still","continue move? "+cells[ap.xF][ap.yF].index+" ("+ap.xF+"x"+ap.yF+")");
+                                ap.count--;
+                            }
                         } else {
                             if (cells[ap.xS][ap.yS].index > 0) {
                                 Bitmap blockMap = blockImages.get(cells[ap.xS][ap.yS].index).flyMaps[ap.count];

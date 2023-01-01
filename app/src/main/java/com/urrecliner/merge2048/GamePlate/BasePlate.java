@@ -29,7 +29,7 @@ public class BasePlate {
         this.context = context;
 
         backPaint = new Paint();
-        backPaint.setColor(ContextCompat.getColor(context, R.color.c00000));
+        backPaint.setColor(ContextCompat.getColor(context, R.color.game_background));
         xBlockCnt = gameInfo.xBlockCnt;
         int yBlockCnt = gameInfo.yBlockCnt;
         blockOutSize = gameInfo.blockOutSize;

@@ -51,10 +51,11 @@ public class NextPlate {
     public void generateNextBlock() {
         nextIndex = nextNextIndex;
         nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty) + 1;
-        if (new Random().nextInt(8) == 0)
-            nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty+ 1) + 1;
-        if (new Random().nextInt(12) == 0)
-            nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty+ 3) + 1;
+        if (new Random().nextInt(8) == 0) {
+            nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty + 1) + 1;
+            if (new Random().nextInt(12) == 0)
+                nextNextIndex = new Random().nextInt(gameInfo.gameDifficulty + 3) + 1;
+        }
     }
 
     public void draw(Canvas canvas, Bitmap nextBlockMap, Bitmap nextNextHalfMap) {

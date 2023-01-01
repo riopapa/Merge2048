@@ -12,22 +12,8 @@
     <color name="board1">#3F6478</color>
     <color name="score">#FF4443</color>
 
+    <color name="msg_background">#FDD835</color>
 
-    <color name="c00000">#A5C6CA</color>
-    <color name="c00002">#648E75</color>
-    <color name="c00004">#448F15</color>
-    <color name="c00008">#D87226</color>
-    <color name="c00016">#0091EA</color>
-    <color name="c00032">#FFD600</color>
-    <color name="c00064">#6328B5</color>
-    <color name="c00128">#FF6D00</color>
-    <color name="c00256">#24B3B3</color>
-    <color name="c00512">#9A27D3</color>
-    <color name="c01024">#B2FF59</color>
-    <color name="c02048">#EEFF41</color>
-    <color name="c04096">#FFFFFF</color>
-    <color name="c08192">#FFAB40</color>
-    <color name="c16384">#FFAB40</color>
-    <color name="c32768">#FFAB40</color>
+    <color name="game_background">#A5C6CA</color>
 
 </resources>

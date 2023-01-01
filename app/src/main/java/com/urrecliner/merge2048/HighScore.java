@@ -13,14 +13,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetPutHighScore {
+public class HighScore {
     GameInfo gameInfo;
     Context context;
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedEditor;
     final String highMember = "highMember";
 
-    public GetPutHighScore(GameInfo gameInfo, Context context) {
+    public HighScore(GameInfo gameInfo, Context context) {
         this.gameInfo = gameInfo;
         this.context = context;
         sharedPref = context.getSharedPreferences("merge2048", MODE_PRIVATE);

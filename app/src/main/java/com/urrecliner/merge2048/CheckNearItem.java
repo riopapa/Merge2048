@@ -27,7 +27,7 @@ public class CheckNearItem {
             indexU = ani.cells[x][y -1].index;
         if (index == indexL && index == indexR && index == indexU) {
             index += 3;
-            gameInfo.score2Add += calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x +1, y, x, y -1);
             explodeThis(x, y, x, y -1);
@@ -36,7 +36,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexR) {
             index += 2;
-            gameInfo.score2Add += calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
@@ -44,7 +44,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexU) {
             index += 2;
-            gameInfo.score2Add += calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -52,7 +52,7 @@ public class CheckNearItem {
         }
         if (index == indexR && index == indexU) {
             index += 2;
-            gameInfo.score2Add +=calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x + 1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -60,21 +60,21 @@ public class CheckNearItem {
         }
         if (index == indexL) {
             index++;
-            gameInfo.score2Add +=calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexR) {
             index++;
-            gameInfo.score2Add +=calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexU) {
             index++;
-            gameInfo.score2Add +=calcNumber(index);
+            gameInfo.score2Add += addNumber(index);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
             return;
@@ -94,7 +94,17 @@ public class CheckNearItem {
         ani.addExplode(x,y, xTo, yTo);
     }
 
-    public int calcNumber(int index) {
+    public int addNumber(int index) {
+        int addVal = powerIndex(index);
+        if (!gameInfo.showNext)
+            addVal += addVal;
+        if (gameInfo.swing)
+            addVal += addVal / 2;
+        gameInfo.greatStacked += addVal;
+        return addVal;
+    }
+
+    public int powerIndex(int index) {
         int number;
         if (index != 0) {
             number = 1;
@@ -102,12 +112,6 @@ public class CheckNearItem {
                 number = number + number;
         } else
             number = 0;
-        if (!gameInfo.showNext)
-            number += number;
-        if (gameInfo.swing)
-            number += number / 2;
-        gameInfo.greatStacked += number;
         return number;
     }
-
 }
