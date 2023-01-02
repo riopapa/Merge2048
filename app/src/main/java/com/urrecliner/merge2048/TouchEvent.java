@@ -1,13 +1,10 @@
 package com.urrecliner.merge2048;
 
-import android.util.Log;
 import android.view.MotionEvent;
-
-import com.urrecliner.merge2048.GameObject.Ani;
 
 public class TouchEvent {
 
-    GameInfo gameInfo;
+    GInfo gInfo;
     private final int xBlockCnt;
     int xTouchPos, yTouchPos;
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
@@ -15,26 +12,26 @@ public class TouchEvent {
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
 
-    public TouchEvent (GameInfo gameInfo) {
-        this.gameInfo = gameInfo;
-        xOffset = gameInfo.xOffset; yDownOffset = gameInfo.yDownOffset;
-        blockOutSize = gameInfo.blockOutSize;
-        xBlockCnt = gameInfo.xBlockCnt;
+    public TouchEvent (GInfo gInfo) {
+        this.gInfo = gInfo;
+        xOffset = gInfo.xOffset; yDownOffset = gInfo.yDownOffset;
+        blockOutSize = gInfo.blockOutSize;
+        xBlockCnt = gInfo.xBlockCnt;
 
-        yNextBottom = gameInfo.yNextPos + blockOutSize + 4;
+        yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
-        xNewPosS = gameInfo.xNewPos;
-        xNewPosE = xNewPosS + gameInfo.blockOutSize*2/3;
-        yNewPosS = gameInfo.yNewPosS;
-        yNewPosE = yNewPosS+ gameInfo.blockOutSize*2/3;
+        xNewPosS = gInfo.xNewPos;
+        xNewPosE = xNewPosS + gInfo.blockOutSize*2/3;
+        yNewPosS = gInfo.yNewPosS;
+        yNewPosE = yNewPosS+ gInfo.blockOutSize*2/3;
 
-        xNextNextPosS = gameInfo.xNextNextPos;
-        yNextNextPosS = gameInfo.yNextNextPos;
+        xNextNextPosS = gInfo.xNextNextPos;
+        yNextNextPosS = gInfo.yNextNextPos;
         xNextNextPosE = xNextNextPosS + blockOutSize/2;
         yNextNextPosE = yNextNextPosS + blockOutSize/2;
 
-        xSwingPosS = gameInfo.xNewPos; ySwingPosS = gameInfo.yNewPosS + gameInfo.blockIconSize;
-        xSwingPosE = xSwingPosS + gameInfo.blockIconSize; ySwingPosE = ySwingPosS + gameInfo.blockIconSize;
+        xSwingPosS = gInfo.xNewPos; ySwingPosS = gInfo.yNewPosS + gInfo.blockIconSize;
+        xSwingPosE = xSwingPosS + gInfo.blockIconSize; ySwingPosE = ySwingPosS + gInfo.blockIconSize;
     }
     
     public void check(MotionEvent event) {
@@ -43,66 +40,66 @@ public class TouchEvent {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                if (gameInfo.poolAniSize != 0) // if animation not completed
+                if (gInfo.poolAniSize != 0) // if animation not completed
                     return;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
                 if (yTouchPos < 400 && xTouchPos < 400) {
-                    gameInfo.dumpCount++;
-                    if (gameInfo.dumpCount > 2) {
-                        gameInfo.msgHead = "참고";
-                        gameInfo.msgLine1 = "Dump Start..";
-                        gameInfo.msgLine2 = "Cell Arrays";
-                        gameInfo.msgTime = System.currentTimeMillis() + 1500;
+                    gInfo.dumpCount++;
+                    if (gInfo.dumpCount > 2) {
+                        gInfo.msgHead = "참고";
+                        gInfo.msgLine1 = "Dump Start..";
+                        gInfo.msgLine2 = "Cell Arrays";
+                        gInfo.msgTime = System.currentTimeMillis() + 1500;
                     }
                 }
                 if (yTouchPos < yDownOffset)
                     return;
-                if (gameInfo.newGamePressed) {
-                    if (gameInfo.isGameOver || isYesPressed()) {
-                        gameInfo.startNewGame = true;
-                        gameInfo.newGamePressed = false;
+                if (gInfo.newGamePressed) {
+                    if (gInfo.isGameOver || isYesPressed()) {
+                        gInfo.startNewGame = true;
+                        gInfo.newGamePressed = false;
                     } else if (isNoPressed()) {
-                        gameInfo.startNewGame = false;
-                        gameInfo.newGamePressed = false;
+                        gInfo.startNewGame = false;
+                        gInfo.newGamePressed = false;
                     }
 
                 } else if (isNextPressed()) {
-                    gameInfo.showNext = !gameInfo.showNext;
+                    gInfo.showNext = !gInfo.showNext;
 
                 } else if (isNewGamePressed()) {
-                    gameInfo.newGamePressed = true;
+                    gInfo.newGamePressed = true;
 
-                } else if (gameInfo.quitPressed) {
+                } else if (gInfo.quitPressed) {
                     if (isYesPressed()) {
-                        gameInfo.quitPressed = false;
-                        gameInfo.quitGame = true;
+                        gInfo.quitPressed = false;
+                        gInfo.quitGame = true;
                     } else if (isNoPressed()) {
-                        gameInfo.quitPressed = false;
-                        gameInfo.quitGame = false;
+                        gInfo.quitPressed = false;
+                        gInfo.quitGame = false;
                     }
                 } else if (isShootPressed()) {
                     xTouchPos -= xOffset;
                     if (xTouchPos >= 0) {
                         int touchIndex = xTouchPos / blockOutSize;
                         if (touchIndex >= 0 && touchIndex < xBlockCnt) {
-                            if (gameInfo.swing) {
-                                if (xTouchPos >= gameInfo.xNextPos &&
-                                    xTouchPos < gameInfo.xNextPos + blockOutSize) {
-                                    gameInfo.blockClicked = true;
-                                    gameInfo.touchIndex = touchIndex;
+                            if (gInfo.swing) {
+                                if (xTouchPos >= gInfo.xNextPos &&
+                                    xTouchPos < gInfo.xNextPos + blockOutSize) {
+                                    gInfo.blockClicked = true;
+                                    gInfo.touchIndex = touchIndex;
                                 }
                             } else {
-                                gameInfo.blockClicked = true;
-                                gameInfo.touchIndex = touchIndex;
+                                gInfo.blockClicked = true;
+                                gInfo.touchIndex = touchIndex;
                             }
                         }
                     }
                 } else if (isSwingPressed()) {
-                    gameInfo.swingPressed = true;
+                    gInfo.swingPressed = true;
 //
 //                } else if (yTouchPos > yNextBottom + 200){
-//                    gameInfo.dumpCellClicked = true;
+//                    gInfo.dumpCellClicked = true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -118,21 +115,21 @@ public class TouchEvent {
     }
 
     boolean isYesPressed() {
-        return  (!gameInfo.isGameOver) &&
+        return  (!gInfo.isGameOver) &&
                 (xTouchPos >= xNewPosE &&
-                xTouchPos <= xNewPosE + gameInfo.blockOutSize*4/5 &&
+                xTouchPos <= xNewPosE + gInfo.blockOutSize*4/5 &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
     }
 
     boolean isNoPressed() {
-        return  (!gameInfo.isGameOver) &&
-                (xTouchPos >= xNewPosE + gameInfo.blockOutSize*4/5 &&
-                xTouchPos <= xNewPosE + gameInfo.blockOutSize*8/5 &&
+        return  (!gInfo.isGameOver) &&
+                (xTouchPos >= xNewPosE + gInfo.blockOutSize*4/5 &&
+                xTouchPos <= xNewPosE + gInfo.blockOutSize*8/5 &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
     }
 
     boolean isSwingPressed() {
-        return  (!gameInfo.isGameOver) &&
+        return  (!gInfo.isGameOver) &&
                 (xTouchPos >= xSwingPosS  && xTouchPos <= xSwingPosE &&
                         yTouchPos >= ySwingPosS && yTouchPos <= ySwingPosE);
     }

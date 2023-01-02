@@ -9,7 +9,7 @@ import android.graphics.Rect;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameObject.HighMember;
 import com.urrecliner.merge2048.R;
 
@@ -23,21 +23,21 @@ public class ScorePlate {
     Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board1Paint, board2Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
-    GameInfo gameInfo;
+    GInfo gInfo;
     List<HighMember> highMembers;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
 
-    public ScorePlate(GameInfo gameInfo, Context context) {
-        this.gameInfo = gameInfo;
+    public ScorePlate(GInfo gInfo, Context context) {
+        this.gInfo = gInfo;
         this.context = context;
-        this.highMembers = gameInfo.highMembers;
+        this.highMembers = gInfo.highMembers;
 
-        gameScoreXPos = gameInfo.xNextPos/2 + gameInfo.xOffset;
-        gameScoreYPos = gameInfo.yNewPosS + gameInfo.blockInSize/2;
+        gameScoreXPos = gInfo.xNextPos/2 + gInfo.xOffset;
+        gameScoreYPos = gInfo.yNewPosS + gInfo.blockInSize/2;
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(80);
+        scoreOPaint.setTextSize(gInfo.pxcl);
         scoreOPaint.setStrokeWidth(12);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
@@ -46,18 +46,18 @@ public class ScorePlate {
         scoreIPaint = new Paint();
         scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(80);
+        scoreIPaint.setTextSize(gInfo.pxcl);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
 
         xBoardPosLeft = calcPixel(48);
-        xBoardPosRight = gameInfo.xNewPos - 8;
+        xBoardPosRight = gInfo.xNewPos - 8;
 
-        yBoardPosTop = gameInfo.yNewPosS + gameInfo.blockInSize*4/5;
+        yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*4/5;
 
-        xBoardPosWho = gameInfo.xOffset + calcPixel(80);
+        xBoardPosWho = gInfo.xOffset + calcPixel(80);
 
         xBoardPosTime = xBoardPosWho + 32;
 
@@ -67,7 +67,7 @@ public class ScorePlate {
         board2Paint.setColor(ContextCompat.getColor(context, R.color.board1));
         board2Paint.setStrokeWidth(4);
 
-        int height, texSize = 100;
+        int height, texSize = gInfo.pxcl;
         hTextPaint = new Paint();
         hTextPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
         hTextPaint.setColor(Color.WHITE);
@@ -105,23 +105,23 @@ public class ScorePlate {
     }
 
     private int calcPixel(int milliPercent) {
-        return gameInfo.screenXSize * milliPercent / 1000;
+        return gInfo.screenXSize * milliPercent / 1000;
     }
 
     public void draw(Canvas canvas) {
 
-        canvas.drawText(""+ gameInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreOPaint);
-        canvas.drawText(""+ gameInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreIPaint);
+        canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreOPaint);
+        canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreIPaint);
 
-        if (gameInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
+        if (gInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
             scoreTimeStamp = System.currentTimeMillis() + 40;
-            int score = gameInfo.score2Add / 6;
+            int score = gInfo.score2Add / 6;
             if (score < 2)
                 score = 2;
             else
                 score = (score / 2) * 2;
-            gameInfo.score2Add -= score;
-            gameInfo.scoreNow += score;
+            gInfo.score2Add -= score;
+            gInfo.scoreNow += score;
         }
 
         for (int i = 0; i < highMembers.size(); i++) {

@@ -8,9 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.GameImage.ExplodeImage;
-import com.urrecliner.merge2048.GameInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,19 +27,19 @@ public class Ani {
     int xBlockCnt, yBlockCnt, xOffset, yUpOffset, xBlockOutSize, yBlockOutSize;
     public List<BlockImage> blockImages;
     ExplodeImage explodeImage;
-    GameInfo gameInfo;
+    GInfo gInfo;
 
-    public Ani(GameInfo gameInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, Context context){
-        this.gameInfo = gameInfo;
+    public Ani(GInfo gInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, Context context){
+        this.gInfo = gInfo;
         this.context = context;
-        this.xOffset = gameInfo.xOffset;
-        this.yUpOffset = gameInfo.yUpOffset;
-        this.screenXSize = gameInfo.screenXSize;
-        this.screenYSize = gameInfo.screenYSize;
-        this.xBlockOutSize = gameInfo.blockOutSize;
-        this.yBlockOutSize = gameInfo.blockOutSize;
-        xBlockCnt = gameInfo.xBlockCnt;
-        yBlockCnt = gameInfo.yBlockCnt;
+        this.xOffset = gInfo.xOffset;
+        this.yUpOffset = gInfo.yUpOffset;
+        this.screenXSize = gInfo.screenXSize;
+        this.screenYSize = gInfo.screenYSize;
+        this.xBlockOutSize = gInfo.blockOutSize;
+        this.yBlockOutSize = gInfo.blockOutSize;
+        xBlockCnt = gInfo.xBlockCnt;
+        yBlockCnt = gInfo.yBlockCnt;
         cells = new Cell[xBlockCnt][yBlockCnt];
         this.blockImages = blockImages;
         this.explodeImage = explodeImage;
@@ -50,19 +50,19 @@ public class Ani {
     public void addMove(int xS, int yS, int xF, int yF) {
         int maxCount = (yF-yS > 2) ? (yF-yS) / 2: 1;
         maxCount *= MOVE_SMOOTH;
-        poolAnis.add(new PoolAni(GameInfo.STATE.MOVING, xS, yS, xF, yF,
-                gameInfo.blockOutSize * (xF - xS) / maxCount,
-                gameInfo.blockOutSize * (yF - yS)/ maxCount, maxCount));
+        poolAnis.add(new PoolAni(GInfo.STATE.MOVING, xS, yS, xF, yF,
+                gInfo.blockOutSize * (xF - xS) / maxCount,
+                gInfo.blockOutSize * (yF - yS)/ maxCount, maxCount));
     }
 
     public void addMerge(int x, int y, int index) {
-        poolAnis.add(new PoolAni(GameInfo.STATE.MERGE, x, y, index));
+        poolAnis.add(new PoolAni(GInfo.STATE.MERGE, x, y, index));
     }
 
     public void addExplode(int xS, int yS, int xF, int yF) {
-        poolAnis.add(new PoolAni(GameInfo.STATE.EXPLODE, xS, yS,
-                gameInfo.blockOutSize * (xF - xS) / MOVE_SMOOTH,
-                gameInfo.blockOutSize * (yF - yS)/ MOVE_SMOOTH));
+        poolAnis.add(new PoolAni(GInfo.STATE.EXPLODE, xS, yS,
+                gInfo.blockOutSize * (xF - xS) / MOVE_SMOOTH,
+                gInfo.blockOutSize * (yF - yS)/ MOVE_SMOOTH));
     }
 
     public void draw(Canvas canvas) {
@@ -70,7 +70,7 @@ public class Ani {
         // reDraw if Paused
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
-                if (cells[x][y].state == GameInfo.STATE.PAUSED && cells[x][y].index > 0) {
+                if (cells[x][y].state == GInfo.STATE.PAUSED && cells[x][y].index > 0) {
                     Bitmap blockMap = blockImages.get(cells[x][y].index).bitmap;
                     canvas.drawBitmap(blockMap, xOffset + x * xBlockOutSize,
                             yUpOffset + y * yBlockOutSize, null);
@@ -87,8 +87,8 @@ public class Ani {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
                             if (cells[ap.xF][ap.yF].index == 0) {
                                 cells[ap.xF][ap.yF] = cells[ap.xS][ap.yS];
-                                cells[ap.xF][ap.yF].state = GameInfo.STATE.STOP;
-                                cells[ap.xS][ap.yS] = new Cell(0, GameInfo.STATE.PAUSED);
+                                cells[ap.xF][ap.yF].state = GInfo.STATE.STOP;
+                                cells[ap.xS][ap.yS] = new Cell(0, GInfo.STATE.PAUSED);
                                 poolAnis.remove(apI);
                                 continue;
                             } else {
@@ -98,10 +98,10 @@ public class Ani {
                         } else {
                             if (cells[ap.xS][ap.yS].index > 0) {
                                 Bitmap blockMap = blockImages.get(cells[ap.xS][ap.yS].index).flyMaps[ap.count];
-                                int xPos = gameInfo.xOffset + ap.xS * gameInfo.blockOutSize
-                                        + ap.xInc * ap.count - gameInfo.blockFlyingGap;
-                                int yPos = gameInfo.yUpOffset + ap.yS * gameInfo.blockOutSize
-                                        + ap.yInc * ap.count - gameInfo.blockFlyingGap;
+                                int xPos = gInfo.xOffset + ap.xS * gInfo.blockOutSize
+                                        + ap.xInc * ap.count - gInfo.blockFlyingGap;
+                                int yPos = gInfo.yUpOffset + ap.yS * gInfo.blockOutSize
+                                        + ap.yInc * ap.count - gInfo.blockFlyingGap;
                                 canvas.drawBitmap(blockMap, xPos, yPos, null);
                                 ap.count++;
                                 ap.timeStamp = System.currentTimeMillis() + ap.delay
@@ -116,15 +116,15 @@ public class Ani {
                 case EXPLODE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = GameInfo.STATE.EXPLODED;
+                            cells[ap.xS][ap.yS].state = GInfo.STATE.EXPLODED;
                             poolAnis.remove(apI);
                             continue;
                         } else {
                             Bitmap explodeMap = explodeImage.smallMaps[ap.count];
-                            int xPos = gameInfo.xOffset + ap.xS * gameInfo.blockOutSize
-                                    + ap.xInc * ap.count - gameInfo.explodeGap;
-                            int yPos = gameInfo.yUpOffset + ap.yS * gameInfo.blockOutSize
-                                    + ap.yInc * ap.count - gameInfo.explodeGap;
+                            int xPos = gInfo.xOffset + ap.xS * gInfo.blockOutSize
+                                    + ap.xInc * ap.count - gInfo.explodeGap;
+                            int yPos = gInfo.yUpOffset + ap.yS * gInfo.blockOutSize
+                                    + ap.yInc * ap.count - gInfo.explodeGap;
                             canvas.drawBitmap(explodeMap, xPos, yPos, null);
                             ap.count++;
                             ap.timeStamp = System.currentTimeMillis() + ap.delay;
@@ -137,7 +137,7 @@ public class Ani {
                 case MERGE:
                     if (ap.timeStamp < System.currentTimeMillis() ) {
                         if (ap.count >= MOVE_SMOOTH) {    // smooth factor
-                            cells[ap.xS][ap.yS].state = GameInfo.STATE.MERGED;
+                            cells[ap.xS][ap.yS].state = GInfo.STATE.MERGED;
                             cells[ap.xS][ap.yS].index = ap.xF;  // xF is new Index
                             poolAnis.remove(apI);
                             continue;
@@ -159,6 +159,6 @@ public class Ani {
                     break;
             }
         }
-        gameInfo.poolAniSize = poolAnis.size();
+        gInfo.poolAniSize = poolAnis.size();
     }
 }

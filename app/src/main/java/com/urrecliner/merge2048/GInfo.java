@@ -9,7 +9,7 @@ import com.urrecliner.merge2048.GameObject.HighMember;
 
 import java.util.List;
 
-public class GameInfo {
+public class GInfo {
 
     public final int screenXSize, screenYSize;
     public final int xBlockCnt = 5, yBlockCnt = 6;
@@ -21,6 +21,7 @@ public class GameInfo {
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public final int xNewPos, yNextPos;
     public final int greatCount = 12;
+    public final int pxcl;
 
     public long scoreNow;
     public int score2Add;
@@ -50,34 +51,35 @@ public class GameInfo {
         PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
     }
 
-    public GameInfo(Context context) {
+    public GInfo(Context context) {
 
         DisplayMetrics metrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        // note 20 ultra    1440 x 2819
-        // A32              1080 x 2194
+
 
         // setUp final values
-        screenXSize = metrics.widthPixels;
-        screenYSize = metrics.heightPixels;
-        blockOutSize = screenXSize * 90 / 100 / xBlockCnt;
-        blockInSize = blockOutSize - blockOutSize / 36;
+        screenXSize = metrics.widthPixels;      // note20  1440 x 2819
+        screenYSize = metrics.heightPixels;     // A32     1080 x 2194
+
+        blockOutSize = screenXSize * 90 / 100 / xBlockCnt;  // note20 = 259
+        blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 252
+
         blockFlyingGap = (blockOutSize * 120/100 - blockOutSize)/2;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
         yUpOffset = 32;
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
-        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;
+        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 196
         explodeGap = blockOutSize / 5;
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
         xNewPos = xNextPosCenter + blockOutSize - 8;
         yNextPos = yDownOffset + 16;
-
+        pxcl = screenXSize / 16;            // N20= 90, A32 = 67
         swingXInc = blockOutSize / 5;
         swingXPosLeft = xOffset - 32;
         swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
 
-        Log.w("GameInfo", "screen= " + screenXSize + " x " + screenYSize);
-        Log.w("GameInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
+        Log.w("GInfo", "screen= " + screenXSize + " x " + screenYSize);
+        Log.w("GInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
 
         resetValues();
     }

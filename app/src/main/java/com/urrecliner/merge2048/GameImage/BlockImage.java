@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
 
 public class BlockImage {
@@ -16,7 +16,7 @@ public class BlockImage {
     public Bitmap [] flyMaps;
     public Bitmap halfMap;
 
-    public BlockImage(int idx, int number, GameInfo gameInfo, Context context) {
+    public BlockImage(int idx, int number, GInfo gInfo, Context context) {
         this.idx = idx;
         this.number = number;
         int [] orgMapId = {
@@ -29,20 +29,20 @@ public class BlockImage {
         };
         bitmap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), orgMapId[idx]),
-                gameInfo.blockInSize, gameInfo.blockInSize, false);
+                gInfo.blockInSize, gInfo.blockInSize, false);
         flyMaps = new Bitmap[5];
-        flyMaps[0] = makeFlyMap(bitmap, gameInfo, 110); // max 120%
-        flyMaps[1] = makeFlyMap(bitmap, gameInfo, 120);
-        flyMaps[2] = makeFlyMap(bitmap, gameInfo, 120);
-        flyMaps[3] = makeFlyMap(bitmap, gameInfo, 110);
-        flyMaps[4] = makeFlyMap(bitmap, gameInfo, 100);
+        flyMaps[0] = makeFlyMap(bitmap, gInfo, 110); // max 120%
+        flyMaps[1] = makeFlyMap(bitmap, gInfo, 120);
+        flyMaps[2] = makeFlyMap(bitmap, gInfo, 120);
+        flyMaps[3] = makeFlyMap(bitmap, gInfo, 110);
+        flyMaps[4] = makeFlyMap(bitmap, gInfo, 100);
 
         halfMap = Bitmap.createScaledBitmap(bitmap,
-                gameInfo.blockInSize /2, gameInfo.blockInSize /2,false);
+                gInfo.blockInSize /2, gInfo.blockInSize /2,false);
     }
 
-    private Bitmap makeFlyMap(Bitmap bitmap, GameInfo gameInfo, int pct) {
-        int scale = (gameInfo.blockInSize + gameInfo.blockFlyingGap*2); // 120 %
+    private Bitmap makeFlyMap(Bitmap bitmap, GInfo gInfo, int pct) {
+        int scale = (gInfo.blockInSize + gInfo.blockFlyingGap*2); // 120 %
         Bitmap bigMap = Bitmap.createScaledBitmap(bitmap, scale, scale,false);
         Canvas canvas = new Canvas(bigMap);
         int fScale = scale * pct / 100;

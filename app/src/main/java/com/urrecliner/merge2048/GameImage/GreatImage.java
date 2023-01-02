@@ -4,14 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
 
 public class GreatImage {
 
     final public Bitmap [] countMaps;
     final public int countMapLen;
-    public GreatImage(GameInfo gameInfo, Context context) {
+    public GreatImage(GInfo gInfo, Context context) {
 
         int [] orgMapId = {
             R.drawable.z100, R.drawable.z101, R.drawable.z102, R.drawable.z103,
@@ -22,11 +22,11 @@ public class GreatImage {
 
         countMapLen = orgMapId.length;
         countMaps = new Bitmap[countMapLen];
-        int blockSize = gameInfo.blockOutSize * 2;
+        int blockSize = gInfo.blockOutSize * 2;
         for (int i = 0; i < countMapLen ; i++) {
             Bitmap bitmap = Bitmap.createScaledBitmap(
                     BitmapFactory.decodeResource(context.getResources(), orgMapId[i]),
-                    gameInfo.blockInSize, gameInfo.blockInSize, false);
+                    gInfo.blockInSize, gInfo.blockInSize, false);
             countMaps[i] = Bitmap.createScaledBitmap(bitmap,
                     blockSize, blockSize,false);
         }

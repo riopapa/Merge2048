@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-//        game.gameInfo.quitPressed = true;
+//        game.gInfo.quitPressed = true;
 //        if (game.exitGame())
 //                finish();
             super.onBackPressed();

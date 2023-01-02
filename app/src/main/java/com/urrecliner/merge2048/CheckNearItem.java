@@ -4,13 +4,13 @@ import com.urrecliner.merge2048.GameObject.Ani;
 
 public class CheckNearItem {
     Ani ani;
-    GameInfo gameInfo;
+    GInfo gInfo;
     final int xBlockCnt, yBlockCnt;
 
-    public CheckNearItem(GameInfo gameInfo, Ani ani) {
-        this.gameInfo = gameInfo;
-        this.xBlockCnt = gameInfo.xBlockCnt;
-        this.yBlockCnt = gameInfo.yBlockCnt;
+    public CheckNearItem(GInfo gInfo, Ani ani) {
+        this.gInfo = gInfo;
+        this.xBlockCnt = gInfo.xBlockCnt;
+        this.yBlockCnt = gInfo.yBlockCnt;
         this.ani = ani;
     }
 
@@ -27,7 +27,7 @@ public class CheckNearItem {
             indexU = ani.cells[x][y -1].index;
         if (index == indexL && index == indexR && index == indexU) {
             index += 3;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x +1, y, x, y -1);
             explodeThis(x, y, x, y -1);
@@ -36,7 +36,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexR) {
             index += 2;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
@@ -44,7 +44,7 @@ public class CheckNearItem {
         }
         if (index == indexL && index == indexU) {
             index += 2;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -52,7 +52,7 @@ public class CheckNearItem {
         }
         if (index == indexR && index == indexU) {
             index += 2;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x + 1, y, x, y -1);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
@@ -60,47 +60,47 @@ public class CheckNearItem {
         }
         if (index == indexL) {
             index++;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexR) {
             index++;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexU) {
             index++;
-            gameInfo.score2Add += addNumber(index);
+            gInfo.score2Add += addNumber(index);
             explodeThis(x, y, x, y -1);
             mergeToHere(x, y -1, index);
             return;
         }
-        ani.cells[x][y].state = GameInfo.STATE.PAUSED;
+        ani.cells[x][y].state = GInfo.STATE.PAUSED;
     }
 
     private void mergeToHere(int x, int y, int index) {
-        gameInfo.greatIdx++;
-        ani.cells[x][y].state = GameInfo.STATE.MERGE;
+        gInfo.greatIdx++;
+        ani.cells[x][y].state = GInfo.STATE.MERGE;
         ani.addMerge(x,y, index);
     }
 
     private void explodeThis(int x, int y, int xTo, int yTo) {
-        ani.cells[x][y].state = GameInfo.STATE.EXPLODE;
+        ani.cells[x][y].state = GInfo.STATE.EXPLODE;
         ani.cells[x][y].index = 0;
         ani.addExplode(x,y, xTo, yTo);
     }
 
     public int addNumber(int index) {
         int addVal = powerIndex(index);
-        if (!gameInfo.showNext)
+        if (!gInfo.showNext)
             addVal += addVal;
-        if (gameInfo.swing)
+        if (gInfo.swing)
             addVal += addVal / 2;
-        gameInfo.greatStacked += addVal;
+        gInfo.greatStacked += addVal;
         return addVal;
     }
 

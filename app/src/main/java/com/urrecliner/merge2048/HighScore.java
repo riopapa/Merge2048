@@ -14,33 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HighScore {
-    GameInfo gameInfo;
+    GInfo gInfo;
     Context context;
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedEditor;
     final String highMember = "highMember";
 
-    public HighScore(GameInfo gameInfo, Context context) {
-        this.gameInfo = gameInfo;
+    public HighScore(GInfo gInfo, Context context) {
+        this.gInfo = gInfo;
         this.context = context;
         sharedPref = context.getSharedPreferences("merge2048", MODE_PRIVATE);
         sharedEditor = sharedPref.edit();
     }
 
     void get() {
-        gameInfo.highMembers = new ArrayList<>();
+        gInfo.highMembers = new ArrayList<>();
         Gson gson = new Gson();
         String json = sharedPref.getString(highMember, "");
         if (!json.isEmpty()) {
             Type type = new TypeToken<List<HighMember>>() {
             }.getType();
-            gameInfo.highMembers = gson.fromJson(json, type);
+            gInfo.highMembers = gson.fromJson(json, type);
         }
     }
 
     void put() {
         Gson gson = new Gson();
-        String json = gson.toJson(gameInfo.highMembers);
+        String json = gson.toJson(gInfo.highMembers);
         sharedEditor.putString(highMember, json);
         sharedEditor.apply();
     }

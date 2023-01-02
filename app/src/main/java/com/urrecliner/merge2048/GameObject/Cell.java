@@ -1,14 +1,14 @@
 package com.urrecliner.merge2048.GameObject;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 
 public class Cell {
 
     public int index;
-    public GameInfo .STATE state;
+    public GInfo.STATE state;
     long timeStamp;
 
-    public Cell(int index, GameInfo.STATE state) {
+    public Cell(int index, GInfo.STATE state) {
         this.index = index;
         this.state = state;
         timeStamp = System.currentTimeMillis();

@@ -8,8 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameImage.GreatImage;
-import com.urrecliner.merge2048.GameInfo;
 import com.urrecliner.merge2048.GameObject.Great;
 
 import java.util.ArrayList;
@@ -18,22 +18,22 @@ import java.util.List;
 public class GreatPlate {
 
     Context context;
-    final GameInfo gameInfo;
+    final GInfo gInfo;
     List<Great> greats;
     final GreatImage greatImage;
 
-    public GreatPlate(GameInfo gameInfo, Context context){
-        this.gameInfo = gameInfo;
+    public GreatPlate(GInfo gInfo, Context context){
+        this.gInfo = gInfo;
         this.context = context;
         greats = new ArrayList<>();    // clear PoolAni
-        greatImage = new GreatImage(gameInfo, context);
+        greatImage = new GreatImage(gInfo, context);
     }
 
     public void addGreat(int xS, int yS, int idx, int loopCount) {
 
         greats.add(new Great(xS, yS, idx, loopCount,
-                gameInfo.blockOutSize * (- xS) / (gameInfo.greatCount+idx),
-                gameInfo.blockOutSize * (gameInfo.yBlockCnt - yS + 1)/ (gameInfo.greatCount+idx), 30));
+                gInfo.blockOutSize * (- xS) / (gInfo.greatCount+idx),
+                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ (gInfo.greatCount+idx), 30));
     }
 
     public void draw(Canvas canvas) {
@@ -43,13 +43,13 @@ public class GreatPlate {
             if (great.timeStamp < System.currentTimeMillis()) {
                 if (great.count >= great.loopCount) {
                     greats.remove(gI);
-                    gameInfo.score2Add += gameInfo.greatStacked * great.idx;
+                    gInfo.score2Add += gInfo.greatStacked * great.idx;
                     continue;
                 } else {
                     Bitmap bitmap = greatImage.countMaps[great.idx];
-                    int xPos = gameInfo.xOffset + great.xS * gameInfo.blockOutSize
+                    int xPos = gInfo.xOffset + great.xS * gInfo.blockOutSize
                             + great.xInc * great.count;
-                    int yPos = gameInfo.yUpOffset + great.yS * gameInfo.blockOutSize
+                    int yPos = gInfo.yUpOffset + great.yS * gInfo.blockOutSize
                             + great.yInc * great.count;
                     canvas.drawBitmap(bitmap, xPos, yPos, null);
                     great.count++;

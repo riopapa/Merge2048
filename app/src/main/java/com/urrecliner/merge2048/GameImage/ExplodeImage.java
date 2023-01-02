@@ -5,21 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
 
 public class ExplodeImage {
 
     public Bitmap [] smallMaps;
     public final int explodeGap = 64;
-    public ExplodeImage(GameInfo gameInfo, Context context) {
+    public ExplodeImage(GInfo gInfo, Context context) {
 
         Bitmap explodeMap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.a_explosion);
 
         Bitmap bitmap = Bitmap.createScaledBitmap(explodeMap,
-                gameInfo.blockInSize + explodeGap + explodeGap,
-                gameInfo.blockInSize + explodeGap + explodeGap, false);
+                gInfo.blockInSize + explodeGap + explodeGap,
+                gInfo.blockInSize + explodeGap + explodeGap, false);
 
         smallMaps = new Bitmap[5];  // MOVE_SMOOTH
         smallMaps[0] = bitmapSmall(bitmap, 100);

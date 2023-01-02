@@ -9,39 +9,39 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.urrecliner.merge2048.GameInfo;
+import com.urrecliner.merge2048.GInfo;
 
 public class GameOverPlate {
 
     Context context;
-    GameInfo gameInfo;
+    GInfo gInfo;
     Paint overPaint;
     boolean showSwitch = false;
     int waitCount;
     final int xOverPos, yOverPosTop, yOverPosBottom;
     int  yOverPos, yOverInc;
 
-    public GameOverPlate(GameInfo gameInfo, Context context){
-        this.gameInfo = gameInfo;
+    public GameOverPlate(GInfo gInfo, Context context){
+        this.gInfo = gInfo;
         this.context = context;
 
         overPaint = new Paint();
-        overPaint.setTextSize(200);
+        overPaint.setTextSize(gInfo.pxcl+gInfo.pxcl);
         overPaint.setColor(Color.RED);
         overPaint.setTextAlign(Paint.Align.CENTER);
         overPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         overPaint.setStrokeWidth(32);
         waitCount = 100;
 
-        xOverPos = gameInfo.screenXSize/2;
-        yOverPos = gameInfo.yDownOffset/2;;
-        yOverPosTop = gameInfo.blockIconSize * 2;
-        yOverPosBottom = gameInfo.blockOutSize * (gameInfo.yBlockCnt -1);
-        yOverInc = gameInfo.blockInSize / 32;
+        xOverPos = gInfo.screenXSize/2;
+        yOverPos = gInfo.yDownOffset/2;;
+        yOverPosTop = gInfo.blockIconSize * 2;
+        yOverPosBottom = gInfo.blockOutSize * (gInfo.yBlockCnt -1);
+        yOverInc = gInfo.blockInSize / 32;
     }
 
     public void draw(Canvas canvas) {
-        if (!gameInfo.isGameOver)
+        if (!gInfo.isGameOver)
             return;
         waitCount++;
         if (waitCount > 10) {
