@@ -1,7 +1,7 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- * Purpose of this Ani module is to draw, animate Game Plate
+ * Purpose of this Animation module is to draw, animate Game Plate
  */
 
 import android.content.Context;
@@ -25,7 +25,7 @@ public class GreatPlate {
     public GreatPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
         this.context = context;
-        greats = new ArrayList<>();    // clear PoolAni
+        greats = new ArrayList<>();    // clear AniStack
         greatImage = new GreatImage(gInfo, context);
     }
 

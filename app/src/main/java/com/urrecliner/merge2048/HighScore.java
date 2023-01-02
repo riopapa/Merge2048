@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HighScore {
-    GInfo gInfo;
-    Context context;
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor sharedEditor;
+    final GInfo gInfo;
+    final Context context;
+    final SharedPreferences sharedPref;
+    final SharedPreferences.Editor sharedEditor;
     final String highMember = "highMember";
 
     public HighScore(GInfo gInfo, Context context) {

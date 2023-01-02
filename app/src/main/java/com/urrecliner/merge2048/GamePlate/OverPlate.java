@@ -1,7 +1,7 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- * Purpose of this Ani module is to draw, animate Game Plate
+ * Purpose of this Animation module is to draw, animate Game Plate
  */
 
 import android.graphics.Bitmap;
@@ -24,7 +24,7 @@ public class OverPlate {
     public OverPlate(GInfo gInfo, List<BlockImage> blockImages){
         this.gInfo = gInfo;
         this.blockImages = blockImages;
-        overs = new ArrayList<>();    // clear PoolAni
+        overs = new ArrayList<>();    // clear AniStack
     }
 
 

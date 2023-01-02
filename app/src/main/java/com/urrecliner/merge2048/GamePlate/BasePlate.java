@@ -15,13 +15,13 @@ import com.urrecliner.merge2048.R;
 public class BasePlate {
 
     Context context;
-    GInfo gInfo;
+    final GInfo gInfo;
     final Paint backPaint, vPath1Paint, vPath2Paint, yesNoPaint;
     private final int xBlockCnt;
     private final int blockOutSize, blockIconSize;
     private final int xOffset;
     private final int xLeft, yTop, yBottom, yNextBottom;
-    private final int xNewPos, yNewPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
+    private final int xNewPos, yNewPos, xQuitPos, yQuitPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
     private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap, quitMap;
 
     public BasePlate(GInfo gInfo, Context context) {
@@ -47,6 +47,7 @@ public class BasePlate {
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
         xNewPos = gInfo.xNewPos; yNewPos = gInfo.yNewPosS;
+        xQuitPos = gInfo.screenXSize-xOffset-blockIconSize; yQuitPos = gInfo.yNewPosS;
         xYesPos = xNewPos + blockIconSize;
         xNopPos = xNewPos + blockIconSize * 2;
         xSwingPos = xNewPos; ySwingPos = yNewPos + blockIconSize;
@@ -59,11 +60,11 @@ public class BasePlate {
         newMap = buildMap (R.drawable.a_new);
         yesMap = buildMap (R.drawable.a_yes);
         nopMap = buildMap (R.drawable.a_no);
+        quitMap = buildMap(R.drawable.a_quit);
 
         swingOMap = buildMap(R.drawable.a_swing);
         swingFMap = buildMap(R.drawable.a_swing_f);
 
-        quitMap = buildMap(R.drawable.a_quit);
     }
 
     Bitmap buildMap(int resId) {
@@ -91,13 +92,11 @@ public class BasePlate {
         }
 
         // new Icon
-        if (gInfo.quitGame)
-            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
-        else
-            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+        canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+        canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
 
         // yes, no
-        if (!gInfo.isGameOver && (gInfo.newGamePressed || gInfo.quitPressed)) {
+        if (gInfo.newGamePressed || gInfo.quitGamePressed) {
             canvas.drawRoundRect(xYesPos-2, yNewPos-2,
                     xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
                         4,4, yesNoPaint);

@@ -18,12 +18,12 @@ import java.util.Random;
 public class NextPlate {
 
     Context context;
-    GInfo gInfo;
+    final GInfo gInfo;
     Paint nextPaint;
     int blockOutSize, blockInSize;
     int xNextNextPos, yNextNextPos;
     public int nextIndex, nextNextIndex;
-    Bitmap nextNoMap;
+    final Bitmap nextNoMap;
 
     public NextPlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;

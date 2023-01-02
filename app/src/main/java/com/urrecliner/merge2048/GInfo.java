@@ -5,8 +5,11 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.urrecliner.merge2048.GameObject.AniStack;
+import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GameObject.HighMember;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GInfo {
@@ -22,6 +25,7 @@ public class GInfo {
     public final int xNewPos, yNextPos;
     public final int greatCount = 12;
     public final int pxcl;
+    public final Cell[][] cells;
 
     public long scoreNow;
     public int score2Add;
@@ -29,26 +33,28 @@ public class GInfo {
 
     public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
     public int greatIdx, greatStacked = 0;
-    public boolean isGameOver = false, quitPressed = false, quitGame = false;
-    public boolean newGamePressed = false, startNewGame = false;
+    public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
+    public boolean newGamePressed = false, startNewGameYes = false;
     public boolean showNext = true;
-
     public boolean swingPressed = false, swing = false;
     public int swingXInc, swingXPosLeft, swingXPosRight;
     public long swingTime, swingDelay;
 
-    public int dumpCount = 0;
     public boolean blockClicked = false;   // clicked means user clicked
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
-    public int poolAniSize = 0;
     public int gameDifficulty = 6;
 
     public String msgHead = "";
     public String msgLine1 = "", msgLine2 = "";
     public long msgTime = 0;
 
+    public List<AniStack> aniStacks = new ArrayList<>();
+
+    public int dumpCount = 0;
+    public boolean dumpClicked = false;
+
     public enum STATE {
-        PAUSED, MOVING, STOP, CHECK, MERGE, MERGED, EXPLODE, EXPLODED
+        PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED
     }
 
     public GInfo(Context context) {
@@ -77,6 +83,7 @@ public class GInfo {
         swingXInc = blockOutSize / 5;
         swingXPosLeft = xOffset - 32;
         swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
+        cells = new Cell[xBlockCnt][yBlockCnt];
 
         Log.w("GInfo", "screen= " + screenXSize + " x " + screenYSize);
         Log.w("GInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
@@ -88,8 +95,9 @@ public class GInfo {
         xNextPos = xNextPosCenter;
         xNextNextPos = xNextPos + (blockOutSize / 4);
         yNextNextPos = yNextPos + blockOutSize + 8;
-
         yNewPosS = yNextPos + blockOutSize + 16;
+
+        aniStacks = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
         greatIdx = 0;

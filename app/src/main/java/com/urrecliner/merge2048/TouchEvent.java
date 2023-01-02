@@ -4,12 +4,13 @@ import android.view.MotionEvent;
 
 public class TouchEvent {
 
-    GInfo gInfo;
+    final GInfo gInfo;
     private final int xBlockCnt;
-    int xTouchPos, yTouchPos;
+    private int xTouchPos, yTouchPos;
     private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
+    private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
 
     public TouchEvent (GInfo gInfo) {
@@ -24,6 +25,11 @@ public class TouchEvent {
         xNewPosE = xNewPosS + gInfo.blockOutSize*2/3;
         yNewPosS = gInfo.yNewPosS;
         yNewPosE = yNewPosS+ gInfo.blockOutSize*2/3;
+
+        xQuitPosE = gInfo.screenXSize - gInfo.xOffset;
+        xQuitPosS = xQuitPosE - gInfo.blockIconSize;
+        yQuitPosS = gInfo.yNewPosS;
+        yQuitPosE = yNewPosS+ gInfo.blockOutSize*2/3;
 
         xNextNextPosS = gInfo.xNextNextPos;
         yNextNextPosS = gInfo.yNextNextPos;
@@ -40,27 +46,28 @@ public class TouchEvent {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                if (gInfo.poolAniSize != 0) // if animation not completed
+                if (gInfo.aniStacks.size() != 0) // if animation not completed
                     return;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
                 if (yTouchPos < 400 && xTouchPos < 400) {
+                    gInfo.dumpClicked = true;
                     gInfo.dumpCount++;
-                    if (gInfo.dumpCount > 2) {
-                        gInfo.msgHead = "참고";
-                        gInfo.msgLine1 = "Dump Start..";
-                        gInfo.msgLine2 = "Cell Arrays";
-                        gInfo.msgTime = System.currentTimeMillis() + 1500;
-                    }
+//                    if (gInfo.dumpCount > 2) {
+//                        gInfo.msgHead = "참고";
+//                        gInfo.msgLine1 = "Dump Start..";
+//                        gInfo.msgLine2 = "Cell Arrays";
+//                        gInfo.msgTime = System.currentTimeMillis() + 1500;
+//                    }
                 }
                 if (yTouchPos < yDownOffset)
                     return;
                 if (gInfo.newGamePressed) {
                     if (gInfo.isGameOver || isYesPressed()) {
-                        gInfo.startNewGame = true;
+                        gInfo.startNewGameYes = true;
                         gInfo.newGamePressed = false;
                     } else if (isNoPressed()) {
-                        gInfo.startNewGame = false;
+                        gInfo.startNewGameYes = false;
                         gInfo.newGamePressed = false;
                     }
 
@@ -70,12 +77,15 @@ public class TouchEvent {
                 } else if (isNewGamePressed()) {
                     gInfo.newGamePressed = true;
 
-                } else if (gInfo.quitPressed) {
+                } else if (isQuitGamePressed()) {
+                    gInfo.quitGamePressed = true;
+
+                } else if (gInfo.quitGamePressed) {
                     if (isYesPressed()) {
-                        gInfo.quitPressed = false;
+                        gInfo.quitGamePressed = false;
                         gInfo.quitGame = true;
                     } else if (isNoPressed()) {
-                        gInfo.quitPressed = false;
+                        gInfo.quitGamePressed = false;
                         gInfo.quitGame = false;
                     }
                 } else if (isShootPressed()) {
@@ -112,6 +122,11 @@ public class TouchEvent {
     boolean isNewGamePressed() {
         return (xTouchPos >= xNewPosS && xTouchPos <= xNewPosE &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
+    }
+
+    boolean isQuitGamePressed() {
+        return (xTouchPos >= xQuitPosS && xTouchPos <= xQuitPosE &&
+                yTouchPos >= yQuitPosS && yTouchPos <= yQuitPosE);
     }
 
     boolean isYesPressed() {

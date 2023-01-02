@@ -6,12 +6,12 @@ public class Cell {
 
     public int index;
     public GInfo.STATE state;
-    long timeStamp;
+//    long timeStamp;
 
     public Cell(int index, GInfo.STATE state) {
         this.index = index;
         this.state = state;
-        timeStamp = System.currentTimeMillis();
+//        timeStamp = System.currentTimeMillis();
     }
 
 }

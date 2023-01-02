@@ -44,7 +44,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         Log.w("MainActivity.java", "onPause()");
-        game.pause();
+        if (game.gInfo.quitGame) {
+            finish();
+            game = null;
+            System.exit(0);
+            android.os.Process.killProcess(android.os.Process.myPid());
+        } else
+            game.pause();
+
         super.onPause();
     }
 
@@ -66,6 +73,5 @@ public class MainActivity extends Activity {
 //        if (game.exitGame())
 //                finish();
             super.onBackPressed();
-        // Comment out "super.onBackPressed()" to disable button
     }
 }

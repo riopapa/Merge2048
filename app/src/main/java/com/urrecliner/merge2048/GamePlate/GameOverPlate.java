@@ -1,7 +1,7 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- * Purpose of this Ani module is to draw, animate Game Plate
+ * Purpose of this Animation module is to draw, animate Game Plate
  */
 
 import android.content.Context;
@@ -13,8 +13,8 @@ import com.urrecliner.merge2048.GInfo;
 
 public class GameOverPlate {
 
-    Context context;
-    GInfo gInfo;
+    final Context context;
+    final GInfo gInfo;
     Paint overPaint;
     boolean showSwitch = false;
     int waitCount;

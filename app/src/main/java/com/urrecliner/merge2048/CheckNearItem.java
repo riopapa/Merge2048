@@ -1,30 +1,30 @@
 package com.urrecliner.merge2048;
 
-import com.urrecliner.merge2048.GameObject.Ani;
-
 public class CheckNearItem {
-    Ani ani;
-    GInfo gInfo;
+    final Animation animation;
+    final AnimationAdd animationAdd;
+    final GInfo gInfo;
     final int xBlockCnt, yBlockCnt;
 
-    public CheckNearItem(GInfo gInfo, Ani ani) {
+    public CheckNearItem(GInfo gInfo, Animation animation, AnimationAdd animationAdd) {
         this.gInfo = gInfo;
-        this.xBlockCnt = gInfo.xBlockCnt;
-        this.yBlockCnt = gInfo.yBlockCnt;
-        this.ani = ani;
+        this.animation = animation;
+        this.animationAdd = animationAdd;
+        xBlockCnt = gInfo.xBlockCnt;
+        yBlockCnt = gInfo.yBlockCnt;
     }
 
     public void check(int x, int y) {
 
-        int index = ani.cells[x][y].index;
+        int index = gInfo.cells[x][y].index;
         int indexR = -1, indexL = -1, indexU = -1;
 
         if (x < xBlockCnt - 1)
-            indexR = ani.cells[x +1][y].index;
+            indexR = gInfo.cells[x +1][y].index;
         if (x > 0)
-            indexL = ani.cells[x -1][y].index;
+            indexL = gInfo.cells[x -1][y].index;
         if (y > 0)
-            indexU = ani.cells[x][y -1].index;
+            indexU = gInfo.cells[x][y -1].index;
         if (index == indexL && index == indexR && index == indexU) {
             index += 3;
             gInfo.score2Add += addNumber(index);
@@ -79,19 +79,19 @@ public class CheckNearItem {
             mergeToHere(x, y -1, index);
             return;
         }
-        ani.cells[x][y].state = GInfo.STATE.PAUSED;
+        gInfo.cells[x][y].state = GInfo.STATE.PAUSED;
     }
 
     private void mergeToHere(int x, int y, int index) {
         gInfo.greatIdx++;
-        ani.cells[x][y].state = GInfo.STATE.MERGE;
-        ani.addMerge(x,y, index);
+        gInfo.cells[x][y].state = GInfo.STATE.MERGE;
+        animationAdd.addMerge(x,y, index);
     }
 
     private void explodeThis(int x, int y, int xTo, int yTo) {
-        ani.cells[x][y].state = GInfo.STATE.EXPLODE;
-        ani.cells[x][y].index = 0;
-        ani.addExplode(x,y, xTo, yTo);
+        gInfo.cells[x][y].state = GInfo.STATE.EXPLODE;
+        gInfo.cells[x][y].index = 0;
+        animationAdd.addExplode(x,y, xTo, yTo);
     }
 
     public int addNumber(int index) {

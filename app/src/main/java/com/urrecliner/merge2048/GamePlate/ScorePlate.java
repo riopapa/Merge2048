@@ -18,13 +18,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class ScorePlate {
-    Context context;
+
+    final GInfo gInfo;
+    final Context context;
+
+    List<HighMember> highMembers;
     long scoreTimeStamp = 0;
     Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board1Paint, board2Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
-    GInfo gInfo;
-    List<HighMember> highMembers;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
 
     public ScorePlate(GInfo gInfo, Context context) {
