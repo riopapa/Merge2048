@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.urrecliner.merge2048.GameObject.AniStack;
 
-import java.util.List;
-
 public class AnimationAdd {
 
     final GInfo gInfo;
@@ -15,18 +13,29 @@ public class AnimationAdd {
         this.smooth = smooth;
     }
 
+
     public void addMove(int xS, int yS, int xF, int yF, int block) {
-        int maxCount = (yF-yS > 2) ? (yF-yS) / 2: 1;
-        maxCount *= smooth;
+        int maxCount = (Math.abs(yF-yS)+1)*(Math.abs(xF-xS)+1);
+        if (maxCount < 3)
+            maxCount = 3;
+        else if (maxCount < 6)
+            maxCount = 4;
+        else if (maxCount < 9)
+            maxCount = 5;
+        else
+            maxCount = 6;
+
+        Log.w("Macount","after maxCount="+maxCount);
         long timeStamp = System.currentTimeMillis();
         if (gInfo.aniStacks.size() > 0) {
-            long adjustTime = gInfo.aniStacks.get(gInfo.aniStacks.size() - 1).timeStamp + 40L;
+            long adjustTime = gInfo.aniStacks.get(gInfo.aniStacks.size() - 1).timeStamp + 30L;
             if (adjustTime > timeStamp)
                 timeStamp = adjustTime;
         }
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MOVING, xS, yS, xF, yF,
                 gInfo.blockOutSize * (xF - xS) / maxCount,
-                gInfo.blockOutSize * (yF - yS)/ maxCount, maxCount, timeStamp, block));
+                gInfo.blockOutSize * (yF - yS)/ maxCount,
+                maxCount, timeStamp, block));
     }
 
     public void addMerge(int x, int y, int index) {

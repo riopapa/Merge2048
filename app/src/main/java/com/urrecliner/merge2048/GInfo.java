@@ -3,7 +3,6 @@ package com.urrecliner.merge2048;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.urrecliner.merge2048.GameObject.AniStack;
 import com.urrecliner.merge2048.GameObject.Cell;
@@ -23,7 +22,7 @@ public class GInfo {
     public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public final int xNewPos, yNextPos;
-    public final int greatCount = 12;
+    public final int greatLoopCount = 12;
     public final int pxcl;
     public final Cell[][] cells;
 
@@ -70,7 +69,7 @@ public class GInfo {
         blockOutSize = screenXSize * 90 / 100 / xBlockCnt;  // note20 = 259
         blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 252
 
-        blockFlyingGap = (blockOutSize * 120/100 - blockOutSize)/2;
+        blockFlyingGap = (blockOutSize * 110/100 - blockOutSize)/2;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
         yUpOffset = 32;
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
@@ -79,14 +78,14 @@ public class GInfo {
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
         xNewPos = xNextPosCenter + blockOutSize - 8;
         yNextPos = yDownOffset + 16;
-        pxcl = screenXSize / 16;            // N20= 90, A32 = 67
+        pxcl = screenXSize / 12;
         swingXInc = blockOutSize / 5;
         swingXPosLeft = xOffset - 32;
         swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
         cells = new Cell[xBlockCnt][yBlockCnt];
 
-        Log.w("GInfo", "screen= " + screenXSize + " x " + screenYSize);
-        Log.w("GInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
+//        Log.w("GInfo", "screen= " + screenXSize + " x " + screenYSize);
+//        Log.w("GInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
 
         resetValues();
     }

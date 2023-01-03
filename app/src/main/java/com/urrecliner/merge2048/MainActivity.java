@@ -64,6 +64,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         Log.w("MainActivity.java", "onDestroy()");
+        if (game.gInfo.quitGame) {
+            int id= android.os.Process.myPid();
+            android.os.Process.killProcess(id);
+        }
         super.onDestroy();
     }
 

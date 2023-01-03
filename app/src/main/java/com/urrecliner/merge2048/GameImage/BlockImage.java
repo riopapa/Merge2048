@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
@@ -30,12 +31,16 @@ public class BlockImage {
         bitmap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), orgMapId[idx]),
                 gInfo.blockInSize, gInfo.blockInSize, false);
-        flyMaps = new Bitmap[5];
-        flyMaps[0] = makeFlyMap(bitmap, gInfo, 110); // max 120%
-        flyMaps[1] = makeFlyMap(bitmap, gInfo, 120);
-        flyMaps[2] = makeFlyMap(bitmap, gInfo, 120);
+        flyMaps = new Bitmap[9];
+        flyMaps[0] = makeFlyMap(bitmap, gInfo, 105); // max 110%
+        flyMaps[1] = makeFlyMap(bitmap, gInfo, 110);
+        flyMaps[2] = makeFlyMap(bitmap, gInfo, 105);
         flyMaps[3] = makeFlyMap(bitmap, gInfo, 110);
-        flyMaps[4] = makeFlyMap(bitmap, gInfo, 100);
+        flyMaps[4] = makeFlyMap(bitmap, gInfo, 105);
+        flyMaps[5] = makeFlyMap(bitmap, gInfo, 110);
+        flyMaps[6] = makeFlyMap(bitmap, gInfo, 105);
+        flyMaps[7] = makeFlyMap(bitmap, gInfo, 100);
+        flyMaps[8] = makeXorMap(bitmap, gInfo);
 
         halfMap = Bitmap.createScaledBitmap(bitmap,
                 gInfo.blockInSize /2, gInfo.blockInSize /2,false);
@@ -49,6 +54,20 @@ public class BlockImage {
         Bitmap flyMap = Bitmap.createScaledBitmap(bitmap, fScale, fScale,false);
         canvas.drawBitmap(flyMap,(scale-fScale)/2f , (scale-fScale)/2f, null);
         return flyMap;
+    }
+
+    private Bitmap makeXorMap(Bitmap bitmap, GInfo gInfo) {
+        int scale = gInfo.blockOutSize;
+        Bitmap xorMap = Bitmap.createScaledBitmap(bitmap, scale, scale,false);
+        Canvas canvas = new Canvas(xorMap);
+        int [] colors = new int [scale*scale];
+        xorMap.getPixels(colors, 0,scale, 0, 0, scale, scale);
+        for (int i = 0; i < scale*scale; i++) {
+            if (colors[i] != 0)
+                colors[i] = (colors[i] ^ 0x00AAAAAA) | 0xFF000000;
+        }
+        xorMap.setPixels(colors, 0,scale, 0, 0, scale, scale);
+        return xorMap;
     }
 
     public void draw(Canvas canvas, int xPos, int yPos) {

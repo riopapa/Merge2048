@@ -45,20 +45,36 @@ public class Animation {
     public void draw(Canvas canvas) {
 
         // reDraw if Paused
+        Bitmap blockMap;
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
                 if (gInfo.cells[x][y].state == GInfo.STATE.PAUSED && gInfo.cells[x][y].index > 0) {
-                    Bitmap blockMap = blockImages.get(gInfo.cells[x][y].index).bitmap;
+                    if (gInfo.cells[x][y].index < 11)
+                        blockMap = blockImages.get(gInfo.cells[x][y].index).bitmap;
+                    else {
+                        gInfo.cells[x][y].count++;
+                        if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 12) {
+                            gInfo.cells[x][y].count = 0;
+                            gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
+                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 1) {
+                            gInfo.cells[x][y].count = 0;
+                            gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
+                        }
+                        blockMap = gInfo.cells[x][y].xor?
+                                blockImages.get(gInfo.cells[x][y].index).bitmap :
+                                blockImages.get(gInfo.cells[x][y].index).flyMaps[8];
+                    }
                     canvas.drawBitmap(blockMap, xOffset + x * xBlockOutSize,
                             yUpOffset + y * yBlockOutSize, null);
                 }
             }
         }
 
-        for (int apI = gInfo.aniStacks.size()-1 ; apI >= 0; apI--) {
+        for (int apI = 0; apI < gInfo.aniStacks.size(); ) {
             if (gInfo.aniStacks.get(apI).count == 100) {
                 gInfo.aniStacks.remove(apI);
-            }
+            } else
+                apI++;
         }
         // draw Animation while ani active
         for (int apI = 0; apI < gInfo.aniStacks.size(); apI++) {
@@ -94,7 +110,7 @@ public class Animation {
 
             case EXPLODE:
                 if (ani.timeStamp < System.currentTimeMillis() ) {
-                    if (ani.count >= smooth) {    // smooth factor
+                    if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
                         gInfo.aniStacks.remove(apI);
                     } else {
@@ -113,7 +129,7 @@ public class Animation {
 
             case MERGE:
                 if (ani.timeStamp < System.currentTimeMillis() ) {
-                    if (ani.count >= smooth) {    // smooth factor
+                    if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.MERGED;
                         gInfo.cells[ani.xS][ani.yS].index = ani.xF;  // xF is new Index
                         gInfo.aniStacks.remove(apI);

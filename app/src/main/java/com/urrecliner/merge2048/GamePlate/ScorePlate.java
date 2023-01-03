@@ -24,10 +24,12 @@ public class ScorePlate {
 
     List<HighMember> highMembers;
     long scoreTimeStamp = 0;
-    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board1Paint, board2Paint;
+    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
+    boolean xor;
+    int xorCount;
 
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -39,7 +41,7 @@ public class ScorePlate {
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(gInfo.pxcl);
+        scoreOPaint.setTextSize(gInfo.pxcl*5/10);
         scoreOPaint.setStrokeWidth(12);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
@@ -48,7 +50,7 @@ public class ScorePlate {
         scoreIPaint = new Paint();
         scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(gInfo.pxcl);
+        scoreIPaint.setTextSize(gInfo.pxcl*5/10);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -56,30 +58,26 @@ public class ScorePlate {
 
         xBoardPosLeft = calcPixel(48);
         xBoardPosRight = gInfo.xNewPos - 8;
-
         yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*4/5;
-
         xBoardPosWho = gInfo.xOffset + calcPixel(80);
-
         xBoardPosTime = xBoardPosWho + 32;
 
+        board0Paint = new Paint();
+        board0Paint.setStrokeWidth(3);
         board1Paint = new Paint();
-        board1Paint.setColor(ContextCompat.getColor(context, R.color.board0));
-        board2Paint = new Paint();
-        board2Paint.setColor(ContextCompat.getColor(context, R.color.board1));
-        board2Paint.setStrokeWidth(4);
+        board1Paint.setStrokeWidth(3);
 
-        int height, texSize = gInfo.pxcl;
+        int height, scoreSize = gInfo.pxcl + gInfo.pxcl;
         hTextPaint = new Paint();
         hTextPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
         hTextPaint.setColor(Color.WHITE);
         while (true) {
-            hTextPaint.setTextSize(texSize);
+            hTextPaint.setTextSize(scoreSize);
             Rect rect = new Rect();
-            hTextPaint.getTextBounds("Me 09", 0, 5, rect);
+            hTextPaint.getTextBounds("RioPaPa", 0, 5, rect);
             height = rect.height();
             if (height > calcPixel(48)) {
-                texSize -=2;
+                scoreSize -=2;
             } else
                 break;
         }
@@ -89,19 +87,19 @@ public class ScorePlate {
 
         hScoreOPaint = new Paint();
         hScoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
-        hScoreOPaint.setTextSize(texSize);
+        hScoreOPaint.setTextSize(scoreSize+6);
         hScoreOPaint.setStyle(Paint.Style.STROKE);
         hScoreOPaint.setLetterSpacing(0.05f);
-        hScoreOPaint.setColor(Color.BLUE);
-        hScoreOPaint.setStrokeWidth(6);
+        hScoreOPaint.setColor(ContextCompat.getColor(context, R.color.hi_score));
+        hScoreOPaint.setStrokeWidth(4);
         hScoreOPaint.setTextAlign(Paint.Align.CENTER);
 
         hScoreIPaint = new Paint();
         hScoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
-        hScoreIPaint.setTextSize(texSize);
+        hScoreIPaint.setTextSize(scoreSize+6);
         hScoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         hScoreIPaint.setLetterSpacing(0.05f);
-        hScoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
+        hScoreIPaint.setColor(Color.WHITE);
         hScoreIPaint.setTextAlign(Paint.Align.CENTER);
 
     }
@@ -127,12 +125,28 @@ public class ScorePlate {
         }
 
         for (int i = 0; i < highMembers.size(); i++) {
+            HighMember highMember = highMembers.get(i);
+            if (gInfo.scoreNow == highMember.score) {
+                xorCount++;
+                if (xor && xorCount > 20) {
+                    xorCount = 0;
+                    board0Paint.setColor(ContextCompat.getColor(context, R.color.board0));
+                    board1Paint.setColor(ContextCompat.getColor(context, R.color.board1));
+                    xor = !xor;
+                } else if (!xor && xorCount > 6) {
+                    board0Paint.setColor(ContextCompat.getColor(context, R.color.board1));
+                    board1Paint.setColor(ContextCompat.getColor(context, R.color.board0));
+                    xor = !xor;
+                }
+            } else {
+                board0Paint.setColor(ContextCompat.getColor(context, R.color.board0));
+                board1Paint.setColor(ContextCompat.getColor(context, R.color.board1));
+            }
             int y = yBoardPosTop + i*yBoardSize;
             canvas.drawRoundRect(xBoardPosLeft-8, y,
-                    xBoardPosRight, y+yBoardSize-4, 16,16, board2Paint);
+                    xBoardPosRight, y+yBoardSize-4, 16,16, board1Paint);
             canvas.drawRoundRect(xBoardPosLeft-4, y+4,
-                    xBoardPosRight-8, y+yBoardSize-12, 16,16, board1Paint);
-            HighMember highMember = highMembers.get(i);
+                    xBoardPosRight-8, y+yBoardSize-12, 16,16, board0Paint);
             String when = sdf.format(highMember.when);
             hTextPaint.setTextAlign(Paint.Align.RIGHT);
             canvas.drawText(highMember.who, xBoardPosWho, y+yBoardSize-24, hTextPaint);

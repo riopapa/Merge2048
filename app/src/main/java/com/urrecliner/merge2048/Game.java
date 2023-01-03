@@ -82,7 +82,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gInfo.msgHead = "Welcome";
         gInfo.msgLine1 = "게임";
         gInfo.msgLine2 = "시작합니다";
-        gInfo.msgTime = System.currentTimeMillis() + 1500;
+        gInfo.msgTime = System.currentTimeMillis() + 1200;
         gInfo.resetValues();
         clearCells();
         nextPlate.generateNextBlock();
@@ -162,14 +162,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             overPlate.addOver(x, y, gInfo.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
-                        if (gInfo.aniStacks.size() == 0 && gInfo.greatIdx > 0) {
+                        if (gInfo.greatIdx > 0) {
                             showGreat(x, y);
                         }
                         break;
 
                     case STOP:
                         checkNearItem.check(x, y);
-                        if (gInfo.aniStacks.size() == 0 && gInfo.greatIdx > 0) {
+                        if (gInfo.greatIdx > 0) {
                             showGreat(x, y);
                         }
                         break;
@@ -200,9 +200,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void showGreat(int x, int y) {
+        if (gInfo.aniStacks.size() > 0)
+            return;
         if (gInfo.greatIdx > 2) {
             greatPlate.addGreat(x, y, gInfo.greatIdx - 2,
-                    gInfo.greatCount + gInfo.greatIdx);
+                    gInfo.greatLoopCount + gInfo.greatIdx);
             if (gInfo.greatIdx > 4) {
                 gInfo.msgHead = "!! 축하합니다 !!";
                 gInfo.msgLine1 = "이제부터 블럭종류가";
@@ -298,6 +300,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         Log.w("game", "surfaceDestroyed");
+        super.destroyDrawingCache();
     }
 
     public void pause() {
@@ -305,10 +308,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void exitApp() {
+        Log.w("game","stopLoop");
         gameLoop.stopLoop();
-        Activity activity = (Activity)context;
-        activity.finish();
-        System.exit(0);
-        android.os.Process.killProcess(android.os.Process.myPid());
+        if (gInfo.quitGame) {
+            Log.w("game","exitApp()");
+            Activity activity = (Activity)context;
+            activity.finish();
+            int id= android.os.Process.myPid();
+            android.os.Process.killProcess(id);
+        }
     }
 }

@@ -93,10 +93,11 @@ public class BasePlate {
 
         // new Icon
         canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
-        canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
+//        canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
 
         // yes, no
-        if (gInfo.newGamePressed || gInfo.quitGamePressed) {
+//        if (gInfo.newGamePressed || gInfo.quitGamePressed) {
+        if (gInfo.newGamePressed) {
             canvas.drawRoundRect(xYesPos-2, yNewPos-2,
                     xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
                         4,4, yesNoPaint);

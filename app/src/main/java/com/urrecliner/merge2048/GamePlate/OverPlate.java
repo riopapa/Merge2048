@@ -31,8 +31,8 @@ public class OverPlate {
     public void addOver(int xS, int yS, int idx, int loopCount, int delay) {
 
         overs.add(new Great(xS, yS, idx, loopCount,
-                gInfo.blockOutSize * (- xS) / (gInfo.greatCount+idx),
-                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ (gInfo.greatCount+idx), delay));
+                gInfo.blockOutSize * (- xS) / (gInfo.greatLoopCount +idx),
+                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ (gInfo.greatLoopCount +idx), delay));
     }
 
     public void draw(Canvas canvas) {

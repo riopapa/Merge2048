@@ -23,14 +23,15 @@ public class MessagePlate {
     final Bitmap msgMap;
     final int msgMapSize;
     final int xMapPos, xBoxPos;
+    final int pxcl;
     Paint msgBoxPaint, msgHeadPaint, msgLinePaint;
     int yBoxPos;
 
     public MessagePlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
         this.context = context;
+        this.pxcl = gInfo.pxcl;
 
-        Log.w("MessagePlate","fontbase ="+ gInfo.pxcl);
         msgBoxPaint = new Paint();
         msgBoxPaint.setColor(ContextCompat.getColor(context, R.color.msg_background));
 
@@ -40,14 +41,14 @@ public class MessagePlate {
         msgHeadPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgLinePaint = new Paint();
-        msgLinePaint.setTextSize(gInfo.pxcl * 8 / 10);
+        msgLinePaint.setTextSize(gInfo.pxcl * 8 / 9);
         msgLinePaint.setTextAlign(Paint.Align.CENTER);
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        msgMapSize = gInfo.screenXSize/2;
+        msgMapSize = gInfo.screenXSize*3/5;
         msgMap = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(msgMap);
-        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/12f, msgMapSize/12f, msgBoxPaint);
+        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBoxPaint);
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
@@ -58,38 +59,37 @@ public class MessagePlate {
             return;
 
         if (gInfo.msgLine2.equals("")) {
-            yBoxPos = gInfo.yDownOffset/2;
+            yBoxPos = gInfo.yDownOffset/2 + pxcl;
         } else {
-            yBoxPos = gInfo.yDownOffset/2 + gInfo.pxcl;
+            yBoxPos = gInfo.yDownOffset/2 + pxcl + pxcl;
         }
         canvas.drawBitmap(msgMap, xMapPos, yBoxPos-msgMapSize/2f, null);
         msgHeadPaint.setStrokeWidth(16);
-        msgHeadPaint.setColor(Color.BLUE);
-        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - gInfo.pxcl - gInfo.pxcl, msgHeadPaint);
+        msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header_out));
+        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
         msgHeadPaint.setStrokeWidth(0);
-        msgHeadPaint.setColor(Color.RED);
-        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - gInfo.pxcl - gInfo.pxcl, msgHeadPaint);
+        msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header));
+        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
 
         if (gInfo.msgLine2.equals(""))
-            yBoxPos += gInfo.pxcl;
+            yBoxPos += pxcl;
         msgLinePaint.setStrokeWidth(8);
-        msgLinePaint.setColor(Color.BLUE);
+        msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
         canvas.drawText(gInfo.msgLine1, xBoxPos, yBoxPos, msgLinePaint);
         msgLinePaint.setStrokeWidth(0);
-        msgLinePaint.setColor(Color.CYAN);
+        msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
         canvas.drawText(gInfo.msgLine1, xBoxPos, yBoxPos, msgLinePaint);
 
         if (!gInfo.msgLine2.equals("")) {
             msgLinePaint.setStrokeWidth(8);
-            msgLinePaint.setColor(Color.BLUE);
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+gInfo.pxcl+gInfo.pxcl, msgLinePaint);
+            msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+pxcl+pxcl, msgLinePaint);
             msgLinePaint.setStrokeWidth(0);
-            msgLinePaint.setColor(Color.CYAN);
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+gInfo.pxcl+gInfo.pxcl, msgLinePaint);
+            msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+pxcl+pxcl, msgLinePaint);
         }
         if (gInfo.msgTime < System.currentTimeMillis())
             gInfo.msgHead = "";
-
     }
 
 }

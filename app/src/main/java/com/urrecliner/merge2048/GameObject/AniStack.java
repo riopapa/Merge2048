@@ -38,6 +38,7 @@ public class AniStack {
         this.yInc = yInc;
         delay = 8;
         count = 0;
+        maxCount = 4;
     }
 
     // state MERGE
@@ -48,5 +49,6 @@ public class AniStack {
         this.xF = index;
         delay = 15; // a little more than explode
         count = 0;
+        maxCount = 3;
     }
 }

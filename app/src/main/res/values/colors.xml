@@ -11,8 +11,13 @@
     <color name="board0">#60849A</color>
     <color name="board1">#3F6478</color>
     <color name="score">#FF4443</color>
+    <color name="hi_score">#831414</color>
 
-    <color name="msg_background">#FDD835</color>
+    <color name="msg_background">#C3A72A</color>
+    <color name="msg_header">#781311</color>
+    <color name="msg_header_out">#CF4A49</color>
+    <color name="msg_line">#380545</color>
+    <color name="msg_line_out">#AF69C1</color>
 
     <color name="game_background">#A5C6CA</color>
 

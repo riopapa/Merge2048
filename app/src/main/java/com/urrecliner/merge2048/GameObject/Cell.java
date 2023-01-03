@@ -4,8 +4,9 @@ import com.urrecliner.merge2048.GInfo;
 
 public class Cell {
 
-    public int index;
+    public int index, count;
     public GInfo.STATE state;
+    public boolean xor;
 //    long timeStamp;
 
     public Cell(int index, GInfo.STATE state) {
