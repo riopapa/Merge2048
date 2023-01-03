@@ -25,7 +25,6 @@ public class AnimationAdd {
         else
             maxCount = 6;
 
-        Log.w("Macount","after maxCount="+maxCount);
         long timeStamp = System.currentTimeMillis();
         if (gInfo.aniStacks.size() > 0) {
             long adjustTime = gInfo.aniStacks.get(gInfo.aniStacks.size() - 1).timeStamp + 30L;

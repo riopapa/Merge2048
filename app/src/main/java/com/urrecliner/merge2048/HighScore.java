@@ -38,7 +38,16 @@ public class HighScore {
         }
     }
 
+    final String highHeart = "♥";
+
     void put() {
+        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+            HighMember hm = gInfo.highMembers.get(i);
+            if (hm.who.equals(highHeart)) {
+                hm.who = "Me";
+                gInfo.highMembers.set(i, hm);
+            }
+        }
         Gson gson = new Gson();
         String json = gson.toJson(gInfo.highMembers);
         sharedEditor.putString(highMember, json);

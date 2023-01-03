@@ -37,7 +37,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final OverPlate overPlate;
     private final MessagePlate messagePlate;
     private final CheckNearItem checkNearItem;
-    private final HighScore HighScore;
+    private final HighScore highScore;
     private final CheckGameOver checkGameOver;
     private final TouchEvent touchEvent;
     private GameLoop gameLoop;
@@ -64,9 +64,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         animationAdd = new AnimationAdd(gInfo, SMOOTH);
         nextPlate = new NextPlate(gInfo, context);
         checkNearItem = new CheckNearItem(gInfo, animation, animationAdd);
-        HighScore = new HighScore(gInfo, context);
-        HighScore.get();
-        checkGameOver = new CheckGameOver(gInfo, nextPlate, animation);
+        highScore = new HighScore(gInfo, context);
+        checkGameOver = new CheckGameOver(gInfo, nextPlate);
         touchEvent = new TouchEvent(gInfo);
         greatPlate = new GreatPlate(gInfo, context);
         overPlate = new OverPlate(gInfo, blockImages);
@@ -84,6 +83,12 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gInfo.msgLine2 = "시작합니다";
         gInfo.msgTime = System.currentTimeMillis() + 1200;
         gInfo.resetValues();
+        highScore.get();
+        if (gInfo.highMembers.size() == 3) {
+            gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
+        } else
+            gInfo.highLowScore = 0;
+
         clearCells();
         nextPlate.generateNextBlock();
     }
@@ -184,10 +189,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (!gInfo.isGameOver) {
             gInfo.isGameOver = checkGameOver.isOver();
-            if (gInfo.isGameOver) {
-                if (checkGameOver.updateHighScore())
-                    HighScore.put();
-            }
+            if (gInfo.isGameOver)
+                highScore.put();
+
             if (gInfo.blockClicked) {
                 start2Move();
             } else if (gInfo.swingPressed) {
@@ -204,11 +208,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             return;
         if (gInfo.greatIdx > 2) {
             greatPlate.addGreat(x, y, gInfo.greatIdx - 2,
-                    gInfo.greatLoopCount + gInfo.greatIdx);
+                    gInfo.greatLoopCount + gInfo.greatIdx + gInfo.greatIdx);
             if (gInfo.greatIdx > 4) {
                 gInfo.msgHead = "!! 축하합니다 !!";
-                gInfo.msgLine1 = "이제부터 블럭종류가";
-                gInfo.msgLine2 = "더 다양해집니다!";
+                gInfo.msgLine1 = "블럭 종류가";
+                gInfo.msgLine2 = "더 많아져요!";
                 gInfo.msgTime = System.currentTimeMillis() + 2000;
                 gInfo.gameDifficulty++;
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -14,6 +15,7 @@ import com.urrecliner.merge2048.GameObject.HighMember;
 import com.urrecliner.merge2048.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,19 +24,18 @@ public class ScorePlate {
     final GInfo gInfo;
     final Context context;
 
-    List<HighMember> highMembers;
     long scoreTimeStamp = 0;
     Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
     boolean xor;
-    int xorCount;
+    int xorCount, delay;
+    final String highHeart = "♥";
 
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
         this.context = context;
-        this.highMembers = gInfo.highMembers;
 
         gameScoreXPos = gInfo.xNextPos/2 + gInfo.xOffset;
         gameScoreYPos = gInfo.yNewPosS + gInfo.blockInSize/2;
@@ -114,26 +115,49 @@ public class ScorePlate {
         canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreIPaint);
 
         if (gInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
-            scoreTimeStamp = System.currentTimeMillis() + 40;
-            int score = gInfo.score2Add / 6;
-            if (score < 2)
+            int score = (int) Math.sqrt(gInfo.score2Add + 200);
+            delay = 90 - score;
+            if (delay < 60)
+                delay = 60;
+            if (score > gInfo.score2Add)
+                score = gInfo.score2Add;
+            else if (score < 2)
                 score = 2;
-            else
-                score = (score / 2) * 2;
+            scoreTimeStamp = System.currentTimeMillis() + delay;
             gInfo.score2Add -= score;
             gInfo.scoreNow += score;
+            if (gInfo.score2Add == 0 && gInfo.scoreNow > gInfo.highLowScore) {
+                boolean updated = false;
+                for (int i = 0; i < gInfo.highMembers.size(); i++) {
+                    HighMember hm = gInfo.highMembers.get(i);
+                    if (hm.who.equals(highHeart)) {
+                        hm.score = gInfo.scoreNow;
+                        gInfo.highMembers.set(i, hm);
+                        gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
+                        updated = true;
+                    }
+                }
+                if (!updated) {
+                    gInfo.highMembers.add(new HighMember(gInfo.scoreNow, highHeart));
+                    gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
+                    while (gInfo.highMembers.size() > 3)
+                        gInfo.highMembers.remove(3);
+                }
+            }
+        } else {
+            delay = 0;
         }
 
-        for (int i = 0; i < highMembers.size(); i++) {
-            HighMember highMember = highMembers.get(i);
+        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+            HighMember highMember = gInfo.highMembers.get(i);
             if (gInfo.scoreNow == highMember.score) {
                 xorCount++;
-                if (xor && xorCount > 20) {
+                if (xor && xorCount > 60) {
                     xorCount = 0;
                     board0Paint.setColor(ContextCompat.getColor(context, R.color.board0));
                     board1Paint.setColor(ContextCompat.getColor(context, R.color.board1));
                     xor = !xor;
-                } else if (!xor && xorCount > 6) {
+                } else if (!xor && xorCount > 20) {
                     board0Paint.setColor(ContextCompat.getColor(context, R.color.board1));
                     board1Paint.setColor(ContextCompat.getColor(context, R.color.board0));
                     xor = !xor;

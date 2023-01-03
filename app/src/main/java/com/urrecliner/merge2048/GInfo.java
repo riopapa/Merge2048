@@ -29,6 +29,7 @@ public class GInfo {
     public long scoreNow;
     public int score2Add;
     public List<HighMember> highMembers;
+    public long highLowScore;
 
     public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
     public int greatIdx, greatStacked = 0;

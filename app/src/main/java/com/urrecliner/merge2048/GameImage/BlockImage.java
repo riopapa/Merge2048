@@ -64,7 +64,7 @@ public class BlockImage {
         xorMap.getPixels(colors, 0,scale, 0, 0, scale, scale);
         for (int i = 0; i < scale*scale; i++) {
             if (colors[i] != 0)
-                colors[i] = (colors[i] ^ 0x00AAAAAA) | 0xFF000000;
+                colors[i] = ((colors[i] ^ 0x00AAAAAA) | 0xFF000000) & 0x80FFFFFF;
         }
         xorMap.setPixels(colors, 0,scale, 0, 0, scale, scale);
         return xorMap;
