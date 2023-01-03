@@ -53,10 +53,10 @@ public class Animation {
                         blockMap = blockImages.get(gInfo.cells[x][y].index).bitmap;
                     else {
                         gInfo.cells[x][y].count++;
-                        if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 20) {
+                        if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 30) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
-                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 1) {
+                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 3) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
                         }

@@ -78,10 +78,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     void newGameStart() {
 
-        gInfo.msgHead = "Welcome";
-        gInfo.msgLine1 = "게임";
-        gInfo.msgLine2 = "시작합니다";
-        gInfo.msgTime = System.currentTimeMillis() + 1200;
+        messagePlate.set("Welcome", "게임을", "시작합니다",
+                System.currentTimeMillis(), 2000);
+
         gInfo.resetValues();
         highScore.get();
         if (gInfo.highMembers.size() == 3) {
@@ -147,7 +146,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
                 switch (gInfo.cells[x][y].state) {
-                    case PAUSED:
                     case MOVING:
                     case MERGE:
                     case EXPLODE:
@@ -176,6 +174,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         checkNearItem.check(x, y);
                         if (gInfo.greatIdx > 0) {
                             showGreat(x, y);
+                        }
+                        break;
+
+                    case PAUSED:
+                        if (y < yBlockCnt-1 && gInfo.cells[x][y].index == 0 &&
+                                gInfo.cells[x][y+1].index != 0 &&
+                                gInfo.cells[x][y+1].state == GInfo.STATE.PAUSED) {  // should go down
+                            gInfo.cells[x][y].state = GInfo.STATE.MOVING;
+                            animationAdd.addMove(x, y+1, x, y, gInfo.cells[x][y+1].index);
+//                            Log.e("game","Empty cell "+x+"x"+y);
                         }
                         break;
 
@@ -210,11 +218,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             greatPlate.addGreat(x, y, gInfo.greatIdx - 2,
                     gInfo.greatLoopCount + gInfo.greatIdx + gInfo.greatIdx);
             if (gInfo.greatIdx > 4) {
-                gInfo.msgHead = "!! 축하합니다 !!";
-                gInfo.msgLine1 = "블럭 종류가";
-                gInfo.msgLine2 = "더 많아져요!";
-                gInfo.msgTime = System.currentTimeMillis() + 2000;
                 gInfo.gameDifficulty++;
+                messagePlate.set("!잘 했어요!", "블럭 종류가",
+                    "더("+gInfo.gameDifficulty+") 많아져요!",
+                    System.currentTimeMillis() + 3000, 2000);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }
         }

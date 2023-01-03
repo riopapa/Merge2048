@@ -42,11 +42,11 @@ public class GInfo {
 
     public boolean blockClicked = false;   // clicked means user clicked
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
-    public int gameDifficulty = 6;
+    public int gameDifficulty = 5;
 
     public String msgHead = "";
     public String msgLine1 = "", msgLine2 = "";
-    public long msgTime = 0;
+    public long msgStartTime, msgFinishTime = 0;
 
     public List<AniStack> aniStacks = new ArrayList<>();
 

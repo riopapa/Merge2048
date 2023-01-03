@@ -7,9 +7,7 @@ package com.urrecliner.merge2048.GamePlate;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -25,7 +23,9 @@ public class MessagePlate {
     final int xMapPos, xBoxPos;
     final int pxcl;
     Paint msgBoxPaint, msgHeadPaint, msgLinePaint;
-    int yBoxPos;
+    int yBoxPos, yTopPos, yBottomPos;
+    int yInc, delay;
+    long nextTime;
 
     public MessagePlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
@@ -52,17 +52,22 @@ public class MessagePlate {
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
+        yTopPos = gInfo.yDownOffset/2 - pxcl - pxcl;
+        yBottomPos = gInfo.yDownOffset/2 + pxcl + pxcl;
     }
 
     public void draw(Canvas canvas) {
-        if (gInfo.msgHead.length() == 0)
+        long nowTime = System.currentTimeMillis();
+        if (gInfo.msgHead.length() == 0 && gInfo.msgStartTime < nowTime)
             return;
-
-        if (gInfo.msgLine2.equals("")) {
-            yBoxPos = gInfo.yDownOffset/2 + pxcl;
-        } else {
-            yBoxPos = gInfo.yDownOffset/2 + pxcl + pxcl;
+        if (nowTime < nextTime)
+            return;
+        nextTime += delay;
+        yBoxPos += yInc;
+        if (yBoxPos > yBottomPos || yBoxPos < yTopPos) {
+            yInc = - yInc;
         }
+
         canvas.drawBitmap(msgMap, xMapPos, yBoxPos-msgMapSize/2f, null);
         msgHeadPaint.setStrokeWidth(16);
         msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header_out));
@@ -88,8 +93,18 @@ public class MessagePlate {
             msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
             canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+pxcl+pxcl, msgLinePaint);
         }
-        if (gInfo.msgTime < System.currentTimeMillis())
+        if (gInfo.msgFinishTime < System.currentTimeMillis())
             gInfo.msgHead = "";
     }
 
+    public void set(String head, String line1, String line2, long startTime, int keep) {
+        gInfo.msgHead = head;
+        gInfo.msgLine1 = line1; gInfo.msgLine2 = line2;
+        gInfo.msgStartTime = startTime;
+        gInfo.msgFinishTime = gInfo.msgStartTime + keep;
+        yInc = 4;
+        delay = 30;
+        nextTime = startTime;
+        yBoxPos = (yTopPos + yBottomPos) / 2;
+    }
 }

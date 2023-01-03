@@ -32,8 +32,8 @@ public class GreatPlate {
     public void addGreat(int xS, int yS, int idx, int loopCount) {
 
         greats.add(new Great(xS, yS, idx, loopCount,
-                gInfo.blockOutSize * (- xS) / (gInfo.greatLoopCount +idx),
-                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ (gInfo.greatLoopCount +idx), 40));
+                gInfo.blockOutSize * (- xS) / loopCount,
+                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ loopCount, 40));
     }
 
     public void draw(Canvas canvas) {

@@ -24,8 +24,8 @@ public class DumpCells {
         sb.append(" index=").append(nextPlate.nextIndex);
         sb.append(" block=").append(checkNearItem.powerIndex(nextPlate.nextIndex));
 
-        Log.w("dumpA "+gInfo.aniStacks.size(), "<<< "+msg+" >>>");
-        Log.w("dumpA "+gInfo.aniStacks.size(), sb.toString());
+        Log.w("dump "+gInfo.aniStacks.size(), "<<< "+msg+" >>>");
+        Log.w("dump "+gInfo.aniStacks.size(), sb.toString());
     }
 
     public DumpCells(GInfo gInfo, String msg) {
@@ -43,7 +43,7 @@ public class DumpCells {
             }
         }
 
-        Log.w("dumpB "+gInfo.aniStacks.size(), "<<< "+msg+" >>>");
+        Log.w("dumpB "+gInfo.aniStacks.size(), ">>> "+msg+" <<<");
         Log.w("dumpB "+gInfo.aniStacks.size(), sb.toString());
     }
 
