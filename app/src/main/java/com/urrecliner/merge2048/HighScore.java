@@ -35,7 +35,16 @@ public class HighScore {
             Type type = new TypeToken<List<HighMember>>() {
             }.getType();
             gInfo.highMembers = gson.fromJson(json, type);
+        } else {
+            gInfo.highMembers = new ArrayList<>();
+            gInfo.highMembers.add(new HighMember(88888, "riopapa",
+                    System.currentTimeMillis()-240000));
+            gInfo.highMembers.add(new HighMember(44444, "riopapa",
+                    System.currentTimeMillis()-120000));
+            gInfo.highMembers.add(new HighMember(22222, "riopapa",
+                    System.currentTimeMillis()-60000));
         }
+
     }
 
     final String highHeart = "♥";

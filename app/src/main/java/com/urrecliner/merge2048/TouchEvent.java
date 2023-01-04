@@ -72,7 +72,7 @@ public class TouchEvent {
                     }
 
                 } else if (isNextPressed()) {
-                    gInfo.showNext = !gInfo.showNext;
+                    gInfo.showNextPressed = true;
 
                 } else if (isNewGamePressed()) {
                     gInfo.newGamePressed = true;

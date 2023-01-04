@@ -35,7 +35,7 @@ public class GInfo {
     public int greatIdx, greatStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
-    public boolean showNext = true;
+    public boolean showNextPressed = false, showNext = true;
     public boolean swingPressed = false, swing = false;
     public int swingXInc, swingXPosLeft, swingXPosRight;
     public long swingTime, swingDelay;
@@ -67,7 +67,7 @@ public class GInfo {
         screenXSize = metrics.widthPixels;      // note20  1440 x 2819
         screenYSize = metrics.heightPixels;     // A32     1080 x 2194
 
-        blockOutSize = screenXSize * 90 / 100 / xBlockCnt;  // note20 = 259
+        blockOutSize = screenXSize * 85 / 100 / xBlockCnt;  // note20 = 259
         blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 252
 
         blockFlyingGap = (blockOutSize * 110/100 - blockOutSize)/2;
@@ -107,7 +107,7 @@ public class GInfo {
     }
 
     public void resetSwing() {
-        swing = !swing;
+
         xNextPos = (screenXSize - blockOutSize) / 2;
         swingDelay = 300 / (gameDifficulty+2);
         swingXInc = blockOutSize / 6;

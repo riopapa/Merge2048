@@ -8,8 +8,13 @@ public class HighMember {
 
     public HighMember(long score, String who) {
         this.score = score;
-        this.when = System.currentTimeMillis();
         this.who = who;
+        this.when = System.currentTimeMillis();
+    }
+    public HighMember(long score, String who, long time) {
+        this.score = score;
+        this.who = who;
+        this.when = time;
     }
 
     public long getScore() {return score;}

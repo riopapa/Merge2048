@@ -131,8 +131,9 @@ public class Animation {
                 if (ani.timeStamp < System.currentTimeMillis() ) {
                     if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.MERGED;
-                        gInfo.cells[ani.xS][ani.yS].index = ani.xF;  // xF is new Index
-                        gInfo.aniStacks.remove(apI);
+                        gInfo.cells[ani.xS][ani.yS].index = ani.block;
+                        ani.count = 100;
+//                        gInfo.aniStacks.remove(apI);
                     } else {
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;

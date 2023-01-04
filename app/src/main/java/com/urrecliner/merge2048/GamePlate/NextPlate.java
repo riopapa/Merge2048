@@ -50,6 +50,9 @@ public class NextPlate {
 
     public void generateNextBlock() {
         nextIndex = nextNextIndex;
+        nextNextIndex = new Random().nextInt(5) + 1;
+        if (new Random().nextInt(10) < 3)
+            return;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         if (new Random().nextInt(10) == 0) {
             nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;

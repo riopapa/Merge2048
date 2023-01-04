@@ -45,7 +45,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     final int SMOOTH = 4;
     Context context;
     public boolean needQuit = false;
-
+    int greatX, greatY;
+    
     public Game(Context context) {
 
         super(context);
@@ -83,10 +84,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         gInfo.resetValues();
         highScore.get();
-        if (gInfo.highMembers.size() == 3) {
-            gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
-        } else
-            gInfo.highLowScore = 0;
+        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
 
         clearCells();
         nextPlate.generateNextBlock();
@@ -116,9 +114,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             gInfo.startNewGameYes = false;
             newGameStart();
         }
-        if (gInfo.quitGame) {
-            exitApp();
-        }
+//        if (gInfo.quitGame) {
+//            exitApp();
+//        }
         if (gInfo.dumpClicked && gInfo.dumpCount > 5) {
             gInfo.dumpClicked = false;
             new DumpCells(gInfo, animation, checkNearItem, nextPlate, "Dump Update");
@@ -126,18 +124,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.aniStacks.size() > 0)
             return;
 
-        if (nextPlate.nextIndex == -1) {
-//            boolean getNext = true;
-//            for (int y = 0; y < yBlockCnt; y++) {
-//                for (int x = 0; x < xBlockCnt; x++) {
-//                    if (gInfo.cells[x][y].state != GInfo.STATE.PAUSED) {
-//                        getNext = false;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (getNext)
-                nextPlate.generateNextBlock();
+        if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
+            nextPlate.generateNextBlock();
+            if (gInfo.greatIdx > 0) {
+                showGreat(greatX, greatY);
+            }
         }
 
         /*
@@ -166,14 +157,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                         }
                         checkNearItem.check(x, y);
                         if (gInfo.greatIdx > 0) {
-                            showGreat(x, y);
+                            greatX = x; greatY = y;
                         }
                         break;
 
                     case STOP:
                         checkNearItem.check(x, y);
                         if (gInfo.greatIdx > 0) {
-                            showGreat(x, y);
+                            greatX = x; greatY = y;
                         }
                         break;
 
@@ -202,13 +193,36 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
             if (gInfo.blockClicked) {
                 start2Move();
+
+            } else if (gInfo.showNextPressed) {
+                gInfo.showNextPressed = false;
+                gInfo.showNext = !gInfo.showNext;
+                messagePlate.set("다음 블럭", (gInfo.showNext) ? "보입니다" : "안 보입니다",
+                        (gInfo.showNext) ? "":"안 보이면 점수2배",System.currentTimeMillis(), 1500);
+
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
+                gInfo.swing = !gInfo.swing;
+                messagePlate.set("움직이기", (gInfo.swing) ? "움직입니다" : "고정됩니다",
+                        (gInfo.swing) ? "움직이면 점수2배":"",System.currentTimeMillis(), 1500);
                 gInfo.resetSwing();
             }
             if (gInfo.swing)
                 gInfo.updateSwing();
         }
+    }
+
+    private boolean isAllPaused() {
+        boolean getNext = true;
+        for (int y = 0; y < yBlockCnt; y++) {
+            for (int x = 0; x < xBlockCnt; x++) {
+                if (gInfo.cells[x][y].state != GInfo.STATE.PAUSED) {
+                    getNext = false;
+                    break;
+                }
+            }
+        }
+        return getNext;
     }
 
     private void showGreat(int x, int y) {
@@ -217,13 +231,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.greatIdx > 2) {
             greatPlate.addGreat(x, y, gInfo.greatIdx - 2,
                     gInfo.greatLoopCount + gInfo.greatIdx + gInfo.greatIdx);
-            if (gInfo.greatIdx > 4) {
+            if (gInfo.greatIdx > 5) {
                 gInfo.gameDifficulty++;
                 messagePlate.set("!잘 했어요!", "블럭 종류가",
                     "더("+gInfo.gameDifficulty+") 많아져요!",
-                    System.currentTimeMillis() + 3000, 2000);
+                    System.currentTimeMillis() + 2500, 2000);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }
+            Log.w("showGreat", "greatIdx= "+gInfo.greatIdx);
         }
         gInfo.greatIdx = 0;
         gInfo.greatStacked = 0;

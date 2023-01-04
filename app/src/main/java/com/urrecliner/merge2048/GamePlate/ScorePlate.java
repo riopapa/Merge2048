@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -16,7 +15,6 @@ import com.urrecliner.merge2048.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 public class ScorePlate {
@@ -43,7 +41,7 @@ public class ScorePlate {
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
         scoreOPaint.setTextSize(gInfo.pxcl*5/10);
-        scoreOPaint.setStrokeWidth(12);
+        scoreOPaint.setStrokeWidth(6);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
         scoreOPaint.setStyle(Paint.Style.STROKE);
@@ -57,18 +55,16 @@ public class ScorePlate {
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
 
-        xBoardPosLeft = calcPixel(48);
+        xBoardPosLeft = calcPercentPixel(48);
         xBoardPosRight = gInfo.xNewPos - 8;
         yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*4/5;
-        xBoardPosWho = gInfo.xOffset + calcPixel(80);
-        xBoardPosTime = xBoardPosWho + 32;
 
         board0Paint = new Paint();
         board0Paint.setStrokeWidth(3);
         board1Paint = new Paint();
         board1Paint.setStrokeWidth(3);
 
-        int height, scoreSize = gInfo.pxcl + gInfo.pxcl;
+        int width, height, scoreSize = gInfo.pxcl + gInfo.pxcl;
         hTextPaint = new Paint();
         hTextPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
         hTextPaint.setColor(Color.WHITE);
@@ -77,11 +73,15 @@ public class ScorePlate {
             Rect rect = new Rect();
             hTextPaint.getTextBounds("RioPaPa", 0, 5, rect);
             height = rect.height();
-            if (height > calcPixel(48)) {
+            width = rect.width();
+            if (height > calcPercentPixel(40)) {
                 scoreSize -=2;
             } else
                 break;
         }
+//        xBoardPosWho = gInfo.xOffset + calcPercentPixel(80);
+        xBoardPosWho = gInfo.xOffset + width + 36;
+        xBoardPosTime = xBoardPosWho + 16;
         yBoardSize = height + 32;
 
         xBoardPosScore = xBoardPosRight - (xBoardPosRight - xBoardPosTime - (int) hTextPaint.measureText("22-12-31 24:31"))/2;
@@ -105,7 +105,7 @@ public class ScorePlate {
 
     }
 
-    private int calcPixel(int milliPercent) {
+    private int calcPercentPixel(int milliPercent) {
         return gInfo.screenXSize * milliPercent / 1000;
     }
 
@@ -140,8 +140,7 @@ public class ScorePlate {
                 if (!updated) {
                     gInfo.highMembers.add(new HighMember(gInfo.scoreNow, highHeart));
                     gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
-                    while (gInfo.highMembers.size() > 3)
-                        gInfo.highMembers.remove(3);
+                    gInfo.highMembers.remove(3);
                 }
             }
         } else {

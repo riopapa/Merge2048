@@ -76,22 +76,23 @@ public class MessagePlate {
         msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header));
         canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
 
+        int yPos = yBoxPos;
         if (gInfo.msgLine2.equals(""))
-            yBoxPos += pxcl;
+            yPos += pxcl;
         msgLinePaint.setStrokeWidth(8);
         msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
-        canvas.drawText(gInfo.msgLine1, xBoxPos, yBoxPos, msgLinePaint);
+        canvas.drawText(gInfo.msgLine1, xBoxPos, yPos, msgLinePaint);
         msgLinePaint.setStrokeWidth(0);
         msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
-        canvas.drawText(gInfo.msgLine1, xBoxPos, yBoxPos, msgLinePaint);
+        canvas.drawText(gInfo.msgLine1, xBoxPos, yPos, msgLinePaint);
 
         if (!gInfo.msgLine2.equals("")) {
             msgLinePaint.setStrokeWidth(8);
             msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+pxcl+pxcl, msgLinePaint);
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+pxcl+pxcl, msgLinePaint);
             msgLinePaint.setStrokeWidth(0);
             msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yBoxPos+pxcl+pxcl, msgLinePaint);
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+pxcl+pxcl, msgLinePaint);
         }
         if (gInfo.msgFinishTime < System.currentTimeMillis())
             gInfo.msgHead = "";

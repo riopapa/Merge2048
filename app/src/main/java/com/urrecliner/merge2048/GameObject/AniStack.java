@@ -46,7 +46,7 @@ public class AniStack {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
-        this.xF = index;
+        this.block = index;
         delay = 15; // a little more than explode
         count = 0;
         maxCount = 3;
