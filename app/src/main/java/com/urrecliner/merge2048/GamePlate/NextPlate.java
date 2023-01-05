@@ -11,22 +11,28 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.urrecliner.merge2048.GInfo;
+import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.R;
 
+import java.util.List;
 import java.util.Random;
 
 public class NextPlate {
 
     final GInfo gInfo;
+    final List<BlockImage> blockImages;
     final int blockOutSize, blockInSize;
     final int xNextNextPos, yNextNextPos;
+
     final Bitmap nextNoMap;
+
     Paint nextPaint;
 
     public int nextIndex, nextNextIndex;
 
-    public NextPlate(GInfo gInfo, Context context) {
+    public NextPlate(GInfo gInfo, Context context, List<BlockImage> blockImages) {
         this.gInfo = gInfo;
+        this.blockImages = blockImages;
         this.blockInSize = gInfo.blockInSize;
         this.blockOutSize = gInfo.blockOutSize;
 
@@ -49,29 +55,29 @@ public class NextPlate {
     public void generateNextBlock() {
         nextIndex = nextNextIndex;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty-1) + 1;
-        if (new Random().nextInt(10) < 3)
+        if (new Random().nextInt(10) < 4)
             return;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         if (new Random().nextInt(10) == 0) {
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 2) + 1;
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;
         }
     }
 
-    public void draw(Canvas canvas, Bitmap nextBlockMap, Bitmap nextNextHalfMap) {
+    public void draw(Canvas canvas) {
 
         if (!gInfo.swing)    // if on swing, no outer box
             canvas.drawRoundRect(gInfo.xNextPos, gInfo.yNextPos,
                     gInfo.xNextPos + blockInSize, gInfo.yNextPos + blockInSize,
                 blockInSize/8f,blockInSize/8f, nextPaint);
-        if (nextBlockMap != null)
-            canvas.drawBitmap(nextBlockMap, gInfo.xNextPos, gInfo.yNextPos,null);
+        if (nextIndex != -1)
+            canvas.drawBitmap(blockImages.get(nextIndex).bitmap, gInfo.xNextPos, gInfo.yNextPos,null);
 
         // draw Next Next //
         canvas.drawRoundRect(xNextNextPos, yNextNextPos,
                 xNextNextPos +blockInSize/2f, yNextNextPos +blockInSize/2f,
                 blockInSize/16f,blockInSize/16f, nextPaint);
         if (gInfo.showNext)
-            canvas.drawBitmap(nextNextHalfMap, xNextNextPos, yNextNextPos,null);
+            canvas.drawBitmap(blockImages.get(nextNextIndex).halfMap, xNextNextPos, yNextNextPos,null);
         else
             canvas.drawBitmap(nextNoMap, xNextNextPos, yNextNextPos,null);
     }

@@ -40,7 +40,7 @@ public class ScorePlate {
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(gInfo.piece *5/10);
+        scoreOPaint.setTextSize(gInfo.piece *5f/10);
         scoreOPaint.setStrokeWidth(6);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
@@ -49,7 +49,7 @@ public class ScorePlate {
         scoreIPaint = new Paint();
         scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(gInfo.piece *5/10);
+        scoreIPaint.setTextSize(gInfo.piece *5f/10);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
