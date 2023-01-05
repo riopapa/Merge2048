@@ -30,23 +30,25 @@ public class AniStack {
     }
 
     // state EXPLODE
-    public AniStack(GInfo.STATE state, int xS, int yS, int xInc, int yInc) {
+    public AniStack(GInfo.STATE state, int xS, int yS, int xInc, int yInc, long timeStamp) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
         this.xInc = xInc;
         this.yInc = yInc;
+        this.timeStamp = timeStamp;
         delay = 8;
         count = 0;
         maxCount = 4;
     }
 
     // state MERGE
-    public AniStack(GInfo.STATE state, int xS, int yS, int index) {
+    public AniStack(GInfo.STATE state, int xS, int yS, int index, long timeStamp) {
         this.state = state;
         this.xS = xS;
         this.yS = yS;
         this.block = index;
+        this.timeStamp = timeStamp;
         delay = 15; // a little more than explode
         count = 0;
         maxCount = 3;

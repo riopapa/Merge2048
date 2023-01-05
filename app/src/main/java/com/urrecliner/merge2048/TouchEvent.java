@@ -50,15 +50,9 @@ public class TouchEvent {
                     return;              // ignore touch Up
                 xTouchPos = (int) event.getX();
                 yTouchPos = (int) event.getY();
-                if (yTouchPos < 400 && xTouchPos < 400) {
+                if (yTouchPos < 300 && xTouchPos < 300) {
                     gInfo.dumpClicked = true;
                     gInfo.dumpCount++;
-//                    if (gInfo.dumpCount > 2) {
-//                        gInfo.msgHead = "참고";
-//                        gInfo.msgLine1 = "Dump Start..";
-//                        gInfo.msgLine2 = "Cell Arrays";
-//                        gInfo.msgTime = System.currentTimeMillis() + 1500;
-//                    }
                 }
                 if (yTouchPos < yDownOffset)
                     return;
@@ -89,21 +83,13 @@ public class TouchEvent {
                         gInfo.quitGame = false;
                     }
                 } else if (isShootPressed()) {
-                    xTouchPos -= xOffset;
-                    if (xTouchPos >= 0) {
-                        int touchIndex = xTouchPos / blockOutSize;
-                        if (touchIndex >= 0 && touchIndex < xBlockCnt) {
-                            if (gInfo.swing) {
-                                if (xTouchPos >= gInfo.xNextPos &&
-                                    xTouchPos < gInfo.xNextPos + blockOutSize) {
-                                    gInfo.blockClicked = true;
-                                    gInfo.touchIndex = touchIndex;
-                                }
-                            } else {
-                                gInfo.blockClicked = true;
-                                gInfo.touchIndex = touchIndex;
-                            }
+                    if (gInfo.swing) {
+                        if (xTouchPos >= gInfo.xNextPos &&
+                                xTouchPos < gInfo.xNextPos + blockOutSize) {
+                            calcTouchIdx();
                         }
+                    } else {
+                        calcTouchIdx();
                     }
                 } else if (isSwingPressed()) {
                     gInfo.swingPressed = true;
@@ -117,6 +103,17 @@ public class TouchEvent {
             case MotionEvent.ACTION_POINTER_UP:
                 break;
         }
+    }
+
+    private void calcTouchIdx() {
+        xTouchPos -= xOffset;
+        int touchIndex = xTouchPos / blockOutSize;
+        if (touchIndex < 0)
+            touchIndex = 0;
+        if (touchIndex >= xBlockCnt)
+            touchIndex = xBlockCnt - 1;
+        gInfo.touchClicked = true;
+        gInfo.touchIndex = touchIndex;
     }
 
     boolean isNewGamePressed() {

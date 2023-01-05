@@ -53,10 +53,10 @@ public class Animation {
                         blockMap = blockImages.get(gInfo.cells[x][y].index).bitmap;
                     else {
                         gInfo.cells[x][y].count++;
-                        if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 30) {
+                        if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 40) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
-                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 3) {
+                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 4) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
                         }
@@ -147,7 +147,7 @@ public class Animation {
                 break;
 
             default:
-                Log.w("drawAni", "not applied "+ani.state +" "+ani.xS +"x"+ani.yS +" >"+ani.xF +"x"+ani.yF);
+                Log.w("drawCase", "not applied "+ani.state +" "+ani.xS +"x"+ani.yS +" >"+ani.xF +"x"+ani.yF);
                 break;
         }
     }

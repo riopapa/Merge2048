@@ -17,7 +17,7 @@ import com.urrecliner.merge2048.GameImage.BlockImageMake;
 import com.urrecliner.merge2048.GamePlate.BasePlate;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.GameOverPlate;
-import com.urrecliner.merge2048.GamePlate.GreatPlate;
+import com.urrecliner.merge2048.GamePlate.BonusPlate;
 import com.urrecliner.merge2048.GamePlate.MessagePlate;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.OverPlate;
@@ -33,7 +33,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final Animation animation;
     private final AnimationAdd animationAdd;
     private final BasePlate basePlate;
-    private final GreatPlate greatPlate;
+    private final BonusPlate bonusPlate;
     private final OverPlate overPlate;
     private final MessagePlate messagePlate;
     private final CheckNearItem checkNearItem;
@@ -45,7 +45,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     final int SMOOTH = 4;
     Context context;
     public boolean needQuit = false;
-    int greatX, greatY;
+    int bonusX, bonusY;
     
     public Game(Context context) {
 
@@ -68,7 +68,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         highScore = new HighScore(gInfo, context);
         checkGameOver = new CheckGameOver(gInfo, nextPlate);
         touchEvent = new TouchEvent(gInfo);
-        greatPlate = new GreatPlate(gInfo, context);
+        bonusPlate = new BonusPlate(gInfo, context);
         overPlate = new OverPlate(gInfo, blockImages);
         messagePlate = new MessagePlate(gInfo, context);
         basePlate = new BasePlate(gInfo, context);
@@ -80,7 +80,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     void newGameStart() {
 
         messagePlate.set(true,"Welcome", "게임을", "시작합니다",
-                System.currentTimeMillis(), 2000);
+                System.currentTimeMillis(), 1000);
 
         gInfo.resetValues();
         highScore.get();
@@ -126,8 +126,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
             nextPlate.generateNextBlock();
-            if (gInfo.greatIdx > 0) {
-                showGreat(greatX, greatY);
+            if (gInfo.bonusIdx > 0) {
+                showBonus(bonusX, bonusY);
             }
         }
 
@@ -156,15 +156,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             overPlate.addOver(x, y, gInfo.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
-                        if (gInfo.greatIdx > 0) {
-                            greatX = x; greatY = y;
+                        if (gInfo.bonusIdx > 0) {
+                            bonusX = x; bonusY = y;
                         }
                         break;
 
                     case STOP:
                         checkNearItem.check(x, y);
-                        if (gInfo.greatIdx > 0) {
-                            greatX = x; greatY = y;
+                        if (gInfo.bonusIdx > 0) {
+                            bonusX = x; bonusY = y;
                         }
                         break;
 
@@ -191,7 +191,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             if (gInfo.isGameOver)
                 highScore.put();
 
-            if (gInfo.blockClicked) {
+            if (gInfo.touchClicked) {
                 start2Move();
 
             } else if (gInfo.showNextPressed) {
@@ -225,23 +225,22 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         return getNext;
     }
 
-    private void showGreat(int x, int y) {
+    private void showBonus(int x, int y) {
         if (gInfo.aniStacks.size() > 0)
             return;
-        if (gInfo.greatIdx > 2) {
-            greatPlate.addGreat(x, y, gInfo.greatIdx - 2,
-                    gInfo.greatLoopCount + gInfo.greatIdx + gInfo.greatIdx);
-            if (gInfo.greatIdx > 5) {
+        if (gInfo.bonusIdx > 2) {
+            bonusPlate.addBonus(x, y, gInfo.bonusIdx - 2,
+                    gInfo.bonusLoopCount + gInfo.bonusIdx + gInfo.bonusIdx);
+            if (gInfo.bonusIdx > 5) {
                 gInfo.gameDifficulty++;
                 messagePlate.set(true, "!잘 했어요!", "블럭 종류가",
                     "더("+gInfo.gameDifficulty+") 많아져요!",
-                    System.currentTimeMillis() + 2500, 2000);
+                    System.currentTimeMillis() + 1500, 2000);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }
-            Log.w("showGreat", "greatIdx= "+gInfo.greatIdx);
         }
-        gInfo.greatIdx = 0;
-        gInfo.greatStacked = 0;
+        gInfo.bonusIdx = 0;
+        gInfo.bonusStacked = 0;
     }
 
     /*
@@ -284,7 +283,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private void start2Move() {
 
-        gInfo.blockClicked = false;
+        gInfo.touchClicked = false;
         if (nextPlate.nextIndex == -1)
             return;
         if (gInfo.dumpCount > 5)
@@ -306,7 +305,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         nextPlate.draw(canvas, nextItem, animation.blockImages.get(nextPlate.nextNextIndex).halfMap);
         animation.draw(canvas);
         scorePlate.draw(canvas);
-        greatPlate.draw(canvas);
+        bonusPlate.draw(canvas);
         overPlate.draw(canvas);
         gameOverPlate.draw(canvas);
         messagePlate.draw(canvas);

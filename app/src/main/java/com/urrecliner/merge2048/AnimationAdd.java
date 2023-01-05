@@ -25,26 +25,30 @@ public class AnimationAdd {
         else
             maxCount = 6;
 
-        long timeStamp = System.currentTimeMillis();
-        if (gInfo.aniStacks.size() > 0) {
-            long adjustTime = gInfo.aniStacks.get(gInfo.aniStacks.size() - 1).timeStamp + 30L;
-            if (adjustTime > timeStamp)
-                timeStamp = adjustTime;
-        }
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MOVING, xS, yS, xF, yF,
                 gInfo.blockOutSize * (xF - xS) / maxCount,
                 gInfo.blockOutSize * (yF - yS)/ maxCount,
-                maxCount, timeStamp, block));
+                maxCount, getNextTime(), block));
     }
 
     public void addMerge(int x, int y, int index) {
-        gInfo.aniStacks.add(new AniStack(GInfo.STATE.MERGE, x, y, index));
+
+        gInfo.aniStacks.add(new AniStack(GInfo.STATE.MERGE, x, y, index, getNextTime()));
     }
 
     public void addExplode(int xS, int yS, int xF, int yF) {
+
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.EXPLODE, xS, yS,
                 gInfo.blockOutSize * (xF - xS) / smooth,
-                gInfo.blockOutSize * (yF - yS)/ smooth));
+                gInfo.blockOutSize * (yF - yS)/ smooth, getNextTime()));
     }
 
+    private long getNextTime() {
+        long timeStamp;
+        if (gInfo.aniStacks.size() > 0)
+            timeStamp = gInfo.aniStacks.get(gInfo.aniStacks.size() - 1).timeStamp + 5L;
+        else
+            timeStamp = System.currentTimeMillis() + 5L;
+        return  timeStamp;
+    }
 }

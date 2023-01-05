@@ -22,7 +22,7 @@ public class GInfo {
     public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public final int xNewPos, yNextPos;
-    public final int greatLoopCount = 12;
+    public final int bonusLoopCount = 12;
     public final int pxcl;
     public final Cell[][] cells;
 
@@ -32,7 +32,7 @@ public class GInfo {
     public long highLowScore;
 
     public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
-    public int greatIdx, greatStacked = 0;
+    public int bonusIdx, bonusStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean showNextPressed = false, showNext = true;
@@ -40,7 +40,7 @@ public class GInfo {
     public int swingXInc, swingXPosLeft, swingXPosRight;
     public long swingTime, swingDelay;
 
-    public boolean blockClicked = false;   // clicked means user clicked
+    public boolean touchClicked = false;   // clicked means user clicked
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     public int gameDifficulty = 5;
 
@@ -74,7 +74,7 @@ public class GInfo {
         blockFlyingGap = (blockOutSize * 110/100 - blockOutSize)/2;
         xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
         yUpOffset = 32;
-        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;
+        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;    // around next block top
         blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 196
         explodeGap = blockOutSize / 5;
         xNextPosCenter = (screenXSize - blockOutSize) / 2;
@@ -83,11 +83,8 @@ public class GInfo {
         pxcl = screenXSize / 12;
         swingXInc = blockOutSize / 5;
         swingXPosLeft = xOffset - 32;
-        swingXPosRight = xOffset + blockOutSize * (xBlockCnt - 1) + 32;
+        swingXPosRight = screenXSize - xOffset -blockOutSize + 32;
         cells = new Cell[xBlockCnt][yBlockCnt];
-
-//        Log.w("GInfo", "screen= " + screenXSize + " x " + screenYSize);
-//        Log.w("GInfo", "blockOutSize=" + blockOutSize + " blockInSize=" + blockInSize + " blockIconSize=" + blockIconSize);
 
         resetValues();
     }
@@ -101,8 +98,8 @@ public class GInfo {
         aniStacks = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
-        greatIdx = 0;
-        greatStacked = 0;
+        bonusIdx = 0;
+        bonusStacked = 0;
         isGameOver = false;
         dumpCount = 0;
     }

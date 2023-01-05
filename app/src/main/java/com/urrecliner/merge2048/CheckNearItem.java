@@ -83,7 +83,7 @@ public class CheckNearItem {
     }
 
     private void mergeToHere(int x, int y, int index) {
-        gInfo.greatIdx++;
+        gInfo.bonusIdx++;
         gInfo.cells[x][y].state = GInfo.STATE.MERGE;
         animationAdd.addMerge(x,y, index);
     }
@@ -100,7 +100,7 @@ public class CheckNearItem {
             addVal += addVal;
         if (gInfo.swing)
             addVal += addVal / 2;
-        gInfo.greatStacked += addVal;
+        gInfo.bonusStacked += addVal;
         return addVal;
     }
 
