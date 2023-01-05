@@ -18,11 +18,11 @@ public class MessagePlate {
 
     Context context;
     final GInfo gInfo;
-    final Bitmap msgMap;
+    final Bitmap msg0Map, msg1Map;
     final int msgMapSize;
     final int xMapPos, xBoxPos;
     final int pxcl;
-    Paint msgBoxPaint, msgHeadPaint, msgLinePaint;
+    Paint msgBox0Paint, msgBox1Paint, msgHeadPaint, msgLinePaint;
     int yBoxPos, yTopPos, yBottomPos;
     int yInc, delay;
     long nextTime;
@@ -32,8 +32,10 @@ public class MessagePlate {
         this.context = context;
         this.pxcl = gInfo.pxcl;
 
-        msgBoxPaint = new Paint();
-        msgBoxPaint.setColor(ContextCompat.getColor(context, R.color.msg_background));
+        msgBox0Paint = new Paint();
+        msgBox0Paint.setColor(ContextCompat.getColor(context, R.color.msg_background0));
+        msgBox1Paint = new Paint();
+        msgBox1Paint.setColor(ContextCompat.getColor(context, R.color.msg_background1));
 
         msgHeadPaint = new Paint();
         msgHeadPaint.setTextSize(gInfo.pxcl);
@@ -46,9 +48,12 @@ public class MessagePlate {
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgMapSize = gInfo.screenXSize*3/5;
-        msgMap = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(msgMap);
-        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBoxPaint);
+        msg0Map = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas0 = new Canvas(msg0Map);
+        canvas0.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
+        msg1Map = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas1 = new Canvas(msg1Map);
+        canvas1.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox1Paint);
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
@@ -68,7 +73,7 @@ public class MessagePlate {
             yInc = - yInc;
         }
 
-        canvas.drawBitmap(msgMap, xMapPos, yBoxPos-msgMapSize/2f, null);
+        canvas.drawBitmap((gInfo.msgOn)? msg0Map: msg1Map, xMapPos, yBoxPos-msgMapSize/2f, null);
         msgHeadPaint.setStrokeWidth(16);
         msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header_out));
         canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
@@ -98,7 +103,8 @@ public class MessagePlate {
             gInfo.msgHead = "";
     }
 
-    public void set(String head, String line1, String line2, long startTime, int keep) {
+    public void set(boolean tf, String head, String line1, String line2, long startTime, int keep) {
+        gInfo.msgOn = tf;
         gInfo.msgHead = head;
         gInfo.msgLine1 = line1; gInfo.msgLine2 = line2;
         gInfo.msgStartTime = startTime;

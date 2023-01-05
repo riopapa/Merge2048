@@ -13,7 +13,8 @@
     <color name="score">#FF4443</color>
     <color name="hi_score">#831414</color>
 
-    <color name="msg_background">#C3A72A</color>
+    <color name="msg_background0">#C8B355</color>
+    <color name="msg_background1">#92C858</color>
     <color name="msg_header">#781311</color>
     <color name="msg_header_out">#CF4A49</color>
     <color name="msg_line">#380545</color>

@@ -44,6 +44,7 @@ public class GInfo {
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     public int gameDifficulty = 5;
 
+    public boolean msgOn = true;
     public String msgHead = "";
     public String msgLine1 = "", msgLine2 = "";
     public long msgStartTime, msgFinishTime = 0;

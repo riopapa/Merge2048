@@ -116,9 +116,7 @@ public class ScorePlate {
 
         if (gInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
             int score = (int) Math.sqrt(gInfo.score2Add + 200);
-            delay = 90 - score;
-            if (delay < 60)
-                delay = 60;
+            delay += 12;
             if (score > gInfo.score2Add)
                 score = gInfo.score2Add;
             else if (score < 2)
@@ -144,7 +142,7 @@ public class ScorePlate {
                 }
             }
         } else {
-            delay = 0;
+            delay = 30;
         }
 
         for (int i = 0; i < gInfo.highMembers.size(); i++) {

@@ -79,7 +79,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     void newGameStart() {
 
-        messagePlate.set("Welcome", "게임을", "시작합니다",
+        messagePlate.set(true,"Welcome", "게임을", "시작합니다",
                 System.currentTimeMillis(), 2000);
 
         gInfo.resetValues();
@@ -197,13 +197,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             } else if (gInfo.showNextPressed) {
                 gInfo.showNextPressed = false;
                 gInfo.showNext = !gInfo.showNext;
-                messagePlate.set("다음 블럭", (gInfo.showNext) ? "보입니다" : "안 보입니다",
+                messagePlate.set(gInfo.showNext, "다음 블럭", (gInfo.showNext) ? "보입니다" : "안 보입니다",
                         (gInfo.showNext) ? "":"안 보이면 점수2배",System.currentTimeMillis(), 1500);
 
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
-                messagePlate.set("움직이기", (gInfo.swing) ? "움직입니다" : "고정됩니다",
+                messagePlate.set(gInfo.swing, "움직이기", (gInfo.swing) ? "움직입니다" : "고정됩니다",
                         (gInfo.swing) ? "움직이면 점수2배":"",System.currentTimeMillis(), 1500);
                 gInfo.resetSwing();
             }
@@ -233,7 +233,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.greatLoopCount + gInfo.greatIdx + gInfo.greatIdx);
             if (gInfo.greatIdx > 5) {
                 gInfo.gameDifficulty++;
-                messagePlate.set("!잘 했어요!", "블럭 종류가",
+                messagePlate.set(true, "!잘 했어요!", "블럭 종류가",
                     "더("+gInfo.gameDifficulty+") 많아져요!",
                     System.currentTimeMillis() + 2500, 2000);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
