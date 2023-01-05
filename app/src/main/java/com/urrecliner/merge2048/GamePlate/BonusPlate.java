@@ -10,17 +10,17 @@ import android.graphics.Canvas;
 
 import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameImage.BonusImage;
-import com.urrecliner.merge2048.GameObject.Bonus;
+import com.urrecliner.merge2048.GameObject.BonusRotate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BonusPlate {
 
-    Context context;
-    final GInfo gInfo;
-    List<Bonus> bonuses;
+    final Context context;
     final BonusImage bonusImage;
+    final GInfo gInfo;
+    List<BonusRotate> bonuses;
 
     public BonusPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
@@ -31,7 +31,7 @@ public class BonusPlate {
 
     public void addBonus(int xS, int yS, int idx, int loopCount) {
 
-        bonuses.add(new Bonus(xS, yS, idx, loopCount,
+        bonuses.add(new BonusRotate(xS, yS, idx, loopCount,
                 gInfo.blockOutSize * (- xS) / loopCount,
                 gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ loopCount, 40));
     }
@@ -39,22 +39,22 @@ public class BonusPlate {
     public void draw(Canvas canvas) {
 
         for (int i = 0; i < bonuses.size(); ) {
-            Bonus bonus = bonuses.get(i);
-            if (bonus.timeStamp < System.currentTimeMillis()) {
-                if (bonus.count >= bonus.loopCount) {
+            BonusRotate bonusRotate = bonuses.get(i);
+            if (bonusRotate.timeStamp < System.currentTimeMillis()) {
+                if (bonusRotate.count >= bonusRotate.loopCount) {
                     bonuses.remove(i);
-                    gInfo.score2Add += gInfo.bonusStacked * bonus.idx;
+                    gInfo.score2Add += gInfo.bonusStacked * bonusRotate.idx;
                     continue;
                 } else {
-                    Bitmap bitmap = bonusImage.bonusMaps[bonus.idx];
-                    int xPos = gInfo.xOffset + bonus.xS * gInfo.blockOutSize
-                            + bonus.xInc * bonus.count;
-                    int yPos = gInfo.yUpOffset + bonus.yS * gInfo.blockOutSize
-                            + bonus.yInc * bonus.count;
+                    Bitmap bitmap = bonusImage.bonusMaps[bonusRotate.idx];
+                    int xPos = gInfo.xOffset + bonusRotate.xS * gInfo.blockOutSize
+                            + bonusRotate.xInc * bonusRotate.count;
+                    int yPos = gInfo.yUpOffset + bonusRotate.yS * gInfo.blockOutSize
+                            + bonusRotate.yInc * bonusRotate.count;
                     canvas.drawBitmap(bitmap, xPos, yPos, null);
-                    bonus.count++;
-                    bonus.timeStamp = System.currentTimeMillis() + bonus.delay;
-                    bonuses.set(i, bonus);
+                    bonusRotate.count++;
+                    bonusRotate.timeStamp = System.currentTimeMillis() + bonusRotate.delay;
+                    bonuses.set(i, bonusRotate);
                 }
                 i++;
             }

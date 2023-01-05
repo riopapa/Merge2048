@@ -15,11 +15,13 @@
 
     <color name="msg_background0">#C8B355</color>
     <color name="msg_background1">#92C858</color>
-    <color name="msg_header">#781311</color>
+    <color name="msg_header_in">#781311</color>
     <color name="msg_header_out">#CF4A49</color>
-    <color name="msg_line">#380545</color>
+    <color name="msg_line_in">#380545</color>
     <color name="msg_line_out">#AF69C1</color>
 
     <color name="game_background">#A5C6CA</color>
+    <color name="game_over0">#FFDD3333</color>
+    <color name="game_over1">#FF3333DD</color>
 
 </resources>

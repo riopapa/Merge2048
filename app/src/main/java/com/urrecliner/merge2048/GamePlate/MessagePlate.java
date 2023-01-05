@@ -16,21 +16,19 @@ import com.urrecliner.merge2048.R;
 
 public class MessagePlate {
 
-    Context context;
     final GInfo gInfo;
     final Bitmap msg0Map, msg1Map;
     final int msgMapSize;
     final int xMapPos, xBoxPos;
-    final int pxcl;
+    final int piece;
     Paint msgBox0Paint, msgBox1Paint, msgHeadPaint, msgLinePaint;
     int yBoxPos, yTopPos, yBottomPos;
     int yInc, delay;
     long nextTime;
-
+    final int head_colorOut, head_colorIn, line_colorOut, line_colorIn;
     public MessagePlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
-        this.context = context;
-        this.pxcl = gInfo.pxcl;
+        this.piece = gInfo.piece;
 
         msgBox0Paint = new Paint();
         msgBox0Paint.setColor(ContextCompat.getColor(context, R.color.msg_background0));
@@ -38,12 +36,12 @@ public class MessagePlate {
         msgBox1Paint.setColor(ContextCompat.getColor(context, R.color.msg_background1));
 
         msgHeadPaint = new Paint();
-        msgHeadPaint.setTextSize(gInfo.pxcl);
+        msgHeadPaint.setTextSize(gInfo.piece);
         msgHeadPaint.setTextAlign(Paint.Align.CENTER);
         msgHeadPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgLinePaint = new Paint();
-        msgLinePaint.setTextSize(gInfo.pxcl * 8 / 9);
+        msgLinePaint.setTextSize(gInfo.piece * 8f / 9);
         msgLinePaint.setTextAlign(Paint.Align.CENTER);
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
@@ -57,8 +55,12 @@ public class MessagePlate {
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
-        yTopPos = gInfo.yDownOffset/2 - pxcl - pxcl;
-        yBottomPos = gInfo.yDownOffset/2 + pxcl + pxcl;
+        yTopPos = gInfo.yDownOffset/2 - piece - piece;
+        yBottomPos = gInfo.yDownOffset/2 + piece + piece;
+        head_colorOut = ContextCompat.getColor(context, R.color.msg_header_out);
+        head_colorIn = ContextCompat.getColor(context, R.color.msg_header_in);
+        line_colorOut = ContextCompat.getColor(context, R.color.msg_line_out);
+        line_colorIn = ContextCompat.getColor(context, R.color.msg_line_in);
     }
 
     public void draw(Canvas canvas) {
@@ -75,29 +77,29 @@ public class MessagePlate {
 
         canvas.drawBitmap((gInfo.msgOn)? msg0Map: msg1Map, xMapPos, yBoxPos-msgMapSize/2f, null);
         msgHeadPaint.setStrokeWidth(16);
-        msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header_out));
-        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
+        msgHeadPaint.setColor(head_colorOut);
+        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - piece - piece, msgHeadPaint);
         msgHeadPaint.setStrokeWidth(0);
-        msgHeadPaint.setColor(ContextCompat.getColor(context, R.color.msg_header));
-        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - pxcl - pxcl, msgHeadPaint);
+        msgHeadPaint.setColor(head_colorIn);
+        canvas.drawText(gInfo.msgHead, xBoxPos, yBoxPos - piece - piece, msgHeadPaint);
 
         int yPos = yBoxPos;
         if (gInfo.msgLine2.equals(""))
-            yPos += pxcl;
+            yPos += piece;
         msgLinePaint.setStrokeWidth(8);
-        msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
+        msgLinePaint.setColor(line_colorOut);
         canvas.drawText(gInfo.msgLine1, xBoxPos, yPos, msgLinePaint);
         msgLinePaint.setStrokeWidth(0);
-        msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
+        msgLinePaint.setColor(line_colorIn);
         canvas.drawText(gInfo.msgLine1, xBoxPos, yPos, msgLinePaint);
 
         if (!gInfo.msgLine2.equals("")) {
             msgLinePaint.setStrokeWidth(8);
-            msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line_out));
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+pxcl+pxcl, msgLinePaint);
+            msgLinePaint.setColor(line_colorOut);
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+ piece + piece, msgLinePaint);
             msgLinePaint.setStrokeWidth(0);
-            msgLinePaint.setColor(ContextCompat.getColor(context, R.color.msg_line));
-            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+pxcl+pxcl, msgLinePaint);
+            msgLinePaint.setColor(line_colorIn);
+            canvas.drawText(gInfo.msgLine2, xBoxPos, yPos+ piece + piece, msgLinePaint);
         }
         if (gInfo.msgFinishTime < System.currentTimeMillis())
             gInfo.msgHead = "";

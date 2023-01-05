@@ -17,17 +17,16 @@ import java.util.Random;
 
 public class NextPlate {
 
-    Context context;
     final GInfo gInfo;
-    Paint nextPaint;
-    int blockOutSize, blockInSize;
-    int xNextNextPos, yNextNextPos;
-    public int nextIndex, nextNextIndex;
+    final int blockOutSize, blockInSize;
+    final int xNextNextPos, yNextNextPos;
     final Bitmap nextNoMap;
+    Paint nextPaint;
+
+    public int nextIndex, nextNextIndex;
 
     public NextPlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
-        this.context = context;
         this.blockInSize = gInfo.blockInSize;
         this.blockOutSize = gInfo.blockOutSize;
 
@@ -42,22 +41,19 @@ public class NextPlate {
         xNextNextPos = gInfo.xNextPos + gInfo.blockOutSize / 4;
         yNextNextPos = gInfo.yNewPosS;
 
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.a_next);
-        nextNoMap = Bitmap.createScaledBitmap(bitmap, blockInSize/2, blockInSize/2, false);
-
+        nextNoMap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.a_next), blockInSize/2, blockInSize/2, false);
     }
 
     public void generateNextBlock() {
         nextIndex = nextNextIndex;
-        nextNextIndex = new Random().nextInt(5) + 1;
+        nextNextIndex = new Random().nextInt(gInfo.gameDifficulty-1) + 1;
         if (new Random().nextInt(10) < 3)
             return;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         if (new Random().nextInt(10) == 0) {
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;
-            if (new Random().nextInt(10) == 0)
-                nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 2) + 2;
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 2) + 1;
         }
     }
 

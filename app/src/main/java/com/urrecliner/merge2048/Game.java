@@ -20,7 +20,7 @@ import com.urrecliner.merge2048.GamePlate.GameOverPlate;
 import com.urrecliner.merge2048.GamePlate.BonusPlate;
 import com.urrecliner.merge2048.GamePlate.MessagePlate;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
-import com.urrecliner.merge2048.GamePlate.OverPlate;
+import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 
 import java.util.List;
@@ -34,7 +34,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final AnimationAdd animationAdd;
     private final BasePlate basePlate;
     private final BonusPlate bonusPlate;
-    private final OverPlate overPlate;
+    private final RotatePlate rotatePlate;
     private final MessagePlate messagePlate;
     private final CheckNearItem checkNearItem;
     private final HighScore highScore;
@@ -61,7 +61,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         final List<BlockImage> blockImages = new BlockImageMake().make(context, gInfo);
         final ExplodeImage explodeImage = new ExplodeImage(gInfo, context);
 
-        animation = new Animation(gInfo, blockImages, explodeImage, context, SMOOTH);
+        animation = new Animation(gInfo, blockImages, explodeImage, SMOOTH);
         animationAdd = new AnimationAdd(gInfo, SMOOTH);
         nextPlate = new NextPlate(gInfo, context);
         checkNearItem = new CheckNearItem(gInfo, animation, animationAdd);
@@ -69,7 +69,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         checkGameOver = new CheckGameOver(gInfo, nextPlate);
         touchEvent = new TouchEvent(gInfo);
         bonusPlate = new BonusPlate(gInfo, context);
-        overPlate = new OverPlate(gInfo, blockImages);
+        rotatePlate = new RotatePlate(gInfo, blockImages);
         messagePlate = new MessagePlate(gInfo, context);
         basePlate = new BasePlate(gInfo, context);
         gameOverPlate = new GameOverPlate(gInfo, context);
@@ -119,7 +119,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 //        }
         if (gInfo.dumpClicked && gInfo.dumpCount > 5) {
             gInfo.dumpClicked = false;
-            new DumpCells(gInfo, animation, checkNearItem, nextPlate, "Dump Update");
+            new DumpCells(gInfo, checkNearItem, nextPlate, "Dump Update");
         }
         if (gInfo.aniStacks.size() > 0)
             return;
@@ -146,7 +146,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
                     case MERGED:
                         if (gInfo.cells[x][y].index >= 10) {
-                            overPlate.addOver(x, y, gInfo.cells[x][y].index, 12, 40);
+                            rotatePlate.addRotate(x, y, gInfo.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
                         if (gInfo.bonusCount > 0) {
@@ -291,7 +291,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.bonusCount != 0)
             showBonus(bonusX, bonusY);
         if (gInfo.dumpCount > 5)
-            new DumpCells(gInfo, animation, checkNearItem, nextPlate, "Start2Move");
+            new DumpCells(gInfo, checkNearItem, nextPlate, "Start2Move");
         Cell cell = gInfo.cells[gInfo.touchIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
             gInfo.cells[gInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GInfo.STATE.GO_UP);
@@ -310,7 +310,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         animation.draw(canvas);
         scorePlate.draw(canvas);
         bonusPlate.draw(canvas);
-        overPlate.draw(canvas);
+        rotatePlate.draw(canvas);
         gameOverPlate.draw(canvas);
         messagePlate.draw(canvas);
     }

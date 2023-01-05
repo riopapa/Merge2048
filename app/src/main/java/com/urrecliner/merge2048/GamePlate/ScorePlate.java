@@ -21,15 +21,15 @@ public class ScorePlate {
 
     final GInfo gInfo;
     final Context context;
-
-    long scoreTimeStamp = 0;
-    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
+
+    long scoreTimeStamp = 0;
+    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
     boolean xor;
     int xorCount, delay;
-    final String highHeart = "♥";
+    final String highHeart = "♥♥";
 
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -40,7 +40,7 @@ public class ScorePlate {
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(gInfo.pxcl*5/10);
+        scoreOPaint.setTextSize(gInfo.piece *5/10);
         scoreOPaint.setStrokeWidth(6);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
@@ -49,7 +49,7 @@ public class ScorePlate {
         scoreIPaint = new Paint();
         scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(gInfo.pxcl*5/10);
+        scoreIPaint.setTextSize(gInfo.piece *5/10);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -64,7 +64,7 @@ public class ScorePlate {
         board1Paint = new Paint();
         board1Paint.setStrokeWidth(3);
 
-        int width, height, scoreSize = gInfo.pxcl + gInfo.pxcl;
+        int width, height, scoreSize = gInfo.piece + gInfo.piece;
         hTextPaint = new Paint();
         hTextPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
         hTextPaint.setColor(Color.WHITE);

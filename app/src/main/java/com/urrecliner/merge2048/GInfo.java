@@ -23,7 +23,7 @@ public class GInfo {
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
     public final int xNewPos, yNextPos;
     public final int bonusLoopCount = 12;
-    public final int pxcl;
+    public final int piece; // small pixel size for calculation sizes
     public final Cell[][] cells;
 
     public long scoreNow;
@@ -63,27 +63,25 @@ public class GInfo {
         DisplayMetrics metrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-
-        // setUp final values
         screenXSize = metrics.widthPixels;      // note20  1440 x 2819
         screenYSize = metrics.heightPixels;     // A32     1080 x 2194
 
-        blockOutSize = screenXSize * 85 / 100 / xBlockCnt;  // note20 = 259
-        blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 252
+        blockOutSize = screenXSize * 85 / 100 / xBlockCnt;  // note20 = 244
+        blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 238
 
-        blockFlyingGap = (blockOutSize * 110/100 - blockOutSize)/2;
-        xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2;
-        yUpOffset = 32;
-        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + 12;    // around next block top
-        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 196
-        explodeGap = blockOutSize / 5;
-        xNextPosCenter = (screenXSize - blockOutSize) / 2;
-        xNewPos = xNextPosCenter + blockOutSize - 8;
-        yNextPos = yDownOffset + 16;
-        pxcl = screenXSize / 12;
-        swingXInc = blockOutSize / 5;
-        swingXPosLeft = xOffset - 32;
-        swingXPosRight = screenXSize - xOffset -blockOutSize + 32;
+        blockFlyingGap = (blockOutSize * 110/100 - blockInSize)/2;  // note20 15
+        xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2; // note20 110
+        yUpOffset = screenYSize / 80;   // ~= 35;
+        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + yUpOffset/3;  // next block top 1510
+        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 199
+        explodeGap = blockOutSize / 5;  // note20 48
+        xNextPosCenter = (screenXSize - blockOutSize) / 2;  // note20 598
+        xNewPos = xNextPosCenter + blockOutSize - 8;    //  note20 834
+        yNextPos = yDownOffset + 16;    // 1526
+        piece = screenXSize / 12;   // 120
+        swingXInc = blockOutSize / 5;   // 48
+        swingXPosLeft = xOffset - 32;   // 78
+        swingXPosRight = screenXSize - xOffset -blockOutSize + 32;  // 1118
         cells = new Cell[xBlockCnt][yBlockCnt];
 
         resetValues();

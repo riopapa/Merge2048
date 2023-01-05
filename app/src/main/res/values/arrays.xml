@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="bonus_images">
+        <item>@drawable/z100</item>
+        <item>@drawable/z101</item>
+        <item>@drawable/z102</item>
+        <item>@drawable/z103</item>
+        <item>@drawable/z104</item>
+        <item>@drawable/z105</item>
+        <item>@drawable/z106</item>
+        <item>@drawable/z107</item>
+        <item>@drawable/z108</item>
+        <item>@drawable/z109</item>
+        <item>@drawable/z110</item>
+        <item>@drawable/z111</item>
+    </integer-array>
+    <integer-array name="block_images">
+        <item>@drawable/i00_0</item>
+        <item>@drawable/i01_2</item>
+        <item>@drawable/i02_4</item>
+        <item>@drawable/i03_8</item>
+        <item>@drawable/i04_16</item>
+        <item>@drawable/i05_32</item>
+        <item>@drawable/i06_64</item>
+        <item>@drawable/i07_128</item>
+        <item>@drawable/i08_256</item>
+        <item>@drawable/i09_512</item>
+        <item>@drawable/i10_1024</item>
+        <item>@drawable/i11_2048</item>
+        <item>@drawable/i12_4096</item>
+        <item>@drawable/i13_8192</item>
+        <item>@drawable/i14_16384</item>
+        <item>@drawable/i15_32768</item>
+        <item>@drawable/i16_65536</item>
+        <item>@drawable/i17_131072</item>
+    </integer-array>
+
+</resources>

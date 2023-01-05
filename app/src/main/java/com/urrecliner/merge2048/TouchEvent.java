@@ -93,11 +93,9 @@ public class TouchEvent {
                     }
                 } else if (isSwingPressed()) {
                     gInfo.swingPressed = true;
-//
-//                } else if (yTouchPos > yNextBottom + 200){
-//                    gInfo.dumpCellClicked = true;
                 }
                 break;
+
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
@@ -154,6 +152,5 @@ public class TouchEvent {
         return (xTouchPos >= xNextNextPosS && xTouchPos <= xNextNextPosE &&
                 yTouchPos >= yNextNextPosS && yTouchPos <= yNextNextPosE);
     }
-
 
 }

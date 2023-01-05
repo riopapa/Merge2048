@@ -3,12 +3,11 @@ package com.urrecliner.merge2048;
 /*
  * Purpose of this Animation module is to draw, animate Game Plate
  */
-import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.GameImage.ExplodeImage;
 import com.urrecliner.merge2048.GameObject.AniStack;
@@ -17,18 +16,16 @@ import java.util.List;
 
 public class Animation {
 
+    final GInfo gInfo;
+    final List<BlockImage> blockImages;
+    final ExplodeImage explodeImage;
     final int smooth;
 
-    Context context;
-    int screenXSize, screenYSize;
-    int xBlockCnt, yBlockCnt, xOffset, yUpOffset, xBlockOutSize, yBlockOutSize;
-    public List<BlockImage> blockImages;
-    ExplodeImage explodeImage;
-    final GInfo gInfo;
+    final int screenXSize, screenYSize;
+    final int xBlockCnt, yBlockCnt, xOffset, yUpOffset, xBlockOutSize, yBlockOutSize;
 
-    public Animation(GInfo gInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, Context context, int smooth){
+    public Animation(GInfo gInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, int smooth){
         this.gInfo = gInfo;
-        this.context = context;
         this.xOffset = gInfo.xOffset;
         this.yUpOffset = gInfo.yUpOffset;
         this.screenXSize = gInfo.screenXSize;
@@ -70,20 +67,20 @@ public class Animation {
             }
         }
 
-        for (int apI = 0; apI < gInfo.aniStacks.size(); ) {
-            if (gInfo.aniStacks.get(apI).count == 100) {
-                gInfo.aniStacks.remove(apI);
+        for (int i = 0; i < gInfo.aniStacks.size(); ) {
+            if (gInfo.aniStacks.get(i).count == 100) {
+                gInfo.aniStacks.remove(i);
             } else
-                apI++;
+                i++;
         }
         // draw Animation while ani active
-        for (int apI = 0; apI < gInfo.aniStacks.size(); apI++) {
-            drawCase(canvas, apI);
+        for (int i = 0; i < gInfo.aniStacks.size(); i++) {
+            drawCase(canvas, i);
         }
     }
 
-    private void drawCase(Canvas canvas, int apI) {
-        AniStack ani = gInfo.aniStacks.get(apI);
+    private void drawCase(Canvas canvas, int i) {
+        AniStack ani = gInfo.aniStacks.get(i);
         switch (ani.state) {
             case MOVING:
                 if (ani.timeStamp < System.currentTimeMillis() ) {
@@ -93,7 +90,7 @@ public class Animation {
                         gInfo.cells[ani.xF][ani.yF].index = ani.block;
                         gInfo.cells[ani.xF][ani.yF].state = GInfo.STATE.STOP;
                         ani.count = 100;
-                        gInfo.aniStacks.set(apI, ani);
+                        gInfo.aniStacks.set(i, ani);
                     } else {
                         Bitmap blockMap = blockImages.get(ani.block).flyMaps[ani.count];
                         int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
@@ -103,7 +100,7 @@ public class Animation {
                         canvas.drawBitmap(blockMap, xPos, yPos, null);
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
-                        gInfo.aniStacks.set(apI, ani);
+                        gInfo.aniStacks.set(i, ani);
                     }
                 }
                 break;
@@ -112,7 +109,7 @@ public class Animation {
                 if (ani.timeStamp < System.currentTimeMillis() ) {
                     if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
-                        gInfo.aniStacks.remove(apI);
+                        gInfo.aniStacks.remove(i);
                     } else {
                         Bitmap explodeMap = explodeImage.smallMaps[ani.count];
                         int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
@@ -122,7 +119,7 @@ public class Animation {
                         canvas.drawBitmap(explodeMap, xPos, yPos, null);
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
-                        gInfo.aniStacks.set(apI, ani);
+                        gInfo.aniStacks.set(i, ani);
                     }
                 }
                 break;
@@ -133,11 +130,11 @@ public class Animation {
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.MERGED;
                         gInfo.cells[ani.xS][ani.yS].index = ani.block;
                         ani.count = 100;
-//                        gInfo.aniStacks.remove(apI);
+//                        gInfo.aniStacks.remove(i);
                     } else {
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
-                        gInfo.aniStacks.set(apI, ani);
+                        gInfo.aniStacks.set(i, ani);
                     }
                 }
                 break;

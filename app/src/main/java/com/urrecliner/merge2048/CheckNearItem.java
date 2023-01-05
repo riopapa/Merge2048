@@ -104,14 +104,8 @@ public class CheckNearItem {
         return addVal;
     }
 
+    final int[] nbrValues = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072};
     public int powerIndex(int index) {
-        int number;
-        if (index != 0) {
-            number = 1;
-            while (index-- > 0)
-                number = number + number;
-        } else
-            number = 0;
-        return number;
+        return nbrValues[index];
     }
 }

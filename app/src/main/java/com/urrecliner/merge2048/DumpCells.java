@@ -6,7 +6,7 @@ import com.urrecliner.merge2048.GamePlate.NextPlate;
 
 public class DumpCells {
 
-    public DumpCells(GInfo gInfo, Animation animation, final CheckNearItem checkNearItem, NextPlate nextPlate, String msg) {
+    public DumpCells(GInfo gInfo, final CheckNearItem checkNearItem, final NextPlate nextPlate, String msg) {
         StringBuilder sb = new StringBuilder("    |    0        |    1        |    2        |    3        |    4 ");
         for (int y = 0; y < gInfo.yBlockCnt; y++) {
             sb.append("\n ").append(y).append(" ");
@@ -28,18 +28,6 @@ public class DumpCells {
 
         Log.w("dump "+gInfo.aniStacks.size(), "<<< "+msg+" >>>");
         Log.w("dump "+gInfo.aniStacks.size(), sb.toString());
-    }
-
-
-    private int powerIndex(int index) {
-        int number;
-        if (index != 0) {
-            number = 1;
-            while (index-- > 0)
-                number = number + number;
-        } else
-            number = 0;
-        return number;
     }
 
 }

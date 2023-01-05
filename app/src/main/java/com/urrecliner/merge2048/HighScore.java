@@ -47,7 +47,7 @@ public class HighScore {
 
     }
 
-    final String highHeart = "♥";
+    final String highHeart = "♥♥";
 
     void put() {
         for (int i = 0; i < gInfo.highMembers.size(); i++) {

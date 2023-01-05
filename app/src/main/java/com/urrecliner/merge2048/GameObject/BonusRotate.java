@@ -1,11 +1,11 @@
 package com.urrecliner.merge2048.GameObject;
 
-public class Bonus {
+public class BonusRotate {
     public int xS, yS, idx, loopCount,xInc, yInc, count;
     public long delay;
     public long timeStamp = 0;
 
-    public Bonus(int xS, int yS, int idx, int loopCount, int xInc, int yInc, int delay) {
+    public BonusRotate(int xS, int yS, int idx, int loopCount, int xInc, int yInc, int delay) {
 
         this.xS = xS;
         this.yS = yS;

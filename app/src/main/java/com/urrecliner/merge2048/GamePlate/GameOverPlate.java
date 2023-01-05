@@ -9,32 +9,36 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import androidx.core.content.ContextCompat;
+
 import com.urrecliner.merge2048.GInfo;
+import com.urrecliner.merge2048.R;
 
 public class GameOverPlate {
 
-    final Context context;
     final GInfo gInfo;
-    Paint overPaint;
+    Paint gOverPaint;
     boolean showSwitch = false;
     int waitCount;
     final int xOverPos, yOverPosTop, yOverPosBottom;
     int  yOverPos, yOverInc;
+    final int overColor0, overColor1;
 
     public GameOverPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
-        this.context = context;
 
-        overPaint = new Paint();
-        overPaint.setTextSize(gInfo.pxcl+gInfo.pxcl);
-        overPaint.setColor(Color.RED);
-        overPaint.setTextAlign(Paint.Align.CENTER);
-        overPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        overPaint.setStrokeWidth(32);
+        gOverPaint = new Paint();
+        gOverPaint.setTextSize(gInfo.piece +gInfo.piece);
+        gOverPaint.setColor(Color.RED);
+        gOverPaint.setTextAlign(Paint.Align.CENTER);
+        gOverPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        gOverPaint.setStrokeWidth(32);
+        overColor0 = ContextCompat.getColor(context, R.color.game_over0);
+        overColor1 = ContextCompat.getColor(context, R.color.game_over1);
         waitCount = 100;
 
         xOverPos = gInfo.screenXSize/2;
-        yOverPos = gInfo.yDownOffset/2;;
+        yOverPos = gInfo.yDownOffset/2;
         yOverPosTop = gInfo.blockIconSize * 2;
         yOverPosBottom = gInfo.blockOutSize * (gInfo.yBlockCnt -1);
         yOverInc = gInfo.blockInSize / 32;
@@ -53,12 +57,12 @@ public class GameOverPlate {
             yOverInc = - yOverInc;
         }
 
-        overPaint.setStrokeWidth(64);
-        overPaint.setColor((showSwitch) ? Color.BLUE : Color.RED);
-        canvas.drawText("Game Over", xOverPos, yOverPos, overPaint);
-        overPaint.setColor((showSwitch) ? Color.RED : Color.BLUE);
-        overPaint.setStrokeWidth(0);
-        canvas.drawText("Game Over", xOverPos, yOverPos, overPaint);
+        gOverPaint.setStrokeWidth(64);
+        gOverPaint.setColor((showSwitch) ? overColor0 : overColor1);
+        canvas.drawText("Game Over", xOverPos, yOverPos, gOverPaint);
+        gOverPaint.setColor((showSwitch) ? overColor1 : overColor0);
+        gOverPaint.setStrokeWidth(0);
+        canvas.drawText("Game Over", xOverPos, yOverPos, gOverPaint);
 
     }
 
