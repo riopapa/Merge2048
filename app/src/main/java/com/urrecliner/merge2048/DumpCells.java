@@ -23,28 +23,11 @@ public class DumpCells {
         sb.append("\n touch=").append(gInfo.touchIndex);
         sb.append(" index=").append(nextPlate.nextIndex);
         sb.append(" block=").append(checkNearItem.powerIndex(nextPlate.nextIndex));
+        sb.append(" nxtblock=").append(checkNearItem.powerIndex(nextPlate.nextNextIndex));
+        sb.append(" bonus=").append(gInfo.bonusCount);
 
         Log.w("dump "+gInfo.aniStacks.size(), "<<< "+msg+" >>>");
         Log.w("dump "+gInfo.aniStacks.size(), sb.toString());
-    }
-
-    public DumpCells(GInfo gInfo, String msg) {
-        StringBuilder sb = new StringBuilder("           0           1           2          3           4 ");
-        for (int y = 0; y < gInfo.yBlockCnt; y++) {
-            sb.append("\n ").append(y).append(" ");
-            for (int x = 0; x < gInfo.xBlockCnt; x++) {
-                int nbr = powerIndex(gInfo.cells[x][y].index);
-                String sNbr = ""+nbr;
-                int space = (7 - sNbr.length())/2;
-                String s = ("       ").substring(0,space)+nbr+("       ").substring(0,space);
-                if (s.length()>6)
-                    s = s.substring(0,6);
-                sb.append(s).append(gInfo.cells[x][y].state);
-            }
-        }
-
-        Log.w("dumpB "+gInfo.aniStacks.size(), ">>> "+msg+" <<<");
-        Log.w("dumpB "+gInfo.aniStacks.size(), sb.toString());
     }
 
 

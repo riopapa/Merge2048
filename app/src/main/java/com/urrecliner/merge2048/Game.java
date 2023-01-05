@@ -124,13 +124,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.aniStacks.size() > 0)
             return;
 
-        if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
-            nextPlate.generateNextBlock();
-            if (gInfo.bonusIdx > 0) {
-                showBonus(bonusX, bonusY);
-            }
-        }
-
         /*
         *   check state info and then ...
          */
@@ -156,14 +149,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                             overPlate.addOver(x, y, gInfo.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
-                        if (gInfo.bonusIdx > 0) {
+                        if (gInfo.bonusCount > 0) {
                             bonusX = x; bonusY = y;
                         }
                         break;
 
                     case STOP:
                         checkNearItem.check(x, y);
-                        if (gInfo.bonusIdx > 0) {
+                        if (gInfo.bonusCount > 0) {
                             bonusX = x; bonusY = y;
                         }
                         break;
@@ -191,6 +184,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             if (gInfo.isGameOver)
                 highScore.put();
 
+            if (gInfo.swing && nextPlate.nextIndex != -1)
+                gInfo.updateSwing();
+
             if (gInfo.touchClicked) {
                 start2Move();
 
@@ -198,40 +194,46 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 gInfo.showNextPressed = false;
                 gInfo.showNext = !gInfo.showNext;
                 messagePlate.set(gInfo.showNext, "다음 블럭", (gInfo.showNext) ? "보입니다" : "안 보입니다",
-                        (gInfo.showNext) ? "":"안 보이면 점수2배",System.currentTimeMillis(), 1500);
+                        (gInfo.showNext) ? "":"점수는 2배로",System.currentTimeMillis(), 1500);
 
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
                 messagePlate.set(gInfo.swing, "움직이기", (gInfo.swing) ? "움직입니다" : "고정됩니다",
-                        (gInfo.swing) ? "움직이면 점수2배":"",System.currentTimeMillis(), 1500);
+                        (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 1500);
                 gInfo.resetSwing();
             }
-            if (gInfo.swing)
-                gInfo.updateSwing();
+
+            if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
+                nextPlate.generateNextBlock();
+                if (gInfo.bonusCount > 0) {
+                    showBonus(bonusX, bonusY);
+                }
+            }
+
         }
     }
 
     private boolean isAllPaused() {
-        boolean getNext = true;
+        boolean allPaused = true;
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
                 if (gInfo.cells[x][y].state != GInfo.STATE.PAUSED) {
-                    getNext = false;
+                    allPaused = false;
                     break;
                 }
             }
         }
-        return getNext;
+        return allPaused;
     }
 
     private void showBonus(int x, int y) {
         if (gInfo.aniStacks.size() > 0)
             return;
-        if (gInfo.bonusIdx > 2) {
-            bonusPlate.addBonus(x, y, gInfo.bonusIdx - 2,
-                    gInfo.bonusLoopCount + gInfo.bonusIdx + gInfo.bonusIdx);
-            if (gInfo.bonusIdx > 5) {
+        if (gInfo.bonusCount > 2) {
+            bonusPlate.addBonus(x, y, gInfo.bonusCount - 2,
+                    gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
+            if (gInfo.bonusCount > 5) {
                 gInfo.gameDifficulty++;
                 messagePlate.set(true, "!잘 했어요!", "블럭 종류가",
                     "더("+gInfo.gameDifficulty+") 많아져요!",
@@ -239,7 +241,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }
         }
-        gInfo.bonusIdx = 0;
+        gInfo.bonusCount = 0;
         gInfo.bonusStacked = 0;
     }
 
@@ -286,6 +288,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gInfo.touchClicked = false;
         if (nextPlate.nextIndex == -1)
             return;
+        if (gInfo.bonusCount != 0)
+            showBonus(bonusX, bonusY);
         if (gInfo.dumpCount > 5)
             new DumpCells(gInfo, animation, checkNearItem, nextPlate, "Start2Move");
         Cell cell = gInfo.cells[gInfo.touchIndex][yBlockCnt-1];

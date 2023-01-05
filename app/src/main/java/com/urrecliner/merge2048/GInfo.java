@@ -32,7 +32,7 @@ public class GInfo {
     public long highLowScore;
 
     public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
-    public int bonusIdx, bonusStacked = 0;
+    public int bonusCount, bonusStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean showNextPressed = false, showNext = true;
@@ -98,7 +98,7 @@ public class GInfo {
         aniStacks = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
-        bonusIdx = 0;
+        bonusCount = 0;
         bonusStacked = 0;
         isGameOver = false;
         dumpCount = 0;
