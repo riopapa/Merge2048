@@ -18,14 +18,23 @@ public class CheckNearItem {
 
         int index = gInfo.cells[x][y].index;
         int indexR = -1, indexL = -1, indexU = -1;
+        GInfo.STATE stateR = null, stateL = null, stateU = null;
 
-        if (x < xBlockCnt - 1)
-            indexR = gInfo.cells[x +1][y].index;
-        if (x > 0)
-            indexL = gInfo.cells[x -1][y].index;
-        if (y > 0)
-            indexU = gInfo.cells[x][y -1].index;
-        if (index == indexL && index == indexR && index == indexU) {
+        if (x < xBlockCnt - 1) {
+            indexR = gInfo.cells[x + 1][y].index;
+            stateR = gInfo.cells[x + 1][y].state;
+        }
+        if (x > 0) {
+            indexL = gInfo.cells[x - 1][y].index;
+            stateL = gInfo.cells[x - 1][y].state;
+        }
+        if (y > 0) {
+            indexU = gInfo.cells[x][y - 1].index;
+            stateU = gInfo.cells[x][y - 1].state;
+        }
+        if (index == indexL && index == indexR && index == indexU &&
+            stateL == GInfo.STATE.PAUSED && stateR == GInfo.STATE.PAUSED &&
+            stateU == GInfo.STATE.PAUSED) {
             index += 3;
             gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
@@ -34,7 +43,8 @@ public class CheckNearItem {
             mergeToHere(x, y -1, index);
             return;
         }
-        if (index == indexL && index == indexR) {
+        if (index == indexL && index == indexR &&
+            stateL == GInfo.STATE.PAUSED && stateR == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
@@ -42,7 +52,8 @@ public class CheckNearItem {
             mergeToHere(x, y, index);
             return;
         }
-        if (index == indexL && index == indexU) {
+        if (index == indexL && index == indexU &&
+            stateL == GInfo.STATE.PAUSED && stateU == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y -1);
@@ -50,7 +61,8 @@ public class CheckNearItem {
             mergeToHere(x, y -1, index);
             return;
         }
-        if (index == indexR && index == indexU) {
+        if (index == indexR && index == indexU &&
+            stateR == GInfo.STATE.PAUSED && stateU == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
             explodeThis(x + 1, y, x, y -1);
@@ -58,21 +70,21 @@ public class CheckNearItem {
             mergeToHere(x, y -1, index);
             return;
         }
-        if (index == indexL) {
+        if (index == indexL && stateL == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
             explodeThis(x -1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
-        if (index == indexR) {
+        if (index == indexR && stateR == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
             explodeThis(x +1, y, x, y);
             mergeToHere(x, y, index);
             return;
         }
-        if (index == indexU) {
+        if (index == indexU && stateU == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
             explodeThis(x, y, x, y -1);

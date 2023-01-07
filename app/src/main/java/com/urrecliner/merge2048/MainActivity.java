@@ -18,12 +18,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-
-        );
+//        Window window = getWindow();
+//        window.setFlags(
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN
+//
+//        );
 
         game = new Game(this);
         setContentView(game);
@@ -57,25 +57,16 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onStop() {
-        Log.w("MainActivity.java", "onStop()");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.w("MainActivity.java", "onDestroy()");
-        if (game.gInfo.quitGame) {
-            int id= android.os.Process.myPid();
-            android.os.Process.killProcess(id);
-        }
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-//        game.gInfo.quitPressed = true;
-//        if (game.exitGame())
-//                finish();
             super.onBackPressed();
     }
 }

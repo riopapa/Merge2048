@@ -43,7 +43,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final int xBlockCnt, yBlockCnt;
     final int SMOOTH = 4;
     Context context;
-    public boolean needQuit = false;
     int bonusX, bonusY;
     
     public Game(Context context) {
@@ -65,7 +64,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         nextPlate = new NextPlate(gInfo, context, blockImages);
         checkNearItem = new CheckNearItem(gInfo, animation, animationAdd);
         highScore = new HighScore(gInfo, context);
-        checkGameOver = new CheckGameOver(gInfo, nextPlate);
+        checkGameOver = new CheckGameOver(gInfo);
         touchEvent = new TouchEvent(gInfo);
         bonusPlate = new BonusPlate(gInfo, context);
         rotatePlate = new RotatePlate(gInfo, blockImages);
@@ -182,7 +181,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (!gInfo.isGameOver) {
-            gInfo.isGameOver = checkGameOver.isOver();
+            gInfo.isGameOver = checkGameOver.isOver(nextPlate.nextIndex);
             if (gInfo.isGameOver)
                 highScore.put();
 
@@ -200,21 +199,24 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 gInfo.showNextPressed = false;
                 gInfo.showNext = !gInfo.showNext;
                 messagePlate.set(gInfo.showNext,
-                        "다음 블럭", (gInfo.showNext) ? "보입니다" : "안 보입니다",
+                        "다음 블럭", (gInfo.showNext) ? "미리 보입니다" : "안 보이니까",
                         (gInfo.showNext) ? "":"점수는 2배로",System.currentTimeMillis(), 2000);
 
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
                 messagePlate.set(gInfo.swing,
-                        "움직이기", (gInfo.swing) ? "움직입니다" : "고정됩니다",
+                        "블럭 움직이기", (gInfo.swing) ? "움직이니까" : "고정됩니다",
                         (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 2000);
                 gInfo.resetSwing();
-
             } else if (gInfo.touchClicked) {
                 start2Move();
             }
         }
+
+        if (gInfo.quitGame)
+            exitApp();
+
     }
 
     private boolean isAllPaused() {
@@ -330,21 +332,24 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         Log.w("game", "surfaceDestroyed");
         super.destroyDrawingCache();
+        if (gInfo.quitGame) {
+            gameLoop.stopLoop();
+            ((Activity) context).finish();
+        }
     }
 
     public void pause() {
         gameLoop.stopLoop();
+        if (gInfo.quitGame) {
+            int id= android.os.Process.myPid();
+            android.os.Process.killProcess(id);
+        }
     }
 
     void exitApp() {
-        Log.w("game","stopLoop");
-        gameLoop.stopLoop();
         if (gInfo.quitGame) {
-            Log.w("game","exitApp()");
             Activity activity = (Activity)context;
             activity.finish();
-            int id= android.os.Process.myPid();
-            android.os.Process.killProcess(id);
         }
     }
 }

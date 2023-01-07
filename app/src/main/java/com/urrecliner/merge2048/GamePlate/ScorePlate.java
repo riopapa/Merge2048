@@ -20,9 +20,9 @@ import java.util.Locale;
 public class ScorePlate {
 
     final GInfo gInfo;
-    final Context context;
     final int gameScoreXPos, gameScoreYPos;
     final int xBoardPosLeft, xBoardPosRight, yBoardPosTop, yBoardSize, xBoardPosWho, xBoardPosTime, xBoardPosScore;
+    final int board_color0, board_color1;
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
 
     long scoreTimeStamp = 0;
@@ -33,10 +33,9 @@ public class ScorePlate {
 
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
-        this.context = context;
 
         gameScoreXPos = gInfo.xNextPos/2 + gInfo.xOffset;
-        gameScoreYPos = gInfo.yNewPosS + gInfo.blockInSize/2;
+        gameScoreYPos = gInfo.yNewPosS + gInfo.blockIconSize/2;
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
@@ -55,9 +54,9 @@ public class ScorePlate {
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
 
-        xBoardPosLeft = calcPercentPixel(48);
+        xBoardPosLeft = 32;
         xBoardPosRight = gInfo.xNewPos - 8;
-        yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*4/5;
+        yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*3/5;
 
         board0Paint = new Paint();
         board0Paint.setStrokeWidth(3);
@@ -82,7 +81,7 @@ public class ScorePlate {
 //        xBoardPosWho = gInfo.xOffset + calcPercentPixel(80);
         xBoardPosWho = gInfo.xOffset + width + 36;
         xBoardPosTime = xBoardPosWho + 16;
-        yBoardSize = height + 32;
+        yBoardSize = height + 48;
 
         xBoardPosScore = xBoardPosRight - (xBoardPosRight - xBoardPosTime - (int) hTextPaint.measureText("22-12-31 24:31"))/2;
 
@@ -103,6 +102,8 @@ public class ScorePlate {
         hScoreIPaint.setColor(Color.WHITE);
         hScoreIPaint.setTextAlign(Paint.Align.CENTER);
 
+        board_color0 = ContextCompat.getColor(context, R.color.board0) & 0xFFf8f8f8;
+        board_color1 = ContextCompat.getColor(context, R.color.board1) & 0xFFf8f8f8;
     }
 
     private int calcPercentPixel(int milliPercent) {
@@ -151,22 +152,22 @@ public class ScorePlate {
                 xorCount++;
                 if (xor && xorCount > 60) {
                     xorCount = 0;
-                    board0Paint.setColor(ContextCompat.getColor(context, R.color.board0));
-                    board1Paint.setColor(ContextCompat.getColor(context, R.color.board1));
+                    board0Paint.setColor(board_color0);
+                    board1Paint.setColor(board_color1);
                     xor = !xor;
                 } else if (!xor && xorCount > 20) {
-                    board0Paint.setColor(ContextCompat.getColor(context, R.color.board1));
-                    board1Paint.setColor(ContextCompat.getColor(context, R.color.board0));
+                    board0Paint.setColor(board_color1);
+                    board1Paint.setColor(board_color0);
                     xor = !xor;
                 }
             } else {
-                board0Paint.setColor(ContextCompat.getColor(context, R.color.board0));
-                board1Paint.setColor(ContextCompat.getColor(context, R.color.board1));
+                board0Paint.setColor(board_color1);
+                board1Paint.setColor(board_color0);
             }
             int y = yBoardPosTop + i*yBoardSize;
-            canvas.drawRoundRect(xBoardPosLeft-8, y,
+            canvas.drawRoundRect(xBoardPosLeft, y,
                     xBoardPosRight, y+yBoardSize-4, 16,16, board1Paint);
-            canvas.drawRoundRect(xBoardPosLeft-4, y+4,
+            canvas.drawRoundRect(xBoardPosLeft+4, y+4,
                     xBoardPosRight-8, y+yBoardSize-12, 16,16, board0Paint);
             String when = sdf.format(highMember.when);
             hTextPaint.setTextAlign(Paint.Align.RIGHT);
@@ -177,6 +178,5 @@ public class ScorePlate {
             canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, hTextPaint);
             canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScoreIPaint);
         }
-
     }
 }

@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.urrecliner.merge2048"
         minSdk 25
-        targetSdk 26
+        targetSdk 25
         versionCode 1
         versionName "1.0"
 

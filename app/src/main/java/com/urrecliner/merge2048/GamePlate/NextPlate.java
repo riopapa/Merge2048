@@ -39,7 +39,7 @@ public class NextPlate {
         nextPaint = new Paint();
         nextPaint.setColor(Color.WHITE);
         nextPaint.setStyle(Paint.Style.STROKE);
-        nextPaint.setStrokeWidth(4);
+        nextPaint.setStrokeWidth(8);
 
         nextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;

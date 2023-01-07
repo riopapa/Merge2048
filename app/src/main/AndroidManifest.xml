@@ -12,6 +12,7 @@
         tools:targetApi="28">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +24,3 @@
     </application>
 
 </manifest>
-
-<!--    android:dataExtractionRules="@xml/data_extraction_rules"-->
-<!--    android:fullBackupContent="@xml/backup_rules"-->
-
-<!--<meta-data-->
-<!--android:name="android.app.lib_name"-->
-<!--android:value="" />-->
