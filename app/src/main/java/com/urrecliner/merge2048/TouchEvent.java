@@ -64,15 +64,11 @@ public class TouchEvent {
                         gInfo.startNewGameYes = false;
                         gInfo.newGamePressed = false;
                     }
-
-                } else if (isNextPressed()) {
-                    gInfo.showNextPressed = true;
-
                 } else if (isNewGamePressed()) {
                     gInfo.newGamePressed = true;
 
-                } else if (isQuitGamePressed()) {
-                    gInfo.quitGamePressed = true;
+                } else if (isNextPressed()) {
+                    gInfo.showNextPressed = true;
 
                 } else if (gInfo.quitGamePressed) {
                     if (isYesPressed()) {
@@ -82,6 +78,9 @@ public class TouchEvent {
                         gInfo.quitGamePressed = false;
                         gInfo.quitGame = false;
                     }
+                } else if (isQuitGamePressed()) {
+                    gInfo.quitGamePressed = true;
+
                 } else if (isShootPressed()) {
                     if (gInfo.swing) {
                         if (xTouchPos >= gInfo.xNextPos &&
@@ -125,15 +124,13 @@ public class TouchEvent {
     }
 
     boolean isYesPressed() {
-        return  (!gInfo.isGameOver) &&
-                (xTouchPos >= xNewPosE &&
+        return  (xTouchPos >= xNewPosE &&
                 xTouchPos <= xNewPosE + gInfo.blockOutSize*4/5 &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
     }
 
     boolean isNoPressed() {
-        return  (!gInfo.isGameOver) &&
-                (xTouchPos >= xNewPosE + gInfo.blockOutSize*4/5 &&
+        return  (xTouchPos >= xNewPosE + gInfo.blockOutSize*4/5 &&
                 xTouchPos <= xNewPosE + gInfo.blockOutSize*8/5 &&
                 yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
     }

@@ -238,7 +238,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.bonusCount > 2) {
             bonusPlate.addBonus(x, y, gInfo.bonusCount - 2,
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
-            if (gInfo.bonusCount > 5) {
+            if (gInfo.bonusCount > 4) {
                 gInfo.gameDifficulty++;
                 messagePlate.set(true, "!잘 했어요!", "블럭 종류가",
                     "더 늘어나요!("+gInfo.gameDifficulty+")",
