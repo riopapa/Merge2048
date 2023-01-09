@@ -22,6 +22,7 @@ import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 
+import java.util.Arrays;
 import java.util.List;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -44,7 +45,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     final int SMOOTH = 4;
     Context context;
     int bonusX, bonusY;
-    
+
     public Game(Context context) {
 
         super(context);
@@ -77,7 +78,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     void newGameStart() {
 
-        messagePlate.set(true,"Welcome", "게임을", "시작합니다",
+        messagePlate.set("Welcome", "게임을", "시작합니다",
                 System.currentTimeMillis(), 1000);
 
         gInfo.resetValues();
@@ -114,9 +115,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             newGameStart();
         }
 
-        if (gInfo.dumpClicked && gInfo.dumpCount > 5) {
+        if (gInfo.dumpClicked) {
             gInfo.dumpClicked = false;
-            new DumpCells(gInfo, checkNearItem, nextPlate, "Dump Update");
+            if (gInfo.dumpCount > 3) {
+                new DumpCells(gInfo, checkNearItem, nextPlate, "Dump Old");
+            }
         }
         if (gInfo.aniStacks.size() > 0)
             return;
@@ -178,9 +181,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (!gInfo.isGameOver) {
 
-            if (gInfo.swing && nextPlate.nextIndex != -1)
-                gInfo.updateSwing();
-
             if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
                 nextPlate.generateNextBlock(true);
                 if (gInfo.bonusCount > 0) {
@@ -188,22 +188,23 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            if (gInfo.swing && nextPlate.nextIndex != -1)
+                gInfo.updateSwing();
+
             if (gInfo.bonusCount > 0 && nextPlate.nextIndex > 0 && isAllPaused() )
                 showBonus(bonusX, bonusY);
             
             if (gInfo.showNextPressed) {
                 gInfo.showNextPressed = false;
                 gInfo.showNext = !gInfo.showNext;
-                messagePlate.set(gInfo.showNext,
-                        "다음 블럭", (gInfo.showNext) ? "미리 보입니다" : "안 보이니까",
-                        (gInfo.showNext) ? "":"점수는 2배로",System.currentTimeMillis(), 2000);
+                messagePlate.set("다음 블럭", (gInfo.showNext) ? "미리 보입니다" : "안 보이니까",
+                    (gInfo.showNext) ? "":"점수는 2배로",System.currentTimeMillis(), 2300);
 
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
-                messagePlate.set(gInfo.swing,
-                        "블럭 움직이기", (gInfo.swing) ? "움직이니까" : "고정됩니다",
-                        (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 2000);
+                messagePlate.set("블럭 움직이기", (gInfo.swing) ? "움직이니까" : "고정됩니다",
+                        (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 2300);
                 gInfo.resetSwing();
 
             } else if (gInfo.swapPressed) {
@@ -212,9 +213,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.swapCount--;
                     nextPlate.generateNextBlock(false);
                     if (gInfo.swapCount > 0)
-                        messagePlate.set(gInfo.swing,
-                        "블럭 바꾸기", "앞으로",
-                        gInfo.swapCount+" 번 더 가능",System.currentTimeMillis(), 1500);
+                        messagePlate.set("블럭 바꾸기", "앞으로",
+                        gInfo.swapCount+" 번 더 가능",System.currentTimeMillis(), 2000);
                 }
 
             } else if (gInfo.shoutClicked) {
@@ -252,7 +252,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
             if (gInfo.bonusCount > 4) {
                 gInfo.gameDifficulty++;
-                messagePlate.set(true, "!잘 했어요!", "블럭 종류가",
+                messagePlate.set("!잘 했어요!", "블럭 종류가",
                     "더 늘어나요!("+gInfo.gameDifficulty+")",
                     System.currentTimeMillis() + 1500, 2500);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
@@ -305,15 +305,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gInfo.shoutClicked = false;
         if (nextPlate.nextIndex == -1)
             return;
-        if (gInfo.dumpCount > 5)
+        if (gInfo.dumpCount > 4)
             new DumpCells(gInfo, checkNearItem, nextPlate, "Start2Move");
-        Cell cell = gInfo.cells[gInfo.touchIndex][yBlockCnt-1];
+        Cell cell = gInfo.cells[gInfo.shootIndex][yBlockCnt-1];
         if (cell.index == 0) {  // empty cell, so start to move
-            gInfo.cells[gInfo.touchIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GInfo.STATE.GO_UP);
+            gInfo.cells[gInfo.shootIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GInfo.STATE.GO_UP);
             nextPlate.nextIndex = -1;   // wait while all moved;
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
-            gInfo.cells[gInfo.touchIndex][yBlockCnt-1].index = cell.index + 1;
-            gInfo.cells[gInfo.touchIndex][yBlockCnt-1].state = GInfo.STATE.STOP;
+            gInfo.cells[gInfo.shootIndex][yBlockCnt-1].index = cell.index + 1;
+            gInfo.cells[gInfo.shootIndex][yBlockCnt-1].state = GInfo.STATE.STOP;
         }
     }
 

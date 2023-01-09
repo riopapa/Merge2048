@@ -9,10 +9,13 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="board0">#78A7C4</color>
-    <color name="board1">#8099A6</color>
+    <color name="board1">#86AEBB</color>
     <color name="score">#FF4443</color>
     <color name="hi_score">#831414</color>
+    <color name="hi_board0">#4D758E</color>
+    <color name="hi_board1">#6D8C9C</color>
 
+    <color name="horizon_line">#22506D</color>
     <color name="msg_background0">#C8B355</color>
     <color name="msg_background1">#92C858</color>
     <color name="msg_header_in">#781311</color>

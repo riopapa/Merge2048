@@ -34,28 +34,30 @@ public class ScorePlate {
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
 
-        gameScoreXPos = gInfo.xNextPos/2 + gInfo.xOffset;
+        gameScoreXPos = gInfo.xNextPosFixed /2 + gInfo.xOffset;
         gameScoreYPos = gInfo.yNewPos + gInfo.blockIconSize/2;
         scoreOPaint = new Paint();
-        scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
+//        scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
+        scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
-        scoreOPaint.setTextSize(gInfo.piece *5f/10);
+        scoreOPaint.setTextSize(gInfo.piece *8f/10);
         scoreOPaint.setStrokeWidth(6);
         scoreOPaint.setLetterSpacing(0.1f);
         scoreOPaint.setColor(Color.BLUE);
         scoreOPaint.setStyle(Paint.Style.STROKE);
 
         scoreIPaint = new Paint();
-        scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
+//        scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
+        scoreIPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
         scoreIPaint.setTextAlign(Paint.Align.CENTER);
-        scoreIPaint.setTextSize(gInfo.piece *5f/10);
+        scoreIPaint.setTextSize(gInfo.piece *8f/10);
         scoreIPaint.setStrokeWidth(0);
         scoreIPaint.setLetterSpacing(0.1f);
         scoreIPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         scoreIPaint.setColor(ContextCompat.getColor(context, R.color.score));
 
         xBoardPosLeft = 32;
-        xBoardPosRight = gInfo.xNewPos - 8;
+        xBoardPosRight = gInfo.xNextPosFixed + gInfo.blockOutSize - gInfo.piece / 8;
         yBoardPosTop = gInfo.yNewPos + gInfo.blockInSize*3/5;
 
         board0Paint = new Paint();
@@ -102,8 +104,8 @@ public class ScorePlate {
         hScoreIPaint.setColor(Color.WHITE);
         hScoreIPaint.setTextAlign(Paint.Align.CENTER);
 
-        board_color0 = ContextCompat.getColor(context, R.color.board0) & 0xFFf8f8f8;
-        board_color1 = ContextCompat.getColor(context, R.color.board1) & 0xFFf8f8f8;
+        board_color0 = ContextCompat.getColor(context, R.color.hi_board0);
+        board_color1 = ContextCompat.getColor(context, R.color.hi_board1);
     }
 
     private int calcPercentPixel(int milliPercent) {

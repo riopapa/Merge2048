@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         Log.w("MainActivity.java", "onResume()");
         super.onResume();
+        setContentView(game);
     }
 
     @Override

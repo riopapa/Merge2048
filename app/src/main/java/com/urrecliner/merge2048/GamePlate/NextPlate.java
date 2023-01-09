@@ -1,7 +1,7 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- *
+ * draw Next, NextNext block, also in swap icon area
  */
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,7 +29,7 @@ public class NextPlate {
 
     Paint nextPaint;
 
-    public int nextIndex, nextNextIndex;
+    public int xNextPos, nextIndex, nextNextIndex;
 
     public NextPlate(GInfo gInfo, Context context, List<BlockImage> blockImages) {
         this.gInfo = gInfo;
@@ -46,6 +46,7 @@ public class NextPlate {
 
         nextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
+        xNextPos = gInfo.xNextPosFixed;
 
         xNextNextPos = gInfo.xNextPos + gInfo.blockOutSize / 4;
         yNextNextPos = gInfo.yNewPos;

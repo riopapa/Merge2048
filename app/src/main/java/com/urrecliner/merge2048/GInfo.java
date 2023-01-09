@@ -20,7 +20,7 @@ public class GInfo {
     public final int blockIconSize; // new, yes, no, ... icon size
     public final int blockFlyingGap;    // bigger size while moving
     public final int explodeGap;        // explode is a little larger
-    public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
+    public final int xOffset, yUpOffset, yDownOffset, xNextPosFixed;
     public final int xNewPos, yNewPos, xQuitPos, yQuitPos, yNextPos;
     public final int xNextNextPos, yNextNextPos, xSwingPos, ySwingPos, xSwapPos, ySwapPos;
     public final int swingXPosLeft, swingXPosRight;
@@ -44,11 +44,10 @@ public class GInfo {
     public long swingTime, swingDelay;
 
     public boolean shoutClicked = false;   // clicked means user clicked
-    public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
+    public int shootIndex;               // user selected x Index (0 ~ xBlockCnt)
     public int gameDifficulty = 5;
     public int swapCount;
 
-    public boolean msgOn = true;
     public String msgHead = "";
     public String msgLine1 = "", msgLine2 = "";
     public long msgStartTime, msgFinishTime = 0;
@@ -81,13 +80,13 @@ public class GInfo {
         explodeGap = blockOutSize / 5;  // note20 48
         piece = screenXSize / 12;   // 120
 
-        xNextPosCenter = (screenXSize - blockOutSize) / 2;  // note20 598
+        xNextPosFixed = (screenXSize - blockOutSize) / 2;  // note20 598
         yNextPos = yDownOffset + 16;    // 1526
 
-        xNextNextPos = xNextPosCenter + (blockOutSize / 4);
+        xNextNextPos = xNextPosFixed + (blockOutSize / 4);
         yNextNextPos = yNextPos + blockOutSize + 8;
 
-        xNewPos = xNextPosCenter + blockOutSize - 8;    //  note20 834
+        xNewPos = xNextPosFixed + blockOutSize - 8;    //  note20 834
         yNewPos = yNextPos + blockOutSize + 16;
 
         xSwingPos = xNewPos;
@@ -115,13 +114,12 @@ public class GInfo {
         isGameOver = false;
         dumpCount = 0;
         swapCount = 3;
-        xNextPos = xNextPosCenter;
+        xNextPos = xNextPosFixed;
     }
 
     public void resetSwing() {
 
-        swing = false;
-        xNextPos = xNextPosCenter;
+        xNextPos = xNextPosFixed;
         swingDelay = 300 / (gameDifficulty+2);
         swingXInc = blockOutSize / 6;
         swingTime = System.currentTimeMillis() + swingDelay;

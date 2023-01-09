@@ -1,7 +1,7 @@
 package com.urrecliner.merge2048.GamePlate;
 
 /*
- * Purpose of this Animation module is to draw, animate Game Plate
+ * Purpose of this Animation module is to draw, animate Game Over
  */
 
 import android.content.Context;
@@ -26,7 +26,6 @@ public class GameOverPlate {
 
     public GameOverPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
-
         gOverPaint = new Paint();
         gOverPaint.setTextSize(gInfo.piece +gInfo.piece);
         gOverPaint.setColor(Color.RED);
@@ -48,7 +47,7 @@ public class GameOverPlate {
         if (!gInfo.isGameOver)
             return;
         waitCount++;
-        if (waitCount > 10) {
+        if (waitCount > 12) {
             waitCount = 0;
             showSwitch = !showSwitch;
         }
@@ -57,7 +56,7 @@ public class GameOverPlate {
             yOverInc = - yOverInc;
         }
 
-        gOverPaint.setStrokeWidth(64);
+        gOverPaint.setStrokeWidth(60);
         gOverPaint.setColor((showSwitch) ? overColor0 : overColor1);
         canvas.drawText("Game Over", xOverPos, yOverPos, gOverPaint);
         gOverPaint.setColor((showSwitch) ? overColor1 : overColor0);

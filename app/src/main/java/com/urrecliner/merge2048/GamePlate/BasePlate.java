@@ -12,23 +12,17 @@ import androidx.core.content.ContextCompat;
 import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
 
-import java.util.Random;
-
 public class BasePlate {
 
     Context context;
     final GInfo gInfo;
-    final Paint backPaint, vPath1Paint, vPath2Paint, yesNoPaint, rioPaint;
+    final Paint backPaint, vPath1Paint, vPath2Paint, yesNoPaint, horizonPaint;
     private final int xBlockCnt, yBlockCnt;
     private final int blockOutSize, blockIconSize;
-    private final int xOffset, yUpOffset;
-    private final int xLeft, yTop, yBottom, yNextBottom;
+    private final int xOffset, yUpOffset, xRight, yLinePos;
+    private final int xLeft, yNextBottom;
     private final int xNewPos, yNewPos, xQuitPos, yQuitPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
-    private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap, quitMap;
-    private final int [] xRioPos, yRioPos, xRioInc, yRioInc;
-    private final Bitmap [] rioMap;
-    private final Bitmap swapBase;
-    private Bitmap swapMap;
+    private final Bitmap newMap, yesMap, nextNoMap, swingOnMap, swingOffMap, quitMap;
 
     public BasePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -50,16 +44,20 @@ public class BasePlate {
         vPath2Paint.setColor(ContextCompat.getColor(context, R.color.board1));
         vPath2Paint.setAlpha(230);
 
-        xLeft = xOffset-4; yTop = yUpOffset -4;
-        yBottom = yTop + 8 + blockOutSize * yBlockCnt;
+        xLeft = xOffset-4;
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
-
+        xRight = gInfo.screenXSize - xOffset;
         xNewPos = gInfo.xNewPos;
         yNewPos = gInfo.yNewPos;
         xQuitPos = gInfo.screenXSize-xOffset-blockIconSize; yQuitPos = gInfo.yNewPos;
         xYesPos = xNewPos + blockIconSize;
         xNopPos = xNewPos + blockIconSize * 2;
         xSwingPos = xNewPos; ySwingPos = yNewPos + blockIconSize;
+
+        horizonPaint = new Paint();
+        horizonPaint.setColor(ContextCompat.getColor(context, R.color.horizon_line));
+        horizonPaint.setStrokeWidth(4);
+        yLinePos = (gInfo.yDownOffset + gInfo.yUpOffset + blockOutSize*yBlockCnt) / 2;
 
         yesNoPaint = new Paint();
         yesNoPaint.setColor(Color.BLUE);
@@ -68,23 +66,11 @@ public class BasePlate {
 
         newMap = buildMap (R.drawable.a_new);
         yesMap = buildMap (R.drawable.a_yes);
-        nopMap = buildMap (R.drawable.a_no);
+        nextNoMap = buildMap (R.drawable.a_no);
         quitMap = buildMap(R.drawable.a_quit);
 
-        swingOMap = buildMap(R.drawable.a_swing);
-        swingFMap = buildMap(R.drawable.a_swing_f);
-
-        swapBase = buildMap(R.drawable.a_swap);
-
-        xRioPos = new int[]{300, 800, xYesPos};
-        yRioPos = new int[]{blockOutSize,  yNextBottom - blockOutSize, blockIconSize};
-        xRioInc = new int[]{2, 2, -2};
-        yRioInc = new int[]{2, -2, 2};
-        rioMap = new Bitmap[] {
-                Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.sign_cr), gInfo.piece, gInfo.piece*2/3, false),
-                Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.sign_gb), gInfo.piece, gInfo.piece*2/3, false),
-                Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.sign_yb), gInfo.piece, gInfo.piece*2/3, false)};
-        rioPaint = new Paint();
+        swingOnMap = buildMap(R.drawable.a_swing_on);
+        swingOffMap = buildMap(R.drawable.a_swing_off);
     }
 
     Bitmap buildMap(int resId) {
@@ -97,32 +83,6 @@ public class BasePlate {
         // back ground display
         canvas.drawRect(0, 0, gInfo.screenXSize, gInfo.screenYSize, backPaint);
 
-        // draw my signature
-        for (int i = 0; i < 3; i++) {
-            canvas.drawBitmap(rioMap[i], xRioPos[i], yRioPos[i], rioPaint);
-            if (new Random().nextInt(2) == 0) {
-                xRioPos[i] += xRioInc[i];
-                yRioPos[i] += yRioInc[i];
-                if (xRioPos[i] < 4)
-                    xRioInc[i] = 1 + new Random().nextInt(2);
-                if (xRioPos[i] > gInfo.screenXSize - 64)
-                    xRioInc[i] = -1 - new Random().nextInt(2);
-                if (yRioPos[i] < 4)
-                    yRioInc[i] = 1 + new Random().nextInt(2);
-                if (yRioPos[i] > gInfo.yNewPos - 64)
-                    yRioInc[i] = -1 - new Random().nextInt(2);
-                if (new Random().nextInt(18) == 0 && xRioInc[i] > 0)
-                    xRioInc[i]++;
-                if (new Random().nextInt(18) == 0 && xRioInc[i] < 0)
-                    xRioInc[i]--;
-                if (new Random().nextInt(18) == 0 && yRioInc[i] > 0)
-                    yRioInc[i]++;
-                if (new Random().nextInt(18) == 0 && yRioInc[i] < 0)
-                    yRioInc[i]--;
-            }
-        }
-
-        // block vertical lane
         for (int x = 0; x <= xBlockCnt - 1; x++) {
             for (int y = 0; y < yBlockCnt; y++) {
                 canvas.drawRect(xLeft + blockOutSize * x + 16,
@@ -136,8 +96,12 @@ public class BasePlate {
                     (x%2 == 0) ? vPath1Paint:vPath2Paint);
         }
 
+        // line at shoot
+        canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
+
         // new Icon
         canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+        // quit Icon
         canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
 
         // yes, no
@@ -146,13 +110,10 @@ public class BasePlate {
                     xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
                         4,4, yesNoPaint);
             canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
-            canvas.drawBitmap(nopMap, xNopPos, yNewPos,null);
+            canvas.drawBitmap(nextNoMap, xNopPos, yNewPos,null);
         }
 
-        if (gInfo.swing)
-            canvas.drawBitmap(swingOMap, xSwingPos, ySwingPos,null);
-        else
-            canvas.drawBitmap(swingFMap, xSwingPos, ySwingPos,null);
+        canvas.drawBitmap((gInfo.swing)? swingOnMap:swingOffMap, xSwingPos, ySwingPos,null);
 
     }
 

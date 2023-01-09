@@ -116,13 +116,13 @@ public class TouchEvent {
 
     private void calcTouchIdx() {
         xTouchPos -= xOffset;
-        int touchIndex = xTouchPos / blockOutSize;
-        if (touchIndex < 0)
-            touchIndex = 0;
-        if (touchIndex >= xBlockCnt)
-            touchIndex = xBlockCnt - 1;
+        int shootIdx = xTouchPos / blockOutSize;
+        if (shootIdx < 0)
+            shootIdx = 0;
+        if (shootIdx >= xBlockCnt)
+            shootIdx = xBlockCnt - 1;
         gInfo.shoutClicked = true;
-        gInfo.touchIndex = touchIndex;
+        gInfo.shootIndex = shootIdx;
     }
 
     boolean isNewGamePressed() {
