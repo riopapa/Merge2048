@@ -25,7 +25,7 @@ public class BonusPlate {
     public BonusPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
         this.context = context;
-        bonuses = new ArrayList<>();    // clear AniStack
+        bonuses = new ArrayList<>();
         bonusImage = new BonusImage(gInfo, context);
     }
 

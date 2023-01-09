@@ -35,7 +35,7 @@ public class ScorePlate {
         this.gInfo = gInfo;
 
         gameScoreXPos = gInfo.xNextPos/2 + gInfo.xOffset;
-        gameScoreYPos = gInfo.yNewPosS + gInfo.blockIconSize/2;
+        gameScoreYPos = gInfo.yNewPos + gInfo.blockIconSize/2;
         scoreOPaint = new Paint();
         scoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.old_english));
         scoreOPaint.setTextAlign(Paint.Align.CENTER);
@@ -56,7 +56,7 @@ public class ScorePlate {
 
         xBoardPosLeft = 32;
         xBoardPosRight = gInfo.xNewPos - 8;
-        yBoardPosTop = gInfo.yNewPosS + gInfo.blockInSize*3/5;
+        yBoardPosTop = gInfo.yNewPos + gInfo.blockInSize*3/5;
 
         board0Paint = new Paint();
         board0Paint.setStrokeWidth(3);

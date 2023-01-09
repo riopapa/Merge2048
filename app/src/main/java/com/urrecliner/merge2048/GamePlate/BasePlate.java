@@ -27,6 +27,8 @@ public class BasePlate {
     private final Bitmap newMap, yesMap, nopMap, swingOMap, swingFMap, quitMap;
     private final int [] xRioPos, yRioPos, xRioInc, yRioInc;
     private final Bitmap [] rioMap;
+    private final Bitmap swapBase;
+    private Bitmap swapMap;
 
     public BasePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -52,8 +54,9 @@ public class BasePlate {
         yBottom = yTop + 8 + blockOutSize * yBlockCnt;
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
-        xNewPos = gInfo.xNewPos; yNewPos = gInfo.yNewPosS;
-        xQuitPos = gInfo.screenXSize-xOffset-blockIconSize; yQuitPos = gInfo.yNewPosS;
+        xNewPos = gInfo.xNewPos;
+        yNewPos = gInfo.yNewPos;
+        xQuitPos = gInfo.screenXSize-xOffset-blockIconSize; yQuitPos = gInfo.yNewPos;
         xYesPos = xNewPos + blockIconSize;
         xNopPos = xNewPos + blockIconSize * 2;
         xSwingPos = xNewPos; ySwingPos = yNewPos + blockIconSize;
@@ -71,6 +74,8 @@ public class BasePlate {
         swingOMap = buildMap(R.drawable.a_swing);
         swingFMap = buildMap(R.drawable.a_swing_f);
 
+        swapBase = buildMap(R.drawable.a_swap);
+
         xRioPos = new int[]{300, 800, xYesPos};
         yRioPos = new int[]{blockOutSize,  yNextBottom - blockOutSize, blockIconSize};
         xRioInc = new int[]{2, 2, -2};
@@ -84,7 +89,7 @@ public class BasePlate {
 
     Bitmap buildMap(int resId) {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
-        return Bitmap.createScaledBitmap(bitmap, blockIconSize-4, blockIconSize-4-4, false);
+        return Bitmap.createScaledBitmap(bitmap, blockIconSize-4, blockIconSize-4, false);
     }
 
     public void draw(Canvas canvas) {
@@ -104,7 +109,7 @@ public class BasePlate {
                     xRioInc[i] = -1 - new Random().nextInt(2);
                 if (yRioPos[i] < 4)
                     yRioInc[i] = 1 + new Random().nextInt(2);
-                if (yRioPos[i] > gInfo.yNewPosS - 64)
+                if (yRioPos[i] > gInfo.yNewPos - 64)
                     yRioInc[i] = -1 - new Random().nextInt(2);
                 if (new Random().nextInt(18) == 0 && xRioInc[i] > 0)
                     xRioInc[i]++;

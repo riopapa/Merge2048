@@ -21,10 +21,11 @@ public class NextPlate {
 
     final GInfo gInfo;
     final List<BlockImage> blockImages;
-    final int blockOutSize, blockInSize;
-    final int xNextNextPos, yNextNextPos;
+    final int blockOutSize, blockInSize, bOffset;
+    final int xNextNextPos, yNextNextPos, xSwapPos, ySwapPos;
+    final int swapSize;
 
-    final Bitmap nextNoMap;
+    final Bitmap nextHideMap, swapMap;
 
     Paint nextPaint;
 
@@ -35,6 +36,8 @@ public class NextPlate {
         this.blockImages = blockImages;
         this.blockInSize = gInfo.blockInSize;
         this.blockOutSize = gInfo.blockOutSize;
+        swapSize = gInfo.blockIconSize*2/3;
+        this.bOffset = gInfo.blockIconSize - swapSize;
 
         nextPaint = new Paint();
         nextPaint.setColor(Color.WHITE);
@@ -45,21 +48,32 @@ public class NextPlate {
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
 
         xNextNextPos = gInfo.xNextPos + gInfo.blockOutSize / 4;
-        yNextNextPos = gInfo.yNewPosS;
+        yNextNextPos = gInfo.yNewPos;
+        xSwapPos = gInfo.xSwapPos;
+        ySwapPos = gInfo.ySwapPos;
 
-        nextNoMap = Bitmap.createScaledBitmap(
+        nextHideMap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.a_next), blockInSize/2, blockInSize/2, false);
+                R.drawable.a_next_hide), blockInSize/2, blockInSize/2, false);
+        swapMap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.a_swap), gInfo.blockIconSize, gInfo.blockIconSize, false);
     }
 
-    public void generateNextBlock() {
-        nextIndex = nextNextIndex;
-        nextNextIndex = new Random().nextInt(gInfo.gameDifficulty-1) + 1;
-        if (new Random().nextInt(10) < 4)
-            return;
-        nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
-        if (new Random().nextInt(10) == 0) {
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;
+    public void generateNextBlock(boolean newIndex) {
+        if (newIndex) {
+            nextIndex = nextNextIndex;
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty - 1) + 1;
+            if (new Random().nextInt(10) < 4)
+                return;
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
+            if (new Random().nextInt(10) == 0) {
+                nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;
+            }
+        } else {
+            int sv = nextIndex;
+            nextIndex = nextNextIndex;
+            nextNextIndex = sv;
         }
     }
 
@@ -69,17 +83,30 @@ public class NextPlate {
             canvas.drawRoundRect(gInfo.xNextPos, gInfo.yNextPos,
                     gInfo.xNextPos + blockInSize, gInfo.yNextPos + blockInSize,
                 blockInSize/8f,blockInSize/8f, nextPaint);
-        if (nextIndex != -1)
-            canvas.drawBitmap(blockImages.get(nextIndex).bitmap, gInfo.xNextPos, gInfo.yNextPos,null);
 
         // draw Next Next //
         canvas.drawRoundRect(xNextNextPos, yNextNextPos,
                 xNextNextPos +blockInSize/2f, yNextNextPos +blockInSize/2f,
                 blockInSize/16f,blockInSize/16f, nextPaint);
-        if (gInfo.showNext)
-            canvas.drawBitmap(blockImages.get(nextNextIndex).halfMap, xNextNextPos, yNextNextPos,null);
-        else
-            canvas.drawBitmap(nextNoMap, xNextNextPos, yNextNextPos,null);
+
+        if (nextIndex == -1)
+            return;
+        canvas.drawBitmap(blockImages.get(nextIndex).bitmap, gInfo.xNextPos, gInfo.yNextPos, null);
+
+        if (gInfo.swapCount > 0)
+            canvas.drawBitmap(blockImages.get(nextIndex).halfMap, xSwapPos, ySwapPos, null);
+
+        if (gInfo.showNext) {
+            canvas.drawBitmap(blockImages.get(nextNextIndex).halfMap, xNextNextPos, yNextNextPos, null);
+            if (gInfo.swapCount > 0)
+                canvas.drawBitmap(blockImages.get(nextNextIndex).halfMap, xSwapPos+bOffset, ySwapPos+bOffset, null);
+        } else {
+            canvas.drawBitmap(nextHideMap, xNextNextPos, yNextNextPos, null);
+            if (gInfo.swapCount > 0)
+                canvas.drawBitmap(nextHideMap, xSwapPos+bOffset, ySwapPos+bOffset, null);
+        }
+
+        canvas.drawBitmap(swapMap, xSwapPos, ySwapPos,null);
     }
 
 }

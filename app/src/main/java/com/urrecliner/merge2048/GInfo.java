@@ -21,7 +21,9 @@ public class GInfo {
     public final int blockFlyingGap;    // bigger size while moving
     public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosCenter;
-    public final int xNewPos, yNextPos;
+    public final int xNewPos, yNewPos, xQuitPos, yQuitPos, yNextPos;
+    public final int xNextNextPos, yNextNextPos, xSwingPos, ySwingPos, xSwapPos, ySwapPos;
+    public final int swingXPosLeft, swingXPosRight;
     public final int bonusLoopCount = 12;
     public final int piece; // small pixel size for calculation sizes
     public final Cell[][] cells;
@@ -31,18 +33,20 @@ public class GInfo {
     public List<HighMember> highMembers;
     public long highLowScore;
 
-    public int xNextPos, yNewPosS, xNextNextPos, yNextNextPos;
+    public int xNextPos;
     public int bonusCount, bonusStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean showNextPressed = false, showNext = true;
     public boolean swingPressed = false, swing = false;
-    public int swingXInc, swingXPosLeft, swingXPosRight;
+    public boolean swapPressed = false, swap = false;
+    public int swingXInc;
     public long swingTime, swingDelay;
 
-    public boolean touchClicked = false;   // clicked means user clicked
+    public boolean shoutClicked = false;   // clicked means user clicked
     public int touchIndex;               // user selected x Index (0 ~ xBlockCnt)
     public int gameDifficulty = 5;
+    public int swapCount;
 
     public boolean msgOn = true;
     public String msgHead = "";
@@ -75,24 +79,34 @@ public class GInfo {
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + yUpOffset/3;  // next block top 1510
         blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 199
         explodeGap = blockOutSize / 5;  // note20 48
-        xNextPosCenter = (screenXSize - blockOutSize) / 2;  // note20 598
-        xNewPos = xNextPosCenter + blockOutSize - 8;    //  note20 834
-        yNextPos = yDownOffset + 16;    // 1526
         piece = screenXSize / 12;   // 120
+
+        xNextPosCenter = (screenXSize - blockOutSize) / 2;  // note20 598
+        yNextPos = yDownOffset + 16;    // 1526
+
+        xNextNextPos = xNextPosCenter + (blockOutSize / 4);
+        yNextNextPos = yNextPos + blockOutSize + 8;
+
+        xNewPos = xNextPosCenter + blockOutSize - 8;    //  note20 834
+        yNewPos = yNextPos + blockOutSize + 16;
+
+        xSwingPos = xNewPos;
+        ySwingPos = yNewPos + blockIconSize;
         swingXInc = blockOutSize / 5;   // 48
         swingXPosLeft = xOffset - 32;   // 78
         swingXPosRight = screenXSize - xOffset -blockOutSize + 32;  // 1118
-        cells = new Cell[xBlockCnt][yBlockCnt];
 
+        xQuitPos = screenXSize-xOffset-blockIconSize;
+        yQuitPos = yNewPos;
+
+        xSwapPos = screenXSize-xOffset-blockIconSize;
+        ySwapPos = ySwingPos;
+
+        cells = new Cell[xBlockCnt][yBlockCnt];
         resetValues();
     }
 
     public void resetValues() {
-        xNextPos = xNextPosCenter;
-        xNextNextPos = xNextPos + (blockOutSize / 4);
-        yNextNextPos = yNextPos + blockOutSize + 8;
-        yNewPosS = yNextPos + blockOutSize + 16;
-
         aniStacks = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
@@ -100,11 +114,14 @@ public class GInfo {
         bonusStacked = 0;
         isGameOver = false;
         dumpCount = 0;
+        swapCount = 3;
+        xNextPos = xNextPosCenter;
     }
 
     public void resetSwing() {
 
-        xNextPos = (screenXSize - blockOutSize) / 2;
+        swing = false;
+        xNextPos = xNextPosCenter;
         swingDelay = 300 / (gameDifficulty+2);
         swingXInc = blockOutSize / 6;
         swingTime = System.currentTimeMillis() + swingDelay;

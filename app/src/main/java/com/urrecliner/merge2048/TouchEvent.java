@@ -12,6 +12,7 @@ public class TouchEvent {
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
+    private final int xSwapPosS, ySwapPosS, xSwapPosE, ySwapPosE;
 
     public TouchEvent (GInfo gInfo) {
         this.gInfo = gInfo;
@@ -22,22 +23,30 @@ public class TouchEvent {
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
         xNewPosS = gInfo.xNewPos;
-        xNewPosE = xNewPosS + gInfo.blockOutSize*2/3;
-        yNewPosS = gInfo.yNewPosS;
-        yNewPosE = yNewPosS+ gInfo.blockOutSize*2/3;
+        yNewPosS = gInfo.yNewPos;
+        xNewPosE = xNewPosS + gInfo.blockIconSize;
+        yNewPosE = yNewPosS+ gInfo.blockIconSize;
 
-        xQuitPosE = gInfo.screenXSize - gInfo.xOffset;
-        xQuitPosS = xQuitPosE - gInfo.blockIconSize;
-        yQuitPosS = gInfo.yNewPosS;
-        yQuitPosE = yNewPosS+ gInfo.blockOutSize*2/3;
+        xQuitPosS = gInfo.xQuitPos;
+        yQuitPosS = gInfo.yQuitPos;
+        xQuitPosE = xQuitPosS + gInfo.blockIconSize;
+        yQuitPosE = yQuitPosS + gInfo.blockIconSize;
 
         xNextNextPosS = gInfo.xNextNextPos;
         yNextNextPosS = gInfo.yNextNextPos;
-        xNextNextPosE = xNextNextPosS + blockOutSize/2;
-        yNextNextPosE = yNextNextPosS + blockOutSize/2;
+        xNextNextPosE = xNextNextPosS + gInfo.blockIconSize/2;
+        yNextNextPosE = yNextNextPosS + gInfo.blockIconSize/2;
 
-        xSwingPosS = gInfo.xNewPos; ySwingPosS = gInfo.yNewPosS + gInfo.blockIconSize;
-        xSwingPosE = xSwingPosS + gInfo.blockIconSize; ySwingPosE = ySwingPosS + gInfo.blockIconSize;
+        xSwingPosS = gInfo.xNewPos;
+        ySwingPosS = gInfo.yNewPos + gInfo.blockIconSize;
+        xSwingPosE = xSwingPosS + gInfo.blockIconSize;
+        ySwingPosE = ySwingPosS + gInfo.blockIconSize;
+
+        xSwapPosS = gInfo.xSwapPos;
+        ySwapPosS = gInfo.ySwapPos;
+        xSwapPosE = xSwapPosS + gInfo.blockIconSize;
+        ySwapPosE = ySwapPosS + gInfo.blockIconSize;
+
     }
     
     public void check(MotionEvent event) {
@@ -69,6 +78,9 @@ public class TouchEvent {
 
                 } else if (isNextPressed()) {
                     gInfo.showNextPressed = true;
+
+                } else if (isSwapPressed()) {
+                    gInfo.swapPressed = true;
 
                 } else if (gInfo.quitGamePressed) {
                     if (isYesPressed()) {
@@ -109,7 +121,7 @@ public class TouchEvent {
             touchIndex = 0;
         if (touchIndex >= xBlockCnt)
             touchIndex = xBlockCnt - 1;
-        gInfo.touchClicked = true;
+        gInfo.shoutClicked = true;
         gInfo.touchIndex = touchIndex;
     }
 
@@ -139,6 +151,12 @@ public class TouchEvent {
         return  (!gInfo.isGameOver) &&
                 (xTouchPos >= xSwingPosS  && xTouchPos <= xSwingPosE &&
                         yTouchPos >= ySwingPosS && yTouchPos <= ySwingPosE);
+    }
+
+    boolean isSwapPressed() {
+        return  (!gInfo.isGameOver) &&
+                (xTouchPos >= xSwapPosS  && xTouchPos <= xSwapPosE &&
+                        yTouchPos >= ySwapPosS && yTouchPos <= ySwapPosE);
     }
 
     boolean isShootPressed() {
