@@ -252,8 +252,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
             if (gInfo.bonusCount > 4) {
                 gInfo.gameDifficulty++;
-                messagePlate.set("!잘 했어요!", "블럭 종류가",
-                    "더 늘어나요!("+gInfo.gameDifficulty+")",
+                messagePlate.set("!잘 했어요!",
+                        "큰 블럭("+checkNearItem.powerIndex(gInfo.gameDifficulty+1)+")이",
+                    "나올 수 있어요",
                     System.currentTimeMillis() + 1500, 2500);
                 gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }

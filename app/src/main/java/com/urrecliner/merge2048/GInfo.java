@@ -108,7 +108,7 @@ public class GInfo {
     public void resetValues() {
         aniStacks = new ArrayList<>();
         scoreNow = 0;
-        gameDifficulty = 5;
+        gameDifficulty = 4;
         bonusCount = 0;
         bonusStacked = 0;
         isGameOver = false;

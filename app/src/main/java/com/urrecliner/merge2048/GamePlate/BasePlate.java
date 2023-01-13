@@ -22,7 +22,10 @@ public class BasePlate {
     private final int xOffset, yUpOffset, xRight, yLinePos;
     private final int xLeft, yNextBottom;
     private final int xNewPos, yNewPos, xQuitPos, yQuitPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
-    private final Bitmap newMap, yesMap, nextNoMap, swingOnMap, swingOffMap, quitMap;
+    private final Bitmap newMap, yesMap, yesSMap, noMap, noSMap, swingOnMap, swingOffMap, quitMap;
+
+    private boolean yesNo;
+    private long yesNoTime;
 
     public BasePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -66,7 +69,9 @@ public class BasePlate {
 
         newMap = buildMap (R.drawable.a_new);
         yesMap = buildMap (R.drawable.a_yes);
-        nextNoMap = buildMap (R.drawable.a_no);
+        yesSMap = yesNoSmall(yesMap);
+        noMap = buildMap (R.drawable.a_no);
+        noSMap = yesNoSmall(noMap);
         quitMap = buildMap(R.drawable.a_quit);
 
         swingOnMap = buildMap(R.drawable.a_swing_on);
@@ -76,6 +81,14 @@ public class BasePlate {
     Bitmap buildMap(int resId) {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
         return Bitmap.createScaledBitmap(bitmap, blockIconSize-4, blockIconSize-4, false);
+    }
+
+    Bitmap yesNoSmall(Bitmap bitmap) {
+        Bitmap bMap = Bitmap.createBitmap(blockIconSize, blockIconSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bMap);
+        Bitmap sMap = Bitmap.createScaledBitmap(bitmap, blockIconSize-8, blockIconSize-8, false);
+        canvas.drawBitmap(sMap, 4, 4, null);
+        return bMap;
     }
 
     public void draw(Canvas canvas) {
@@ -109,10 +122,13 @@ public class BasePlate {
             canvas.drawRoundRect(xYesPos-2, yNewPos-2,
                     xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
                         4,4, yesNoPaint);
-            canvas.drawBitmap(yesMap, xYesPos, yNewPos,null);
-            canvas.drawBitmap(nextNoMap, xNopPos, yNewPos,null);
+            canvas.drawBitmap((yesNo) ? yesMap : yesSMap, xYesPos, yNewPos,null);
+            canvas.drawBitmap((yesNo) ? noMap : noSMap, xNopPos, yNewPos,null);
+            if (yesNoTime <System.currentTimeMillis()) {
+                yesNoTime = System.currentTimeMillis() + 222;
+                yesNo = !yesNo;
+            }
         }
-
         canvas.drawBitmap((gInfo.swing)? swingOnMap:swingOffMap, xSwingPos, ySwingPos,null);
 
     }

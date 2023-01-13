@@ -19,6 +19,7 @@ public class GameLoop extends Thread{
     }
 
     public void startLoop() {
+        Log.w("GameLoop.java", "startLoop()");
         isRunning = true;
         start();
     }
