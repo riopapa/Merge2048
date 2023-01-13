@@ -37,9 +37,9 @@ public class CheckNearItem {
             stateU == GInfo.STATE.PAUSED) {
             index += 3;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x -1, y, x, y -1);
-            explodeThis(x +1, y, x, y -1);
-            explodeThis(x, y, x, y -1);
+            explodeThis(x -1, y, x, y -1, index);
+            explodeThis(x +1, y, x, y -1, index);
+            explodeThis(x, y, x, y -1, index);
             mergeToHere(x, y -1, index);
             return;
         }
@@ -47,8 +47,8 @@ public class CheckNearItem {
             stateL == GInfo.STATE.PAUSED && stateR == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x -1, y, x, y);
-            explodeThis(x +1, y, x, y);
+            explodeThis(x -1, y, x, y, index);
+            explodeThis(x +1, y, x, y, index);
             mergeToHere(x, y, index);
             return;
         }
@@ -56,8 +56,8 @@ public class CheckNearItem {
             stateL == GInfo.STATE.PAUSED && stateU == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x -1, y, x, y -1);
-            explodeThis(x, y, x, y -1);
+            explodeThis(x -1, y, x, y -1, index);
+            explodeThis(x, y, x, y -1, index);
             mergeToHere(x, y -1, index);
             return;
         }
@@ -65,29 +65,29 @@ public class CheckNearItem {
             stateR == GInfo.STATE.PAUSED && stateU == GInfo.STATE.PAUSED) {
             index += 2;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x + 1, y, x, y -1);
-            explodeThis(x, y, x, y -1);
+            explodeThis(x + 1, y, x, y -1, index);
+            explodeThis(x, y, x, y -1, index);
             mergeToHere(x, y -1, index);
             return;
         }
         if (index == indexL && stateL == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x -1, y, x, y);
+            explodeThis(x -1, y, x, y, index);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexR && stateR == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x +1, y, x, y);
+            explodeThis(x +1, y, x, y, index);
             mergeToHere(x, y, index);
             return;
         }
         if (index == indexU && stateU == GInfo.STATE.PAUSED) {
             index++;
             gInfo.score2Add += addNumber(index);
-            explodeThis(x, y, x, y -1);
+            explodeThis(x, y, x, y -1, index);
             mergeToHere(x, y -1, index);
             return;
         }
@@ -100,10 +100,10 @@ public class CheckNearItem {
         animationAdd.addMerge(x,y, index);
     }
 
-    private void explodeThis(int x, int y, int xTo, int yTo) {
+    private void explodeThis(int x, int y, int xTo, int yTo, int index) {
         gInfo.cells[x][y].state = GInfo.STATE.EXPLODE;
         gInfo.cells[x][y].index = 0;
-        animationAdd.addExplode(x,y, xTo, yTo);
+        animationAdd.addExplode(x,y, xTo, yTo, index);
     }
 
     public int addNumber(int index) {

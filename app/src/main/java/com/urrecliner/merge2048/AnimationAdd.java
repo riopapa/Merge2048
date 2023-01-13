@@ -36,11 +36,11 @@ public class AnimationAdd {
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MERGE, x, y, index, getNextTime()));
     }
 
-    public void addExplode(int xS, int yS, int xF, int yF) {
+    public void addExplode(int xS, int yS, int xF, int yF, int index) {
 
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.EXPLODE, xS, yS,
                 gInfo.blockOutSize * (xF - xS) / smooth,
-                gInfo.blockOutSize * (yF - yS)/ smooth, getNextTime()));
+                gInfo.blockOutSize * (yF - yS)/ smooth, getNextTime(), index));
     }
 
     private long getNextTime() {

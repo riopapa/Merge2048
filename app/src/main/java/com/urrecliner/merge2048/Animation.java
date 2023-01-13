@@ -111,14 +111,25 @@ public class Animation {
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
                         gInfo.aniStacks.remove(i);
                     } else {
-                        Bitmap explodeMap = explodeImage.smallMaps[ani.count];
-                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
-                                + ani.xInc * ani.count - gInfo.explodeGap;
-                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
-                                + ani.yInc * ani.count - gInfo.explodeGap;
-                        canvas.drawBitmap(explodeMap, xPos, yPos, null);
+                        int sw = ani.count % 2;
+                        if (sw == 0) {
+                            Bitmap explodeMap = explodeImage.smallMaps[ani.count];
+                            int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
+                                    + ani.xInc * ani.count - gInfo.explodeGap;
+                            int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
+                                    + ani.yInc * ani.count - gInfo.explodeGap;
+                            canvas.drawBitmap(explodeMap, xPos, yPos, null);
+                            ani.timeStamp = System.currentTimeMillis() + 1;
+                        } else {
+                            Bitmap blockMap = blockImages.get(ani.block).flyMaps[ani.count];
+                            int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
+                                    + ani.xInc * ani.count - gInfo.blockFlyingGap;
+                            int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
+                                    + ani.yInc * ani.count - gInfo.blockFlyingGap;
+                            canvas.drawBitmap(blockMap, xPos, yPos, null);
+                            ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        }
                         ani.count++;
-                        ani.timeStamp = System.currentTimeMillis() + ani.delay;
                         gInfo.aniStacks.set(i, ani);
                     }
                 }
