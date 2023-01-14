@@ -68,7 +68,7 @@ public class Animation {
         }
 
         for (int i = 0; i < gInfo.aniStacks.size(); ) {
-            if (gInfo.aniStacks.get(i).count == 100) {
+            if (gInfo.aniStacks.get(i).count == 111) {
                 gInfo.aniStacks.remove(i);
             } else
                 i++;
@@ -87,12 +87,12 @@ public class Animation {
                     if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].index = 0;
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.PAUSED;
-                        gInfo.cells[ani.xF][ani.yF].index = ani.block;
+                        gInfo.cells[ani.xF][ani.yF].index = ani.index;
                         gInfo.cells[ani.xF][ani.yF].state = GInfo.STATE.STOP;
-                        ani.count = 100;
+                        ani.count = 111;    // 111 means this ani should be removed soon
                         gInfo.aniStacks.set(i, ani);
                     } else {
-                        Bitmap blockMap = blockImages.get(ani.block).flyMaps[ani.count];
+                        Bitmap blockMap = blockImages.get(ani.index).flyMaps[ani.count];
                         int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
                                 + ani.xInc * ani.count - gInfo.blockFlyingGap;
                         int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
@@ -111,25 +111,14 @@ public class Animation {
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
                         gInfo.aniStacks.remove(i);
                     } else {
-                        int sw = ani.count % 2;
-                        if (sw == 0) {
-                            Bitmap explodeMap = explodeImage.smallMaps[ani.count];
-                            int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
-                                    + ani.xInc * ani.count - gInfo.explodeGap;
-                            int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
-                                    + ani.yInc * ani.count - gInfo.explodeGap;
-                            canvas.drawBitmap(explodeMap, xPos, yPos, null);
-                            ani.timeStamp = System.currentTimeMillis() + 1;
-                        } else {
-                            Bitmap blockMap = blockImages.get(ani.block).flyMaps[ani.count];
-                            int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
-                                    + ani.xInc * ani.count - gInfo.blockFlyingGap;
-                            int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
-                                    + ani.yInc * ani.count - gInfo.blockFlyingGap;
-                            canvas.drawBitmap(blockMap, xPos, yPos, null);
-                            ani.timeStamp = System.currentTimeMillis() + ani.delay;
-                        }
+                        Bitmap explodeMap = explodeImage.smallMaps[ani.count];
                         ani.count++;
+                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
+                                + ani.xInc * ani.count - gInfo.explodeGap - gInfo.explodeGap;
+                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
+                                + ani.yInc * ani.count - gInfo.explodeGap - gInfo.explodeGap;
+                        canvas.drawBitmap(explodeMap, xPos, yPos, null);
+                        ani.timeStamp = System.currentTimeMillis() + ani.delay;
                         gInfo.aniStacks.set(i, ani);
                     }
                 }
@@ -139,8 +128,8 @@ public class Animation {
                 if (ani.timeStamp < System.currentTimeMillis() ) {
                     if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.MERGED;
-                        gInfo.cells[ani.xS][ani.yS].index = ani.block;
-                        ani.count = 100;
+                        gInfo.cells[ani.xS][ani.yS].index = ani.index;
+                        ani.count = 111;
 //                        gInfo.aniStacks.remove(i);
                     } else {
                         ani.count++;
