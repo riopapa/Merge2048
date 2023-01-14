@@ -35,12 +35,12 @@ public class MessagePlate {
         msgBox0Paint.setAlpha(200);
 
         msgHeadPaint = new Paint();
-        msgHeadPaint.setTextSize(gInfo.piece);
+        msgHeadPaint.setTextSize(gInfo.piece*7f/9);
         msgHeadPaint.setTextAlign(Paint.Align.CENTER);
         msgHeadPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgLinePaint = new Paint();
-        msgLinePaint.setTextSize(gInfo.piece * 8f / 9);
+        msgLinePaint.setTextSize(gInfo.piece * 6f / 9);
         msgLinePaint.setTextAlign(Paint.Align.CENTER);
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 

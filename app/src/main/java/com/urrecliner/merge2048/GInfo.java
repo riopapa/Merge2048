@@ -37,11 +37,13 @@ public class GInfo {
     public int bonusCount, bonusStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
-    public boolean showNextPressed = false, showNext = true;
     public boolean swingPressed = false, swing = false;
     public boolean swapPressed = false, swap = false;
     public int swingXInc;
     public long swingTime, swingDelay;
+
+    public boolean showNextPressed = false, showNext = true;
+    public int showCount;
 
     public boolean shoutClicked = false;   // clicked means user clicked
     public int shootIndex;               // user selected x Index (0 ~ xBlockCnt)
@@ -114,6 +116,7 @@ public class GInfo {
         isGameOver = false;
         dumpCount = 0;
         swapCount = 3;
+        showCount = 5;
         xNextPos = xNextPosFixed;
     }
 

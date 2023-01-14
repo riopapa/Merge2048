@@ -196,10 +196,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             
             if (gInfo.showNextPressed) {
                 gInfo.showNextPressed = false;
-                gInfo.showNext = !gInfo.showNext;
-                messagePlate.set("다음 블럭", (gInfo.showNext) ? "미리 보입니다" : "안 보이니까",
-                    (gInfo.showNext) ? "":"점수는 2배로",System.currentTimeMillis(), 2300);
-
+                gInfo.showCount--;
+                if (gInfo.showCount > 0) {
+                    gInfo.showNext = !gInfo.showNext;
+                    messagePlate.set("다음 블럭 "+((gInfo.showNext) ? "보이기":" 안 보이기"),
+                            "("+gInfo.showCount+") 회 전환가능",
+                            (gInfo.showNext) ? "" : "점수는 2배로", System.currentTimeMillis(), 2300);
+                }
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
