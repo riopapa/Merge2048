@@ -111,14 +111,14 @@ public class Animation {
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
                         gInfo.aniStacks.remove(i);
                     } else {
-                        Bitmap explodeMap = explodeImage.smallMaps[ani.count];
-                        ani.count++;
+                        Bitmap explodeMap = blockImages.get(ani.index-1).explodeMaps[ani.count];
                         int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
-                                + ani.xInc * ani.count - gInfo.explodeGap - gInfo.explodeGap;
+                                + ani.xInc * ani.count - gInfo.explodeGap;
                         int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
-                                + ani.yInc * ani.count - gInfo.explodeGap - gInfo.explodeGap;
+                                + ani.yInc * ani.count - gInfo.explodeGap;
                         canvas.drawBitmap(explodeMap, xPos, yPos, null);
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        ani.count++;
                         gInfo.aniStacks.set(i, ani);
                     }
                 }

@@ -79,7 +79,7 @@ public class GInfo {
         yUpOffset = screenYSize / 80;   // ~= 35;
         yDownOffset = yUpOffset + yBlockCnt * blockOutSize + yUpOffset/3;  // next block top 1510
         blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 199
-        explodeGap = blockOutSize / 7;  // note20 48
+        explodeGap = blockInSize / 8;  // note20 48
         piece = screenXSize / 12;   // 120
 
         xNextPosFixed = (screenXSize - blockOutSize) / 2;  // note20 598

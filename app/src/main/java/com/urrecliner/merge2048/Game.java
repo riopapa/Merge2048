@@ -255,7 +255,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
             if (gInfo.bonusCount > 4) {
                 gInfo.gameDifficulty++;
-                messagePlate.set("!잘 했어요!",
+                messagePlate.set("!연속 블럭 정복!",
                         "큰 블럭("+checkNearItem.powerIndex(gInfo.gameDifficulty+1)+")이",
                     "나올 수 있어요",
                     System.currentTimeMillis() + 1500, 2500);
