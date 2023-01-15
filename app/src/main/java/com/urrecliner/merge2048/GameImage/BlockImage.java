@@ -51,9 +51,9 @@ public class BlockImage {
         Bitmap expMap = makeExplode(bitmap, gInfo.explodeGap, explode);
         explodeMaps = new Bitmap[5];
         explodeMaps[0] = makeExplodeMap(bitmap, gInfo, 77);
-        explodeMaps[1] = makeExplodeMap(expMap, gInfo, 77);
-        explodeMaps[2] = makeExplodeMap(bitmap, gInfo, 77);
-        explodeMaps[3] = makeExplodeMap(expMap, gInfo, 77);
+        explodeMaps[1] = makeExplodeMap(bitmap, gInfo, 66);
+        explodeMaps[2] = makeExplodeMap(expMap, gInfo, 77);
+        explodeMaps[3] = makeExplodeMap(bitmap, gInfo, 66);
         explodeMaps[4] = makeExplodeMap(bitmap, gInfo, 88);
     }
 
