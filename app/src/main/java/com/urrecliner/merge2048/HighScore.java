@@ -15,14 +15,12 @@ import java.util.List;
 
 public class HighScore {
     final GInfo gInfo;
-    final Context context;
     final SharedPreferences sharedPref;
     final SharedPreferences.Editor sharedEditor;
     final String highMember = "highMember";
 
     public HighScore(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
-        this.context = context;
         sharedPref = context.getSharedPreferences("merge2048", MODE_PRIVATE);
         sharedEditor = sharedPref.edit();
     }
@@ -36,13 +34,7 @@ public class HighScore {
             }.getType();
             gInfo.highMembers = gson.fromJson(json, type);
         } else {
-            gInfo.highMembers = new ArrayList<>();
-            gInfo.highMembers.add(new HighMember(88888, "riopapa",
-                    System.currentTimeMillis()-240000));
-            gInfo.highMembers.add(new HighMember(44444, "riopapa",
-                    System.currentTimeMillis()-120000));
-            gInfo.highMembers.add(new HighMember(22222, "riopapa",
-                    System.currentTimeMillis()-60000));
+            reset();
         }
 
     }
@@ -61,5 +53,15 @@ public class HighScore {
         String json = gson.toJson(gInfo.highMembers);
         sharedEditor.putString(highMember+gInfo.xBlockCnt+gInfo.yBlockCnt, json);
         sharedEditor.apply();
+    }
+
+    void reset() {
+        gInfo.highMembers = new ArrayList<>();
+        gInfo.highMembers.add(new HighMember(88888, "riopapa",
+                System.currentTimeMillis()-240000));
+        gInfo.highMembers.add(new HighMember(44444, "riopapa",
+                System.currentTimeMillis()-120000));
+        gInfo.highMembers.add(new HighMember(22222, "riopapa",
+                System.currentTimeMillis()-60000));
     }
 }

@@ -13,6 +13,7 @@ public class TouchEvent {
     private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
     private final int xSwapPosS, ySwapPosS, xSwapPosE, ySwapPosE;
+    private final int xHighPosS, xHighPosE, yHighPosS, yHighPosE;
 
     public TouchEvent (GInfo gInfo) {
         this.gInfo = gInfo;
@@ -47,6 +48,10 @@ public class TouchEvent {
         xSwapPosE = xSwapPosS + gInfo.blockIconSize;
         ySwapPosE = ySwapPosS + gInfo.blockIconSize;
 
+        xHighPosS = gInfo.xHighPosS;
+        xHighPosE = gInfo.xHighPosE;
+        yHighPosS = gInfo.yHighPosS;
+        yHighPosE = gInfo.yHighPosE;
     }
     
     public void check(MotionEvent event) {
@@ -93,6 +98,9 @@ public class TouchEvent {
                 } else if (isQuitGamePressed()) {
                     gInfo.quitGamePressed = true;
 
+                } else if (isHighPressed()) {
+                    gInfo.highTouchPressed = true;
+
                 } else if (isShootPressed()) {
                     if (gInfo.swing) {
                         if (xTouchPos >= gInfo.xNextPos &&
@@ -133,6 +141,11 @@ public class TouchEvent {
     boolean isQuitGamePressed() {
         return (xTouchPos >= xQuitPosS && xTouchPos <= xQuitPosE &&
                 yTouchPos >= yQuitPosS && yTouchPos <= yQuitPosE);
+    }
+
+    boolean isHighPressed() {
+        return  (xTouchPos >= xHighPosS && xTouchPos <= xHighPosE &&
+                yTouchPos >= yHighPosS && yTouchPos <= yHighPosE);
     }
 
     boolean isYesPressed() {

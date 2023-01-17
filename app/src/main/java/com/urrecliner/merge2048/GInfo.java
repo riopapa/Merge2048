@@ -59,6 +59,10 @@ public class GInfo {
     public int dumpCount = 0;
     public boolean dumpClicked = false;
 
+    public int xHighPosS, xHighPosE, yHighPosS, yHighPosE;
+    public int highTouchCount;
+    public boolean highTouchPressed;
+
     public enum STATE {
         PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED
     }
@@ -118,6 +122,8 @@ public class GInfo {
         swapCount = 3;
         showCount = 5;
         xNextPos = xNextPosFixed;
+        highTouchPressed = false;
+        highTouchCount = 0;
     }
 
     public void resetSwing() {

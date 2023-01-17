@@ -106,6 +106,12 @@ public class ScorePlate {
 
         board_color0 = ContextCompat.getColor(context, R.color.hi_board0);
         board_color1 = ContextCompat.getColor(context, R.color.hi_board1);
+
+        gInfo.xHighPosS = xBoardPosLeft;
+        gInfo.xHighPosE = (xBoardPosRight + xBoardPosLeft) / 2;
+        gInfo.yHighPosS = yBoardPosTop;
+        gInfo.yHighPosE = yBoardPosTop + yBoardSize;
+
     }
 
     private int calcPercentPixel(int milliPercent) {
@@ -113,17 +119,22 @@ public class ScorePlate {
     }
 
     public void draw(Canvas canvas) {
-
+        int score;
         canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreOPaint);
         canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreIPaint);
 
         if (gInfo.score2Add > 0 && scoreTimeStamp < System.currentTimeMillis()) {
-            int score = (int) Math.sqrt(gInfo.score2Add + 200);
-            delay += 12;
+            if (gInfo.score2Add > 200)
+                score = (int) Math.sqrt(gInfo.score2Add + 150);
+            else if (gInfo.score2Add > 100)
+                score = (int) Math.sqrt(gInfo.score2Add + 50);
+            else
+                score = (int) Math.sqrt(gInfo.score2Add + 10);
             if (score > gInfo.score2Add)
                 score = gInfo.score2Add;
             else if (score < 2)
                 score = 2;
+            delay += 12;
             scoreTimeStamp = System.currentTimeMillis() + delay;
             gInfo.score2Add -= score;
             gInfo.scoreNow += score;

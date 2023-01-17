@@ -66,13 +66,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         checkNearItem = new CheckNearItem(gInfo, animation, animationAdd);
         highScore = new HighScore(gInfo, context);
         checkGameOver = new CheckGameOver(gInfo);
-        touchEvent = new TouchEvent(gInfo);
         bonusPlate = new BonusPlate(gInfo, context);
         rotatePlate = new RotatePlate(gInfo, blockImages);
         messagePlate = new MessagePlate(gInfo, context);
         basePlate = new BasePlate(gInfo, context);
         gameOverPlate = new GameOverPlate(gInfo, context);
         scorePlate = new ScorePlate(gInfo, context);
+        touchEvent = new TouchEvent(gInfo);     // touchEvent should be followed by scorePlate
         newGameStart();
     }
 
@@ -231,6 +231,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gInfo.quitGame)
             exitApp();
+        else if (gInfo.highTouchPressed) {
+            gInfo.highTouchPressed = false;
+            gInfo.highTouchCount++;
+            if (gInfo.highTouchCount > 6) {
+                highScore.reset();
+                highScore.put();
+            }
+        }
 
     }
 
