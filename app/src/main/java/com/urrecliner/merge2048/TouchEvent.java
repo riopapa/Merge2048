@@ -19,7 +19,7 @@ public class TouchEvent {
         this.gInfo = gInfo;
         xOffset = gInfo.xOffset; yDownOffset = gInfo.yDownOffset;
         blockOutSize = gInfo.blockOutSize;
-        xBlockCnt = gInfo.xBlockCnt;
+        xBlockCnt = gInfo.X_BLOCK_CNT;
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
@@ -77,6 +77,15 @@ public class TouchEvent {
                     } else if (isNoPressed()) {
                         gInfo.startNewGameYes = false;
                         gInfo.newGamePressed = false;
+                    }
+
+                } else if (gInfo.isGameOver && gInfo.is2048) {
+                    if (isYesPressed()) {
+                        gInfo.continueYes = true;
+                    } else if (isNoPressed()) {
+                        gInfo.continueYes = false;
+                        gInfo.is2048 = false;
+                        gInfo.startNewGameYes = true;
                     }
                 } else if (isNewGamePressed()) {
                     gInfo.newGamePressed = true;

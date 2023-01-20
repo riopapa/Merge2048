@@ -25,6 +25,6 @@
 
     <color name="game_background">#A5C6CA</color>
     <color name="game_over0">#FFDD3333</color>
-    <color name="game_over1">#FF3333DD</color>
+    <color name="game_over1">#3A3A59</color>
 
 </resources>

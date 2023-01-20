@@ -11,7 +11,6 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
-import com.urrecliner.merge2048.GameImage.ExplodeImage;
 import com.urrecliner.merge2048.GameImage.BlockImageMake;
 import com.urrecliner.merge2048.GamePlate.BasePlate;
 import com.urrecliner.merge2048.GameObject.Cell;
@@ -22,7 +21,6 @@ import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 
-import java.util.Arrays;
 import java.util.List;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -39,6 +37,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final CheckNearItem checkNearItem;
     private final HighScore highScore;
     private final CheckGameOver checkGameOver;
+    private final CheckGoUp checkGoUp;
+    private final PullBelow pullBelow;
     private final TouchEvent touchEvent;
     private GameLoop gameLoop;
     private final int xBlockCnt, yBlockCnt;
@@ -55,17 +55,19 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
         gInfo = new GInfo(context);
 
-        xBlockCnt = gInfo.xBlockCnt; yBlockCnt = gInfo.yBlockCnt;
+        xBlockCnt = gInfo.X_BLOCK_CNT; yBlockCnt = gInfo.Y_BLOCK_CNT;
 
         List<BlockImage> blockImages = new BlockImageMake().make(context, gInfo);
-        final ExplodeImage explodeImage = new ExplodeImage(gInfo, context);
 
-        animation = new Animation(gInfo, blockImages, explodeImage, SMOOTH);
+        animation = new Animation(gInfo, blockImages, SMOOTH);
         animationAdd = new AnimationAdd(gInfo, SMOOTH);
         nextPlate = new NextPlate(gInfo, context, blockImages);
         checkNearItem = new CheckNearItem(gInfo, animation, animationAdd);
         highScore = new HighScore(gInfo, context);
-        checkGameOver = new CheckGameOver(gInfo);
+        checkGameOver = new CheckGameOver(gInfo, animationAdd);
+        checkGoUp = new CheckGoUp(gInfo, animationAdd);
+        pullBelow = new PullBelow(gInfo, animationAdd);
+
         bonusPlate = new BonusPlate(gInfo, context);
         rotatePlate = new RotatePlate(gInfo, blockImages);
         messagePlate = new MessagePlate(gInfo, context);
@@ -73,29 +75,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameOverPlate = new GameOverPlate(gInfo, context);
         scorePlate = new ScorePlate(gInfo, context);
         touchEvent = new TouchEvent(gInfo);     // touchEvent should be followed by scorePlate
-        newGameStart();
-    }
 
-    void newGameStart() {
-
-        messagePlate.set("Welcome", "게임을", "시작합니다",
-                System.currentTimeMillis(), 1000);
-
-        gInfo.resetValues();
-        highScore.get();
-        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
-
-        clearCells();
-        nextPlate.generateNextBlock(true);
-        nextPlate.generateNextBlock(true);
-    }
-
-    void clearCells() {
-        for (int y = 0; y < yBlockCnt; y++) {
-            for (int x = 0; x < xBlockCnt; x++) {
-                gInfo.cells[x][y] = new Cell(0, GInfo.STATE.PAUSED); // 0 means null
-            }
-        }
+        new NewGame(gInfo, messagePlate, highScore, nextPlate);
     }
 
     @Override
@@ -112,7 +93,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gInfo.startNewGameYes) {
             gInfo.startNewGameYes = false;
-            newGameStart();
+            highScore.put();
+            new NewGame(gInfo, messagePlate, highScore, nextPlate);
+            return;
         }
 
         if (gInfo.dumpClicked) {
@@ -124,6 +107,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.aniStacks.size() > 0)
             return;
 
+        if (gInfo.isGameOver && gInfo.continueYes) {
+            checkGameOver.destroy();
+            return;
+        }
+
         /*
         *   check state info and then ...
          */
@@ -132,20 +120,22 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 switch (gInfo.cells[x][y].state) {
                     case MOVING:
                     case MERGE:
+                    case DESTROY:
                     case EXPLODE:
                         break;
 
                     case EXPLODED:
                         gInfo.cells[x][y] = new Cell(0, GInfo.STATE.PAUSED);
-                        pullBelowBlock(x, y);
+                        pullBelow.check(x, y);
                         break;
 
                     case GO_UP:
-                        goingUp(x, y);
+                        checkGoUp.check(x, y);
                         break;
 
                     case MERGED:
-                        if (gInfo.cells[x][y].index >= 10) {
+                        if (gInfo.cells[x][y].index > gInfo.CONTINUE_INDEX) {
+                            gInfo.is2048 = true;
                             rotatePlate.addRotate(x, y, gInfo.cells[x][y].index, 12, 40);
                         }
                         checkNearItem.check(x, y);
@@ -179,21 +169,37 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        if (!gInfo.isGameOver) {
-
-            if (nextPlate.nextIndex == -1 &&  isAllPaused()) {
-                nextPlate.generateNextBlock(true);
-                if (gInfo.bonusCount > 0) {
-                    showBonus(bonusX, bonusY);
+        for (int y = 1; y < yBlockCnt; y++) {   // added because of check completeness
+            for (int x = 0; x < xBlockCnt; x++) {
+                if (gInfo.cells[x][y].index != 0 && gInfo.cells[x][y].state == GInfo.STATE.PAUSED) {
+                    checkNearItem.checkUp(x, y);
                 }
             }
+        }
+        if (gInfo.aniStacks.size() > 0)
+            return;
+
+        for (int y = 1; y < yBlockCnt; y++) {   // added because of check completeness
+            for (int x = 0; x < xBlockCnt; x++) {
+                if (gInfo.cells[x][y].index != 0 && gInfo.cells[x][y].state == GInfo.STATE.PAUSED) {
+                    checkNearItem.checkRight(x, y);
+                }
+            }
+        }
+        if (gInfo.aniStacks.size() > 0)
+            return;
+
+        if (gInfo.isGameOver) {
+            if (!gInfo.is2048)
+                highScore.put();
+        } else {
+
+            if (gInfo.bonusCount > 0 && new CheckState().paused(gInfo))
+                new ShowBonus(gInfo, bonusX, bonusY, bonusPlate, messagePlate);
 
             if (gInfo.swing && nextPlate.nextIndex != -1)
                 gInfo.updateSwing();
 
-            if (gInfo.bonusCount > 0 && nextPlate.nextIndex > 0 && isAllPaused() )
-                showBonus(bonusX, bonusY);
-            
             if (gInfo.showNextPressed) {
                 gInfo.showNextPressed = false;
                 gInfo.showCount--;
@@ -221,111 +227,25 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
             } else if (gInfo.shoutClicked) {
-                start2Move();
+                new Start2Move(gInfo, nextPlate, checkNearItem);
             }
 
-            gInfo.isGameOver = checkGameOver.isOver(nextPlate.nextIndex);
-            if (gInfo.isGameOver)
-                highScore.put();
+            if (nextPlate.nextIndex == -1)
+                nextPlate.generateNextBlock(true);
+            if (gInfo.aniStacks.size() == 0)
+                gInfo.isGameOver = checkGameOver.isOver(nextPlate.nextIndex);
         }
 
-        if (gInfo.quitGame)
+        if (gInfo.quitGame) {
+            highScore.put();
             exitApp();
-        else if (gInfo.highTouchPressed) {
+        } else if (gInfo.highTouchPressed) {
             gInfo.highTouchPressed = false;
             gInfo.highTouchCount++;
             if (gInfo.highTouchCount > 6) {
                 highScore.reset();
                 highScore.put();
             }
-        }
-
-    }
-
-    private boolean isAllPaused() {
-        boolean allPaused = true;
-        for (int y = 0; y < yBlockCnt; y++) {
-            for (int x = 0; x < xBlockCnt; x++) {
-                if (gInfo.cells[x][y].state != GInfo.STATE.PAUSED) {
-                    allPaused = false;
-                    break;
-                }
-            }
-        }
-        return allPaused;
-    }
-
-    private void showBonus(int x, int y) {
-        if (gInfo.aniStacks.size() > 0)
-            return;
-        if (gInfo.bonusCount > 2) {
-            bonusPlate.addBonus(x, y, gInfo.bonusCount - 2,
-                    gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
-            if (gInfo.bonusCount > 4) {
-                gInfo.gameDifficulty++;
-                messagePlate.set("!연속 블럭 정복!",
-                        "큰 블럭("+checkNearItem.powerIndex(gInfo.gameDifficulty+1)+")이",
-                    "나올 수 있어요",
-                    System.currentTimeMillis() + 1500, 2500);
-                gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
-            }
-        }
-        gInfo.bonusCount = 0;
-        gInfo.bonusStacked = 0;
-    }
-
-    /*
-    * block just moved here or initially loaded, if can not go up, then STOP
-     */
-    private void goingUp(int x, int y) {
-        if (y > 0) {
-            int yUp = 0;
-            for (int yy = y - 1; yy >= 0; yy--) {
-                if (gInfo.cells[x][yy].index != 0) {
-                    yUp = yy + 1;
-                    break;
-                }
-            }
-            if (yUp != y) {
-                gInfo.cells[x][y].state = GInfo.STATE.MOVING;
-                animationAdd.addMove(x, y, x, yUp, gInfo.cells[x][y].index);
-//                Log.w("Add", y +" > "+yUp);
-                return;
-            }
-        }
-        gInfo.cells[x][y].state = GInfo.STATE.STOP;
-    }
-
-    /*
-    *   block exploded, so if any block below, pull them up
-     */
-    private void pullBelowBlock(int x, int y) {
-
-        if (y == yBlockCnt -1 || gInfo.cells[x][y+1].index == 0)
-            return;
-        for (int yy = y+1; yy < yBlockCnt; yy++) {
-            if (gInfo.cells[x][yy].index > 0) {
-                gInfo.cells[x][yy].state = GInfo.STATE.MOVING;
-                animationAdd.addMove(x, yy, x, yy-1, gInfo.cells[x][yy].index);
-            } else
-                break;
-        }
-    }
-
-    private void start2Move() {
-
-        gInfo.shoutClicked = false;
-        if (nextPlate.nextIndex == -1)
-            return;
-        if (gInfo.dumpCount > 4)
-            new DumpCells(gInfo, checkNearItem, nextPlate, "Start2Move");
-        Cell cell = gInfo.cells[gInfo.shootIndex][yBlockCnt-1];
-        if (cell.index == 0) {  // empty cell, so start to move
-            gInfo.cells[gInfo.shootIndex][yBlockCnt-1] = new Cell(nextPlate.nextIndex, GInfo.STATE.GO_UP);
-            nextPlate.nextIndex = -1;   // wait while all moved;
-        } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
-            gInfo.cells[gInfo.shootIndex][yBlockCnt-1].index = cell.index + 1;
-            gInfo.cells[gInfo.shootIndex][yBlockCnt-1].state = GInfo.STATE.STOP;
         }
     }
 

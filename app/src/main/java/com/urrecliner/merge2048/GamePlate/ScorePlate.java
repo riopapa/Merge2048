@@ -107,8 +107,8 @@ public class ScorePlate {
         board_color0 = ContextCompat.getColor(context, R.color.hi_board0);
         board_color1 = ContextCompat.getColor(context, R.color.hi_board1);
 
-        gInfo.xHighPosS = xBoardPosLeft;
-        gInfo.xHighPosE = (xBoardPosRight + xBoardPosLeft) / 2;
+        gInfo.xHighPosS = (xBoardPosRight + xBoardPosLeft) / 2;
+        gInfo.xHighPosE = xBoardPosRight;
         gInfo.yHighPosS = yBoardPosTop;
         gInfo.yHighPosE = yBoardPosTop + yBoardSize;
 
@@ -134,7 +134,7 @@ public class ScorePlate {
                 score = gInfo.score2Add;
             else if (score < 2)
                 score = 2;
-            delay += 12;
+            delay += 20;
             scoreTimeStamp = System.currentTimeMillis() + delay;
             gInfo.score2Add -= score;
             gInfo.scoreNow += score;
@@ -156,7 +156,7 @@ public class ScorePlate {
                 }
             }
         } else {
-            delay = 30;
+            delay = 40;
         }
 
         for (int i = 0; i < gInfo.highMembers.size(); i++) {

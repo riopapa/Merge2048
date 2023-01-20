@@ -28,7 +28,7 @@ public class HighScore {
     void get() {
         gInfo.highMembers = new ArrayList<>();
         Gson gson = new Gson();
-        String json = sharedPref.getString(highMember+gInfo.xBlockCnt+gInfo.yBlockCnt, "");
+        String json = sharedPref.getString(highMember+gInfo.X_BLOCK_CNT +gInfo.Y_BLOCK_CNT, "");
         if (!json.isEmpty()) {
             Type type = new TypeToken<List<HighMember>>() {
             }.getType();
@@ -51,7 +51,7 @@ public class HighScore {
         }
         Gson gson = new Gson();
         String json = gson.toJson(gInfo.highMembers);
-        sharedEditor.putString(highMember+gInfo.xBlockCnt+gInfo.yBlockCnt, json);
+        sharedEditor.putString(highMember+gInfo.X_BLOCK_CNT +gInfo.Y_BLOCK_CNT, json);
         sharedEditor.apply();
     }
 

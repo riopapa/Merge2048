@@ -38,9 +38,21 @@ public class AniStack {
         this.yInc = yInc;
         this.timeStamp = timeStamp;
         this.index = index;
-        delay = 10;
+        delay = 0;
         count = 0;
-        maxCount = 5;   // Explode max is 5
+        maxCount = 5;   // refer to BlockImage explode[n]
+    }
+
+    // state DESTROY
+    public AniStack(GInfo.STATE state, int xS, int yS, long timeStamp, int index) {
+        this.state = state;
+        this.xS = xS;
+        this.yS = yS;
+        this.timeStamp = timeStamp;
+        this.index = index;
+        delay = 40;
+        count = 0;
+        maxCount = 7;   // refer to BlockImage explode[n]
     }
 
     // state MERGE

@@ -17,13 +17,11 @@ public class AnimationAdd {
     public void addMove(int xS, int yS, int xF, int yF, int block) {
         int maxCount = (Math.abs(yF-yS)+1)*(Math.abs(xF-xS)+1);
         if (maxCount < 3)
-            maxCount = 3;
+            maxCount = 2;
         else if (maxCount < 6)
-            maxCount = 4;
-        else if (maxCount < 9)
-            maxCount = 5;
+            maxCount = 3;
         else
-            maxCount = 6;
+            maxCount = 4;
 
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MOVING, xS, yS, xF, yF,
                 gInfo.blockOutSize * (xF - xS) / maxCount,
@@ -39,10 +37,13 @@ public class AnimationAdd {
     public void addExplode(int xS, int yS, int xF, int yF, int index) {
 
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.EXPLODE, xS, yS,
-                gInfo.blockOutSize * (xF - xS) / smooth,
-                gInfo.blockOutSize * (yF - yS)/ smooth, getNextTime(), index));
+                gInfo.blockOutSize * (xF - xS) / 4,
+                gInfo.blockOutSize * (yF - yS)/ 4, getNextTime(), index));
     }
 
+    public void addDestroy(int xS, int yS, int index) {
+        gInfo.aniStacks.add(new AniStack(GInfo.STATE.DESTROY, xS, yS, getNextTime() + 200, index));
+    }
     private long getNextTime() {
         long timeStamp;
         if (gInfo.aniStacks.size() > 0)

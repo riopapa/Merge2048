@@ -32,7 +32,7 @@ public class RotatePlate {
 
         rotates.add(new BonusRotate(xS, yS, idx, loopCount,
                 gInfo.blockOutSize * (- xS) / (gInfo.bonusLoopCount +idx),
-                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ (gInfo.bonusLoopCount +idx), delay));
+                gInfo.blockOutSize * (gInfo.Y_BLOCK_CNT - yS + 1)/ (gInfo.bonusLoopCount +idx), delay));
     }
 
     public void draw(Canvas canvas) {

@@ -17,10 +17,11 @@ public class BlockImage {
     public int idx;
     public int number;
 
-    public Bitmap bitmap;
+    public Bitmap bitmap, xorMap;
     public Bitmap [] flyMaps;
     public Bitmap halfMap;
     public Bitmap [] explodeMaps;
+    public Bitmap destroyMap;  // self destroy 2048
 
     public BlockImage(int idx, int number, GInfo gInfo, Context context) {
         this.idx = idx;
@@ -33,28 +34,34 @@ public class BlockImage {
                 gInfo.blockInSize, gInfo.blockInSize, false);
         halfMap = Bitmap.createScaledBitmap(bitmap,
                 gInfo.blockInSize /2, gInfo.blockInSize /2,false);
-        flyMaps = new Bitmap[9];
+        flyMaps = new Bitmap[7];
         flyMaps[0] = makeFlyMap(bitmap, gInfo, 105); // max 110%
         flyMaps[1] = makeFlyMap(bitmap, gInfo, 110);
         flyMaps[2] = makeFlyMap(bitmap, gInfo, 105);
-        flyMaps[3] = makeFlyMap(bitmap, gInfo, 110);
-        flyMaps[4] = makeFlyMap(bitmap, gInfo, 105);
-        flyMaps[5] = makeFlyMap(bitmap, gInfo, 110);
+        flyMaps[3] = makeFlyMap(bitmap, gInfo, 100);
+        flyMaps[4] = makeFlyMap(bitmap, gInfo, 95);
+        flyMaps[5] = makeFlyMap(bitmap, gInfo, 100);
         flyMaps[6] = makeFlyMap(bitmap, gInfo, 105);
-        flyMaps[7] = makeFlyMap(bitmap, gInfo, 100);
-        flyMaps[8] = makeXorMap(bitmap, gInfo);
+
+        xorMap = makeXorMap(bitmap, gInfo);
 
         Bitmap explode = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.a_explosion_e, options),
                 gInfo.blockOutSize+gInfo.explodeGap, gInfo.blockOutSize+gInfo.explodeGap, false);
 
         Bitmap expMap = makeExplode(bitmap, gInfo.explodeGap, explode);
-        explodeMaps = new Bitmap[5];
-        explodeMaps[0] = makeExplodeMap(bitmap, gInfo, 77);
-        explodeMaps[1] = makeExplodeMap(bitmap, gInfo, 66);
-        explodeMaps[2] = makeExplodeMap(expMap, gInfo, 77);
-        explodeMaps[3] = makeExplodeMap(bitmap, gInfo, 66);
-        explodeMaps[4] = makeExplodeMap(bitmap, gInfo, 88);
+        explodeMaps = new Bitmap[6];
+        explodeMaps[0] = makeExplodeMap(bitmap, gInfo, 80);
+        explodeMaps[1] = makeExplodeMap(expMap, gInfo, 76);
+        explodeMaps[2] = makeExplodeMap(bitmap, gInfo, 77);
+        explodeMaps[3] = makeExplodeMap(bitmap, gInfo, 70);
+        explodeMaps[4] = makeExplodeMap(expMap, gInfo, 65);
+        explodeMaps[5] = makeExplodeMap(bitmap, gInfo, 65);
+
+        destroyMap = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.destroy, options),
+                gInfo.blockOutSize+gInfo.explodeGap, gInfo.blockOutSize+gInfo.explodeGap, false);
+        destroyMap = makeExplode(bitmap, gInfo.explodeGap, destroyMap);
     }
 
     private Bitmap makeFlyMap(Bitmap bitmap, GInfo gInfo, int pct) {

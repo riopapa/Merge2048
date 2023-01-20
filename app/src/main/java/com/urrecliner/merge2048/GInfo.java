@@ -14,7 +14,7 @@ import java.util.List;
 public class GInfo {
 
     public final int screenXSize, screenYSize;
-    public final int xBlockCnt = 5, yBlockCnt = 6;
+    public final int X_BLOCK_CNT = 5, Y_BLOCK_CNT = 6;
     public final int blockOutSize;  // block Size with gaps
     public final int blockInSize;   // block size itself;
     public final int blockIconSize; // new, yes, no, ... icon size
@@ -27,7 +27,7 @@ public class GInfo {
     public final int bonusLoopCount = 12;
     public final int piece; // small pixel size for calculation sizes
     public final Cell[][] cells;
-
+    public final int CONTINUE_INDEX = 10;  // if achieved this index game can be continued
     public long scoreNow;
     public int score2Add;
     public List<HighMember> highMembers;
@@ -41,6 +41,7 @@ public class GInfo {
     public boolean swapPressed = false, swap = false;
     public int swingXInc;
     public long swingTime, swingDelay;
+    public boolean is2048 = false, continueYes = false;
 
     public boolean showNextPressed = false, showNext = true;
     public int showCount;
@@ -64,7 +65,7 @@ public class GInfo {
     public boolean highTouchPressed;
 
     public enum STATE {
-        PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED
+        PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED, DESTROY
     }
 
     public GInfo(Context context) {
@@ -75,13 +76,13 @@ public class GInfo {
         screenXSize = metrics.widthPixels;      // note20  1440 x 2819
         screenYSize = metrics.heightPixels;     // A32     1080 x 2194
 
-        blockOutSize = screenXSize * 85 / 100 / xBlockCnt;  // note20 = 244
+        blockOutSize = screenXSize * 85 / 100 / X_BLOCK_CNT;  // note20 = 244
         blockInSize = blockOutSize - blockOutSize / 36;     // note20 = 238
 
         blockFlyingGap = (blockOutSize * 110/100 - blockInSize)/2;  // note20 15
-        xOffset = (screenXSize - xBlockCnt * blockOutSize) / 2; // note20 110
+        xOffset = (screenXSize - X_BLOCK_CNT * blockOutSize) / 2; // note20 110
         yUpOffset = screenYSize / 80;   // ~= 35;
-        yDownOffset = yUpOffset + yBlockCnt * blockOutSize + yUpOffset/3;  // next block top 1510
+        yDownOffset = yUpOffset + Y_BLOCK_CNT * blockOutSize + yUpOffset/3;  // next block top 1510
         blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 199
         explodeGap = blockInSize / 8;  // note20 48
         piece = screenXSize / 12;   // 120
@@ -107,14 +108,14 @@ public class GInfo {
         xSwapPos = screenXSize-xOffset-blockIconSize;
         ySwapPos = ySwingPos;
 
-        cells = new Cell[xBlockCnt][yBlockCnt];
+        cells = new Cell[X_BLOCK_CNT][Y_BLOCK_CNT];
         resetValues();
     }
 
     public void resetValues() {
         aniStacks = new ArrayList<>();
         scoreNow = 0;
-        gameDifficulty = 4;
+        gameDifficulty = 5;
         bonusCount = 0;
         bonusStacked = 0;
         isGameOver = false;
@@ -124,6 +125,8 @@ public class GInfo {
         xNextPos = xNextPosFixed;
         highTouchPressed = false;
         highTouchCount = 0;
+        is2048 = false;
+        continueYes = false;
     }
 
     public void resetSwing() {

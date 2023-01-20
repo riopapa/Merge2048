@@ -1,20 +1,19 @@
 package com.urrecliner.merge2048;
 
-import com.urrecliner.merge2048.GamePlate.NextPlate;
-
 public class CheckGameOver {
     final GInfo gInfo;
+    final AnimationAdd animationAdd;
     final int xBlockCnt, yBlockCnt;
 
-    public CheckGameOver(GInfo gInfo) {
+    public CheckGameOver(GInfo gInfo, AnimationAdd animationAdd) {
         this.gInfo = gInfo;
-        this.xBlockCnt = gInfo.xBlockCnt;
-        this.yBlockCnt = gInfo.yBlockCnt;
+        this.animationAdd = animationAdd;
+        this.xBlockCnt = gInfo.X_BLOCK_CNT;
+        this.yBlockCnt = gInfo.Y_BLOCK_CNT;
     }
 
     public boolean isOver(int nextIndex) {
-        if (nextIndex == -1)
-            return false;
+
         for (int x = 0; x < xBlockCnt; x++) {
             if (gInfo.cells[x][yBlockCnt-1].index == 0 ||
                 gInfo.cells[x][yBlockCnt-1].state != GInfo.STATE.PAUSED ||
@@ -22,5 +21,21 @@ public class CheckGameOver {
                 return false;
         }
         return true;
+    }
+
+    public void destroy() {
+        for (int y = 0; y < yBlockCnt; y++) {
+            for (int x = 0; x < xBlockCnt; x++) {
+                if (gInfo.cells[x][y].index > gInfo.CONTINUE_INDEX) {
+                    animationAdd.addDestroy(x,y, gInfo.cells[x][y].index);
+                    gInfo.cells[x][y].state = GInfo.STATE.EXPLODE;
+                    gInfo.cells[x][y].index = 0;
+                    return;
+                }
+            }
+        }
+        gInfo.isGameOver = false;
+        gInfo.continueYes = false;
+        gInfo.is2048 = false;
     }
 }

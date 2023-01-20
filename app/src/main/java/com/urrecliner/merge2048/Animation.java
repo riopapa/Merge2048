@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
-import com.urrecliner.merge2048.GameImage.ExplodeImage;
 import com.urrecliner.merge2048.GameObject.AniStack;
 
 import java.util.List;
@@ -18,13 +17,12 @@ public class Animation {
 
     final GInfo gInfo;
     final List<BlockImage> blockImages;
-    final ExplodeImage explodeImage;
     final int smooth;
 
     final int screenXSize, screenYSize;
     final int xBlockCnt, yBlockCnt, xOffset, yUpOffset, xBlockOutSize, yBlockOutSize;
 
-    public Animation(GInfo gInfo, List<BlockImage> blockImages, ExplodeImage explodeImage, int smooth){
+    public Animation(GInfo gInfo, List<BlockImage> blockImages, int smooth){
         this.gInfo = gInfo;
         this.xOffset = gInfo.xOffset;
         this.yUpOffset = gInfo.yUpOffset;
@@ -32,10 +30,9 @@ public class Animation {
         this.screenYSize = gInfo.screenYSize;
         this.xBlockOutSize = gInfo.blockOutSize;
         this.yBlockOutSize = gInfo.blockOutSize;
-        xBlockCnt = gInfo.xBlockCnt;
-        yBlockCnt = gInfo.yBlockCnt;
+        xBlockCnt = gInfo.X_BLOCK_CNT;
+        yBlockCnt = gInfo.Y_BLOCK_CNT;
         this.blockImages = blockImages;
-        this.explodeImage = explodeImage;
         this.smooth = smooth;
     }
 
@@ -45,21 +42,22 @@ public class Animation {
         Bitmap blockMap;
         for (int y = 0; y < yBlockCnt; y++) {
             for (int x = 0; x < xBlockCnt; x++) {
-                if (gInfo.cells[x][y].state == GInfo.STATE.PAUSED && gInfo.cells[x][y].index > 0) {
-                    if (gInfo.cells[x][y].index < 11)
-                        blockMap = blockImages.get(gInfo.cells[x][y].index).bitmap;
-                    else {
+                int idx = gInfo.cells[x][y].index;
+                if (idx > 0 && gInfo.cells[x][y].state == GInfo.STATE.PAUSED) {
+                    if (idx > gInfo.CONTINUE_INDEX) {
                         gInfo.cells[x][y].count++;
                         if (gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 40) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
-                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 4) {
+                        } else if (!gInfo.cells[x][y].xor && gInfo.cells[x][y].count > 6) {
                             gInfo.cells[x][y].count = 0;
                             gInfo.cells[x][y].xor = !gInfo.cells[x][y].xor;
                         }
-                        blockMap = gInfo.cells[x][y].xor?
-                                blockImages.get(gInfo.cells[x][y].index).bitmap :
-                                blockImages.get(gInfo.cells[x][y].index).flyMaps[8];
+                        blockMap = gInfo.cells[x][y].xor ?
+                                blockImages.get(idx).bitmap :
+                                blockImages.get(idx).xorMap;
+                    } else {
+                        blockMap = blockImages.get(idx).bitmap;
                     }
                     canvas.drawBitmap(blockMap, xOffset + x * xBlockOutSize,
                             yUpOffset + y * yBlockOutSize, null);
@@ -111,7 +109,8 @@ public class Animation {
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
                         gInfo.aniStacks.remove(i);
                     } else {
-                        Bitmap explodeMap = blockImages.get(ani.index-1).explodeMaps[ani.count];
+                        Bitmap explodeMap = blockImages.get(
+                                (ani.count > 3)? ani.index:ani.index-1).explodeMaps[ani.count];
                         int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
                                 + ani.xInc * ani.count - gInfo.explodeGap;
                         int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
@@ -124,13 +123,31 @@ public class Animation {
                 }
                 break;
 
+            case DESTROY:
+                if (ani.timeStamp < System.currentTimeMillis() ) {
+                    if (ani.count >= ani.maxCount) {
+                        gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
+                        gInfo.aniStacks.remove(i);
+                    } else {    // 0~4 : lower block, 5~7 merged block
+                        Bitmap explodeMap = (ani.count % 2 == 0)?
+                                blockImages.get(ani.index).destroyMap :
+                                blockImages.get(ani.index).bitmap; // .explodeMaps[ani.count];
+                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize - gInfo.explodeGap;
+                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize - gInfo.explodeGap;
+                        canvas.drawBitmap(explodeMap, xPos, yPos, null);
+                        ani.count++;
+                        ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        gInfo.aniStacks.set(i, ani);
+                    }
+                }
+                break;
+
             case MERGE:
                 if (ani.timeStamp < System.currentTimeMillis() ) {
                     if (ani.count >= ani.maxCount) {    // smooth factor
                         gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.MERGED;
                         gInfo.cells[ani.xS][ani.yS].index = ani.index;
                         ani.count = 111;
-//                        gInfo.aniStacks.remove(i);
                     } else {
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;

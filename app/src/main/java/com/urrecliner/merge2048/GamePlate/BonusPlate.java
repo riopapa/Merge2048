@@ -33,7 +33,7 @@ public class BonusPlate {
 
         bonuses.add(new BonusRotate(xS, yS, idx, loopCount,
                 gInfo.blockOutSize * (- xS) / loopCount,
-                gInfo.blockOutSize * (gInfo.yBlockCnt - yS + 1)/ loopCount, 40));
+                gInfo.blockOutSize * (gInfo.Y_BLOCK_CNT - yS + 1)/ loopCount, 40));
     }
 
     public void draw(Canvas canvas) {

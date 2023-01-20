@@ -6,7 +6,6 @@ package com.urrecliner.merge2048.GamePlate;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
@@ -27,8 +26,7 @@ public class GameOverPlate {
     public GameOverPlate(GInfo gInfo, Context context){
         this.gInfo = gInfo;
         gOverPaint = new Paint();
-        gOverPaint.setTextSize(gInfo.piece +gInfo.piece);
-        gOverPaint.setColor(Color.RED);
+        gOverPaint.setTextSize(gInfo.piece + gInfo.piece);
         gOverPaint.setTextAlign(Paint.Align.CENTER);
         gOverPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         gOverPaint.setStrokeWidth(32);
@@ -39,15 +37,17 @@ public class GameOverPlate {
         xOverPos = gInfo.screenXSize/2;
         yOverPos = gInfo.yDownOffset/2;
         yOverPosTop = gInfo.blockIconSize * 2;
-        yOverPosBottom = gInfo.blockOutSize * (gInfo.yBlockCnt -1);
+        yOverPosBottom = gInfo.blockOutSize * (gInfo.Y_BLOCK_CNT -1);
         yOverInc = gInfo.blockInSize / 32;
     }
 
     public void draw(Canvas canvas) {
         if (!gInfo.isGameOver)
             return;
+        if (gInfo.aniStacks.size() > 0)
+            return;
         waitCount++;
-        if (waitCount > 12) {
+        if (waitCount > 30) {
             waitCount = 0;
             showSwitch = !showSwitch;
         }
@@ -56,13 +56,30 @@ public class GameOverPlate {
             yOverInc = - yOverInc;
         }
 
-        gOverPaint.setStrokeWidth(60);
+        gOverPaint.setStrokeWidth(40);
+        gOverPaint.setTextSize(gInfo.piece + gInfo.piece/3f);
         gOverPaint.setColor((showSwitch) ? overColor0 : overColor1);
         canvas.drawText("Game Over", xOverPos, yOverPos, gOverPaint);
         gOverPaint.setColor((showSwitch) ? overColor1 : overColor0);
-        gOverPaint.setStrokeWidth(0);
+        gOverPaint.setStrokeWidth(12);
         canvas.drawText("Game Over", xOverPos, yOverPos, gOverPaint);
 
+        if (gInfo.is2048) {
+            gOverPaint.setTextSize(gInfo.piece*8/10f);
+            gOverPaint.setStrokeWidth(20);
+            gOverPaint.setColor((showSwitch) ? overColor0 : overColor1);
+            canvas.drawText("2048 이상을 지우고", xOverPos, yOverPos+208, gOverPaint);
+            gOverPaint.setColor((showSwitch) ? overColor1 : overColor0);
+            gOverPaint.setStrokeWidth(2);
+            canvas.drawText("2048 이상을 지우고", xOverPos, yOverPos+208, gOverPaint);
+            gOverPaint.setTextSize(gInfo.piece*8/10f);
+            gOverPaint.setStrokeWidth(20);
+            gOverPaint.setColor((showSwitch) ? overColor0 : overColor1);
+            canvas.drawText("계속할까요?", xOverPos, yOverPos+408, gOverPaint);
+            gOverPaint.setColor((showSwitch) ? overColor1 : overColor0);
+            gOverPaint.setStrokeWidth(2);
+            canvas.drawText("계속할까요?", xOverPos, yOverPos+408, gOverPaint);
+        }
     }
 
 }
