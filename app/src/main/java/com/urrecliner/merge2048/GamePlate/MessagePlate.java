@@ -6,8 +6,11 @@ package com.urrecliner.merge2048.GamePlate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 
 import androidx.core.content.ContextCompat;
 
@@ -45,12 +48,9 @@ public class MessagePlate {
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgMapSize = gInfo.screenXSize*3/5;
-        msgBoxMap = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
-        Canvas canvas0 = new Canvas(msgBoxMap);
-        canvas0.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
-//        msg1Map = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
-//        Canvas canvas1 = new Canvas(msg1Map);
-//        canvas1.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox1Paint);
+//        canvas0.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
+
+        msgBoxMap = get_Merge_2048(context);
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
@@ -62,6 +62,18 @@ public class MessagePlate {
         line_colorIn = ContextCompat.getColor(context, R.color.msg_line_in);
     }
 
+    private Bitmap get_Merge_2048(Context context) {
+
+        Bitmap map = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(map);
+        Paint p = new Paint();
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
+        p.setAlpha(120);
+        Bitmap img = Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(), R.mipmap.merge_2048, null), msgMapSize, msgMapSize, false);
+        canvas.drawBitmap(img, 0, 0, p);
+        return map;
+    }
     public void draw(Canvas canvas) {
         long nowTime = System.currentTimeMillis();
         if (gInfo.msgHead.length() == 0 && gInfo.msgStartTime < nowTime)

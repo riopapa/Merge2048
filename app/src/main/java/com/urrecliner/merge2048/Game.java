@@ -107,11 +107,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.aniStacks.size() > 0)
             return;
 
-        if (gInfo.isGameOver && gInfo.continueYes) {
-            checkGameOver.destroy();
-            return;
-        }
-
         /*
         *   check state info and then ...
          */
@@ -188,6 +183,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (gInfo.aniStacks.size() > 0)
             return;
+
+        if (gInfo.isGameOver && gInfo.continueYes) {
+            checkGameOver.destroy();
+            return;
+        }
 
         if (gInfo.isGameOver) {
             if (!gInfo.is2048)

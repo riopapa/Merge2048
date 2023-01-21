@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.urrecliner.merge2048.GameObject.AniStack;
 
+import java.util.Random;
+
 public class AnimationAdd {
 
     final GInfo gInfo;
@@ -22,6 +24,7 @@ public class AnimationAdd {
             maxCount = 3;
         else
             maxCount = 4;
+        maxCount += new Random().nextInt(2);
 
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MOVING, xS, yS, xF, yF,
                 gInfo.blockOutSize * (xF - xS) / maxCount,

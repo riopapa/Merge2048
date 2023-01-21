@@ -12,6 +12,7 @@ import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.GameObject.AniStack;
 
 import java.util.List;
+import java.util.Random;
 
 public class Animation {
 
@@ -98,6 +99,7 @@ public class Animation {
                         canvas.drawBitmap(blockMap, xPos, yPos, null);
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        ani.delay += new Random().nextInt(10) + 5;
                         gInfo.aniStacks.set(i, ani);
                     }
                 }
@@ -117,6 +119,7 @@ public class Animation {
                                 + ani.yInc * ani.count - gInfo.explodeGap;
                         canvas.drawBitmap(explodeMap, xPos, yPos, null);
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        ani.delay += new Random().nextInt(20) + 5;
                         ani.count++;
                         gInfo.aniStacks.set(i, ani);
                     }
