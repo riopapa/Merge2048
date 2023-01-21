@@ -15,21 +15,14 @@ public class AnimationAdd {
         this.smooth = smooth;
     }
 
-
     public void addMove(int xS, int yS, int xF, int yF, int block) {
-        int maxCount = (Math.abs(yF-yS)+1)*(Math.abs(xF-xS)+1);
-        if (maxCount < 3)
-            maxCount = 2;
-        else if (maxCount < 6)
-            maxCount = 3;
-        else
+        int maxCount = 2 + yS - yF;
+        if (maxCount > 4)
             maxCount = 4;
-        maxCount += new Random().nextInt(2);
-
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MOVING, xS, yS, xF, yF,
                 gInfo.blockOutSize * (xF - xS) / maxCount,
                 gInfo.blockOutSize * (yF - yS)/ maxCount,
-                maxCount, getNextTime(), block));
+                maxCount, getNextTime() + new Random().nextInt(20), block));
     }
 
     public void addMerge(int x, int y, int index) {

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
@@ -59,7 +60,8 @@ public class BasePlate {
 
         horizonPaint = new Paint();
         horizonPaint.setColor(ContextCompat.getColor(context, R.color.horizon_line));
-        horizonPaint.setStrokeWidth(4);
+        horizonPaint.setStrokeWidth(8);
+        horizonPaint.setPathEffect(new DashPathEffect(new float[] {40, 8}, 0));
         yLinePos = (gInfo.yDownOffset + gInfo.yUpOffset + blockOutSize*yBlockCnt) / 2;
 
         yesNoPaint = new Paint();
@@ -109,7 +111,7 @@ public class BasePlate {
                     (x%2 == 0) ? vPath1Paint:vPath2Paint);
         }
 
-        // line at shoot
+        // horizon line at shoot
         canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
 
         // new Icon

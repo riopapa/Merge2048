@@ -98,8 +98,9 @@ public class Animation {
                                 + ani.yInc * ani.count - gInfo.blockFlyingGap;
                         canvas.drawBitmap(blockMap, xPos, yPos, null);
                         ani.count++;
-                        ani.timeStamp = System.currentTimeMillis() + ani.delay;
-                        ani.delay += new Random().nextInt(10) + 5;
+                        ani.timeStamp = System.currentTimeMillis() + ani.delay
+                            + new Random().nextInt(30);
+                        ani.delay += new Random().nextInt(6) + 6;
                         gInfo.aniStacks.set(i, ani);
                     }
                 }

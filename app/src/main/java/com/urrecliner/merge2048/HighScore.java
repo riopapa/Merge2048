@@ -58,10 +58,10 @@ public class HighScore {
     void reset() {
         gInfo.highMembers = new ArrayList<>();
         gInfo.highMembers.add(new HighMember(88888, "riopapa",
-                System.currentTimeMillis()-240000));
+                System.currentTimeMillis()-960000));
         gInfo.highMembers.add(new HighMember(44444, "riopapa",
-                System.currentTimeMillis()-120000));
+                System.currentTimeMillis()-480000));
         gInfo.highMembers.add(new HighMember(22222, "riopapa",
-                System.currentTimeMillis()-60000));
+                System.currentTimeMillis()-120000));
     }
 }

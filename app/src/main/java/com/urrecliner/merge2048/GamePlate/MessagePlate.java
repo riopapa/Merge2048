@@ -35,7 +35,7 @@ public class MessagePlate {
 
         msgBox0Paint = new Paint();
         msgBox0Paint.setColor(ContextCompat.getColor(context, R.color.msg_background0));
-        msgBox0Paint.setAlpha(200);
+        msgBox0Paint.setAlpha(150);
 
         msgHeadPaint = new Paint();
         msgHeadPaint.setTextSize(gInfo.piece*7f/9);
@@ -48,9 +48,9 @@ public class MessagePlate {
         msgLinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         msgMapSize = gInfo.screenXSize*3/5;
-//        canvas0.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
-
         msgBoxMap = get_Merge_2048(context);
+        Canvas canvas = new Canvas(msgBoxMap);
+        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
