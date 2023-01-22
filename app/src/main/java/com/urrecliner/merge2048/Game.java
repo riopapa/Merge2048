@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.urrecliner.merge2048.GamePlate.YesNoPlate;
 import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameImage.BlockImage;
 import com.urrecliner.merge2048.Sub.MakeBlockImage;
@@ -22,7 +23,6 @@ import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 import com.urrecliner.merge2048.Sub.TouchEvent;
-import com.urrecliner.merge2048.Sub.UserName;
 
 import java.util.List;
 
@@ -37,6 +37,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final BonusPlate bonusPlate;
     private final RotatePlate rotatePlate;
     private final MessagePlate messagePlate;
+    private final YesNoPlate yesNoPlate;
     private final CheckNearItem checkNearItem;
     private final HighScore highScore;
     private final CheckGameOver checkGameOver;
@@ -77,7 +78,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         basePlate = new BasePlate(gInfo, context);
         gameOverPlate = new GameOverPlate(gInfo, context);
         scorePlate = new ScorePlate(gInfo, context);
-        touchEvent = new TouchEvent(gInfo);     // touchEvent should be followed by scorePlate
+        yesNoPlate = new YesNoPlate(gInfo, context);
+        touchEvent = new TouchEvent(gInfo);     // touchEvent should be after scorePlate
 
         nextPlate.generateNextBlock(true);
         new NewGame(gInfo, messagePlate, highScore, context);
@@ -262,12 +264,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         rotatePlate.draw(canvas);
         gameOverPlate.draw(canvas);
         messagePlate.draw(canvas);
+        yesNoPlate.draw(canvas);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        performClick();
+//        performClick();
         touchEvent.check(event);
         return super.onTouchEvent(event);
     }
