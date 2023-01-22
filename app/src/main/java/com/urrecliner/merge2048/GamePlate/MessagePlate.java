@@ -49,8 +49,6 @@ public class MessagePlate {
 
         msgMapSize = gInfo.screenXSize*3/5;
         msgBoxMap = get_Merge_2048(context);
-        Canvas canvas = new Canvas(msgBoxMap);
-        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
 
         xMapPos = (gInfo.screenXSize- msgMapSize)/2;
         xBoxPos = gInfo.screenXSize/2;
@@ -66,6 +64,8 @@ public class MessagePlate {
 
         Bitmap map = Bitmap.createBitmap(msgMapSize, msgMapSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(map);
+        canvas.drawRoundRect(0, 0, msgMapSize, msgMapSize, msgMapSize/10f, msgMapSize/10f, msgBox0Paint);
+
         Paint p = new Paint();
         p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
         p.setAlpha(120);
@@ -74,6 +74,7 @@ public class MessagePlate {
         canvas.drawBitmap(img, 0, 0, p);
         return map;
     }
+
     public void draw(Canvas canvas) {
         long nowTime = System.currentTimeMillis();
         if (gInfo.msgHead.length() == 0 && gInfo.msgStartTime < nowTime)

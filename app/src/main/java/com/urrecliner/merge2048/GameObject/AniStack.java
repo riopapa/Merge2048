@@ -26,7 +26,7 @@ public class AniStack {
         this.timeStamp = timeStamp;
         this.index = index;
         count = 0;
-        delay = 8;
+        delay = 0;  // move with no delay
     }
 
     // state EXPLODE

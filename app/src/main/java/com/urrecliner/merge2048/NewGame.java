@@ -7,7 +7,7 @@ public class NewGame {
     public NewGame(GInfo gInfo, MessagePlate messagePlate, HighScore highScore, NextPlate nextPlate) {
 
         messagePlate.set("Welcome", "게임을", "시작합니다",
-                System.currentTimeMillis(), 1000);
+                System.currentTimeMillis(), 2000);
 
         gInfo.resetValues();
         highScore.get();
