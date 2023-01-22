@@ -10,8 +10,9 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameImage.BlockImage;
-import com.urrecliner.merge2048.GameImage.BlockImageMake;
+import com.urrecliner.merge2048.Sub.MakeBlockImage;
 import com.urrecliner.merge2048.GamePlate.BasePlate;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.GameOverPlate;
@@ -20,6 +21,8 @@ import com.urrecliner.merge2048.GamePlate.MessagePlate;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
+import com.urrecliner.merge2048.Sub.TouchEvent;
+import com.urrecliner.merge2048.Sub.UserName;
 
 import java.util.List;
 
@@ -57,7 +60,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         xBlockCnt = gInfo.X_BLOCK_CNT; yBlockCnt = gInfo.Y_BLOCK_CNT;
 
-        List<BlockImage> blockImages = new BlockImageMake().make(context, gInfo);
+        List<BlockImage> blockImages = new MakeBlockImage().make(context, gInfo);
 
         animation = new Animation(gInfo, blockImages, SMOOTH);
         animationAdd = new AnimationAdd(gInfo, SMOOTH);
@@ -76,7 +79,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         scorePlate = new ScorePlate(gInfo, context);
         touchEvent = new TouchEvent(gInfo);     // touchEvent should be followed by scorePlate
 
-        new NewGame(gInfo, messagePlate, highScore, nextPlate);
+        nextPlate.generateNextBlock(true);
+        new NewGame(gInfo, messagePlate, highScore, context);
+        nextPlate.generateNextBlock(true);
     }
 
     @Override
@@ -94,14 +99,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.startNewGameYes) {
             gInfo.startNewGameYes = false;
             highScore.put();
-            new NewGame(gInfo, messagePlate, highScore, nextPlate);
+            nextPlate.generateNextBlock(true);
+            new NewGame(gInfo, messagePlate, highScore, context);
             return;
         }
 
         if (gInfo.dumpClicked) {
             gInfo.dumpClicked = false;
             if (gInfo.dumpCount > 3) {
-                new DumpCells(gInfo, checkNearItem, nextPlate, "Dump Old");
+                new DumpCells(gInfo, nextPlate, "Dump Old");
             }
         }
         if (gInfo.aniStacks.size() > 0)
@@ -197,9 +203,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             if (gInfo.bonusCount > 0 && new CheckState().paused(gInfo))
                 new ShowBonus(gInfo, bonusX, bonusY, bonusPlate, messagePlate);
 
-            if (gInfo.swing && nextPlate.nextIndex != -1)
-                gInfo.updateSwing();
-
             if (gInfo.showNextPressed) {
                 gInfo.showNextPressed = false;
                 gInfo.showCount--;
@@ -214,7 +217,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 gInfo.swing = !gInfo.swing;
                 messagePlate.set("블럭 움직이기", (gInfo.swing) ? "움직이니까" : "고정됩니다",
                         (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 2300);
-                gInfo.resetSwing();
+                nextPlate.resetSwing();
 
             } else if (gInfo.swapPressed) {
                 gInfo.swapPressed = false;

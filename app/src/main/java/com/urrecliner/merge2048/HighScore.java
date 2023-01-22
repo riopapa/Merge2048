@@ -36,6 +36,7 @@ public class HighScore {
         } else {
             reset();
         }
+        gInfo.userName = sharedPref.getString("userName","Me");
 
     }
 
@@ -45,7 +46,10 @@ public class HighScore {
         for (int i = 0; i < gInfo.highMembers.size(); i++) {
             HighMember hm = gInfo.highMembers.get(i);
             if (hm.who.equals(highHeart)) {
-                hm.who = "Me";
+                if (gInfo.userName.equals(""))
+                    hm.who = "Me";
+                else
+                    hm.who = gInfo.userName;
                 gInfo.highMembers.set(i, hm);
             }
         }

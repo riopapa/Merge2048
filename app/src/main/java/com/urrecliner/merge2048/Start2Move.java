@@ -1,5 +1,6 @@
 package com.urrecliner.merge2048;
 
+import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
 
@@ -14,7 +15,7 @@ public class Start2Move {
         if (nextPlate.nextIndex == -1)
             return;
         if (gInfo.dumpCount > 4)
-            new DumpCells(gInfo, checkNearItem, nextPlate, "Start2Move");
+            new DumpCells(gInfo, nextPlate, "Start2Move");
         int x = gInfo.shootIndex;
         Cell cell = gInfo.cells[x][gInfo.Y_BLOCK_CNT -1];
         if (cell.index == 0) {  // empty cell, so start to move

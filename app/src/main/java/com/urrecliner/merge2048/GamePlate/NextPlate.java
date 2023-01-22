@@ -29,7 +29,10 @@ public class NextPlate {
 
     Paint nextPaint;
 
-    public int xNextPos, nextIndex, nextNextIndex;
+    public int nextIndex, nextNextIndex;
+
+    public int swingXInc, swingXMaxLeft, swingXMaxRight;
+    long swingTime, swingDelay;
 
     public NextPlate(GInfo gInfo, Context context, List<BlockImage> blockImages) {
         this.gInfo = gInfo;
@@ -46,7 +49,10 @@ public class NextPlate {
 
         nextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
-        xNextPos = gInfo.xNextPosFixed;
+
+        swingXInc = blockOutSize / 5;   // 48
+        swingXMaxLeft = gInfo.xOffset - 32;   // 78
+        swingXMaxRight = gInfo.screenXSize - gInfo.xOffset -blockOutSize + 32;  // 1118
 
         xNextNextPos = gInfo.xNextPos + gInfo.blockOutSize / 4;
         yNextNextPos = gInfo.yNewPos;
@@ -59,6 +65,7 @@ public class NextPlate {
         swapMap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.a_swap), gInfo.blockIconSize, gInfo.blockIconSize, false);
+
     }
 
     public void generateNextBlock(boolean newIndex) {
@@ -92,6 +99,9 @@ public class NextPlate {
 
         if (nextIndex == -1)
             return;
+        if (gInfo.swing)
+            updateSwing();
+
         canvas.drawBitmap(blockImages.get(nextIndex).bitmap, gInfo.xNextPos, gInfo.yNextPos, null);
 
         if (gInfo.swapCount > 0)
@@ -108,6 +118,28 @@ public class NextPlate {
         }
 
         canvas.drawBitmap(swapMap, xSwapPos, ySwapPos,null);
+    }
+
+
+    void updateSwing() {
+        if (System.currentTimeMillis() > swingTime) {   // start swing left, right
+            gInfo.xNextPos += swingXInc;
+            if (gInfo.xNextPos > swingXMaxRight) {
+                gInfo.xNextPos = swingXMaxRight;
+                swingXInc = -swingXInc;
+            } else if (gInfo.xNextPos < swingXMaxLeft) {
+                gInfo.xNextPos = swingXMaxLeft;
+                swingXInc = -swingXInc;
+            }
+            swingTime = System.currentTimeMillis() + swingDelay;
+        }
+    }
+    public void resetSwing() {
+
+        gInfo.xNextPos = gInfo.xNextPosFixed;
+        swingDelay = 300 / (gInfo.gameDifficulty+2);
+        swingXInc = blockOutSize / 6;
+        swingTime = System.currentTimeMillis() + swingDelay;
     }
 
 }

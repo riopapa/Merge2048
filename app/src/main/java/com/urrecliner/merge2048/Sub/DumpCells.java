@@ -1,12 +1,13 @@
-package com.urrecliner.merge2048;
+package com.urrecliner.merge2048.Sub;
 
 import android.util.Log;
 
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
 
 public class DumpCells {
 
-    public DumpCells(GInfo gInfo, final CheckNearItem checkNearItem, final NextPlate nextPlate,
+    public DumpCells(GInfo gInfo, final NextPlate nextPlate,
                      String msg) {
         StringBuilder sb = new StringBuilder("    |    0        |    1        |    2        |    3        |    4 ");
         for (int y = 0; y < gInfo.Y_BLOCK_CNT; y++) {

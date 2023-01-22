@@ -2,6 +2,7 @@ package com.urrecliner.merge2048;
 
 import com.urrecliner.merge2048.GamePlate.BonusPlate;
 import com.urrecliner.merge2048.GamePlate.MessagePlate;
+import com.urrecliner.merge2048.Sub.PowerIndex;
 
 public class ShowBonus {
 
@@ -16,7 +17,6 @@ public class ShowBonus {
                         "큰 블럭("+new PowerIndex().power(gInfo.gameDifficulty+1)+")이",
                         "나올 수 있어요",
                         System.currentTimeMillis() + 1500, 2500);
-                gInfo.swingDelay = 800 / (gInfo.gameDifficulty+2);
             }
         }
         gInfo.bonusCount = 0;

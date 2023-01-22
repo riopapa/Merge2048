@@ -1,5 +1,6 @@
-package com.urrecliner.merge2048;
+package com.urrecliner.merge2048.Sub;
 
+import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.GameObject.Cell;
 
 public class ClearCells {

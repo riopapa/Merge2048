@@ -1,5 +1,7 @@
 package com.urrecliner.merge2048;
 
+import com.urrecliner.merge2048.Sub.PowerIndex;
+
 public class CheckNearItem {
     final Animation animation;
     final AnimationAdd animationAdd;

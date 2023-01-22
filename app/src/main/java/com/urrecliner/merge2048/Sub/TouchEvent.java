@@ -1,6 +1,8 @@
-package com.urrecliner.merge2048;
+package com.urrecliner.merge2048.Sub;
 
 import android.view.MotionEvent;
+
+import com.urrecliner.merge2048.GInfo;
 
 public class TouchEvent {
 
@@ -14,6 +16,8 @@ public class TouchEvent {
     private final int xSwingPosS, ySwingPosS, xSwingPosE, ySwingPosE;
     private final int xSwapPosS, ySwapPosS, xSwapPosE, ySwapPosE;
     private final int xHighPosS, xHighPosE, yHighPosS, yHighPosE;
+    private final int xYesPosS, xYesPosE, xNopPosS, xNopPosE;
+    private final int yYesPosS, yYesPosE, yNopPosS, yNopPosE;
 
     public TouchEvent (GInfo gInfo) {
         this.gInfo = gInfo;
@@ -23,13 +27,11 @@ public class TouchEvent {
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
 
-        xNewPosS = gInfo.xNewPos;
-        yNewPosS = gInfo.yNewPos;
+        xNewPosS = gInfo.xNewPos;       yNewPosS = gInfo.yNewPos;
         xNewPosE = xNewPosS + gInfo.blockIconSize;
         yNewPosE = yNewPosS+ gInfo.blockIconSize;
 
-        xQuitPosS = gInfo.xQuitPos;
-        yQuitPosS = gInfo.yQuitPos;
+        xQuitPosS = gInfo.xQuitPos;     yQuitPosS = gInfo.yQuitPos;
         xQuitPosE = xQuitPosS + gInfo.blockIconSize;
         yQuitPosE = yQuitPosS + gInfo.blockIconSize;
 
@@ -43,20 +45,24 @@ public class TouchEvent {
         xSwingPosE = xSwingPosS + gInfo.blockIconSize;
         ySwingPosE = ySwingPosS + gInfo.blockIconSize;
 
-        xSwapPosS = gInfo.xSwapPos;
-        ySwapPosS = gInfo.ySwapPos;
+        xSwapPosS = gInfo.xSwapPos;     ySwapPosS = gInfo.ySwapPos;
         xSwapPosE = xSwapPosS + gInfo.blockIconSize;
         ySwapPosE = ySwapPosS + gInfo.blockIconSize;
 
-        xHighPosS = gInfo.xHighPosS;
-        xHighPosE = gInfo.xHighPosE;
-        yHighPosS = gInfo.yHighPosS;
-        yHighPosE = gInfo.yHighPosE;
+        xHighPosS = gInfo.xHighPosS;    xHighPosE = gInfo.xHighPosE;
+        yHighPosS = gInfo.yHighPosS;    yHighPosE = gInfo.yHighPosE;
+
+        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + gInfo.blockIconSize;
+        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + gInfo.blockIconSize;
+
+        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + gInfo.blockIconSize;
+        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + gInfo.blockIconSize;
+
     }
     
     public void check(MotionEvent event) {
 
-        // Handle user input touch event actions
+        // Handle user get touch event actions
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -68,7 +74,7 @@ public class TouchEvent {
                     gInfo.dumpClicked = true;
                     gInfo.dumpCount++;
                 }
-                if (yTouchPos < yDownOffset)
+                if (yTouchPos < yYesPosS)
                     return;
                 if (gInfo.newGamePressed) {
                     if (gInfo.isGameOver || isYesPressed()) {
@@ -158,15 +164,13 @@ public class TouchEvent {
     }
 
     boolean isYesPressed() {
-        return  (xTouchPos >= xNewPosE &&
-                xTouchPos <= xNewPosE + gInfo.blockOutSize*4/5 &&
-                yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
+        return  (xTouchPos >= xYesPosS && xTouchPos <= xYesPosE &&
+                yTouchPos >= yYesPosS && yTouchPos <= yYesPosE);
     }
 
     boolean isNoPressed() {
-        return  (xTouchPos >= xNewPosE + gInfo.blockOutSize*4/5 &&
-                xTouchPos <= xNewPosE + gInfo.blockOutSize*8/5 &&
-                yTouchPos >= yNewPosS && yTouchPos <= yNewPosE);
+        return  (xTouchPos >= xNopPosS && xTouchPos <= xNopPosE &&
+                yTouchPos >= yNopPosS && yTouchPos <= yNopPosE);
     }
 
     boolean isSwingPressed() {
@@ -182,7 +186,7 @@ public class TouchEvent {
     }
 
     boolean isShootPressed() {
-        return  yTouchPos <= yNextBottom;
+        return  yTouchPos <= yNextBottom && yTouchPos > yNextBottom - blockOutSize;
     }
 
     boolean isNextPressed() {

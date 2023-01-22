@@ -22,11 +22,12 @@ public class BasePlate {
     private final int blockOutSize, blockIconSize;
     private final int xOffset, yUpOffset, xRight, yLinePos;
     private final int xLeft, yNextBottom;
-    private final int xNewPos, yNewPos, xQuitPos, yQuitPos, xYesPos, xNopPos, xSwingPos, ySwingPos;
-    private final Bitmap newMap, yesMap, yesSmallMap, noMap, noSmallMap, swingOnMap, swingOffMap, quitMap;
+    private final int xNewPos, yNewPos, xQuitPos, yQuitPos, xYesPos, xNopPos, yYesPos, yNopPos;
+    private final int xUndoPos, yUndoPos, xSwingPos, ySwingPos;
+    private final Bitmap newMap, newSmallMap, yesMap, yesSmallMap, noMap, noSmallMap, swingOnMap, swingOffMap, quitMap, quitSmallMap, undoMap;
 
-    private boolean yesNo;
-    private long yesNoTime;
+    private boolean yesNo, newNo, quitNo;
+    private long yesNoWaitTime, newWaitTime, quitWaitTime;
 
     public BasePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -48,16 +49,15 @@ public class BasePlate {
         vPath2Paint.setColor(ContextCompat.getColor(context, R.color.board1));
         vPath2Paint.setAlpha(230);
 
-        xLeft = xOffset-4;
-        yNextBottom = gInfo.yNextPos + blockOutSize + 4;
-        xRight = gInfo.screenXSize - xOffset;
-        xNewPos = gInfo.xNewPos;
-        yNewPos = gInfo.yNewPos;
-        xQuitPos = gInfo.screenXSize-xOffset-blockIconSize; yQuitPos = gInfo.yNewPos;
-        xYesPos = xNewPos + blockIconSize;
-        xNopPos = xNewPos + blockIconSize * 2;
-        xSwingPos = xNewPos; ySwingPos = yNewPos + blockIconSize;
+        xLeft = xOffset-4;                  xRight = gInfo.screenXSize - xOffset;
+        xNewPos = gInfo.xNewPos;            yNewPos = gInfo.yNewPos;
+        xQuitPos = gInfo.xQuitPos;          yQuitPos = gInfo.yQuitPos;
+        xUndoPos = gInfo.xUndoPos;          yUndoPos = gInfo.yUndoPos;
+        xSwingPos = gInfo.xSwingPos;        ySwingPos = gInfo.ySwingPos;
+        xYesPos = gInfo.xYesPos;            yYesPos = gInfo.yYesPos;
+        xNopPos = gInfo.xNopPos;             yNopPos  = gInfo.yNopPos;
 
+        yNextBottom = gInfo.yNextPos + blockOutSize + 4;
         horizonPaint = new Paint();
         horizonPaint.setColor(ContextCompat.getColor(context, R.color.horizon_line));
         horizonPaint.setStrokeWidth(8);
@@ -69,15 +69,15 @@ public class BasePlate {
         yesNoPaint.setStrokeWidth(6);
         yesNoPaint.setStyle(Paint.Style.STROKE);
 
-        newMap = buildMap (R.drawable.a_new);
-        yesMap = buildMap (R.drawable.a_yes);
-        yesSmallMap = yesNoSmall(yesMap);
-        noMap = buildMap (R.drawable.a_no);
-        noSmallMap = yesNoSmall(noMap);
-        quitMap = buildMap(R.drawable.a_quit);
+        newMap = buildMap (R.drawable.a_new);       newSmallMap = makeBlink(newMap);
+        yesMap = buildMap (R.drawable.a_yes);       yesSmallMap = makeBlink(yesMap);
+        noMap = buildMap (R.drawable.a_no);         noSmallMap = makeBlink(noMap);
+        quitMap = buildMap(R.drawable.a_quit);      quitSmallMap = makeBlink(quitMap);
 
         swingOnMap = buildMap(R.drawable.a_swing_on);
         swingOffMap = buildMap(R.drawable.a_swing_off);
+
+        undoMap = buildMap(R.drawable.undo_click);
     }
 
     Bitmap buildMap(int resId) {
@@ -85,7 +85,7 @@ public class BasePlate {
         return Bitmap.createScaledBitmap(bitmap, blockIconSize-4, blockIconSize-4, false);
     }
 
-    Bitmap yesNoSmall(Bitmap bitmap) {
+    Bitmap makeBlink(Bitmap bitmap) {
         Bitmap bMap = Bitmap.createBitmap(blockIconSize, blockIconSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bMap);
         Bitmap sMap = Bitmap.createScaledBitmap(bitmap, blockIconSize-8, blockIconSize-8, false);
@@ -115,22 +115,46 @@ public class BasePlate {
         canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
 
         // new Icon
-        canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+
+        if (gInfo.newGamePressed) {
+            if (newWaitTime < System.currentTimeMillis()) {
+                newWaitTime = System.currentTimeMillis() + 111;
+                newNo = !newNo;
+            }
+            canvas.drawBitmap((newNo) ? newMap : newSmallMap, xNewPos, yNewPos,null);
+        } else
+            canvas.drawBitmap(newMap, xNewPos, yNewPos,null);
+
         // quit Icon
-        canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
+
+        if (gInfo.quitGamePressed) {
+            if (quitWaitTime < System.currentTimeMillis()) {
+                quitWaitTime = System.currentTimeMillis() + 111;
+                quitNo = !quitNo;
+            }
+            canvas.drawBitmap((quitNo) ? quitMap : quitSmallMap, xQuitPos, yQuitPos,null);
+        } else
+            canvas.drawBitmap(quitMap, xQuitPos, yQuitPos,null);
+
+        // undo Icon
+
+        canvas.drawBitmap(undoMap, xUndoPos, yUndoPos,null);
 
         // yes, no
+
         if (gInfo.newGamePressed || gInfo.quitGamePressed || (gInfo.isGameOver && gInfo.is2048)) {
-            canvas.drawRoundRect(xYesPos-2, yNewPos-2,
-                    xNewPos+ blockIconSize*3, yNewPos+ blockIconSize,
+            canvas.drawRoundRect(xYesPos-2, yYesPos-2,
+                    xNopPos+ blockIconSize+2, yNopPos+ blockIconSize+2,
                         4,4, yesNoPaint);
-            canvas.drawBitmap((yesNo) ? yesMap : yesSmallMap, xYesPos, yNewPos,null);
-            canvas.drawBitmap((yesNo) ? noMap : noSmallMap, xNopPos, yNewPos,null);
-            if (yesNoTime <System.currentTimeMillis()) {
-                yesNoTime = System.currentTimeMillis() + 222;
+            canvas.drawBitmap((yesNo) ? yesMap : yesSmallMap, xYesPos, yYesPos,null);
+            canvas.drawBitmap((yesNo) ? noMap : noSmallMap, xNopPos, yNopPos,null);
+            if (yesNoWaitTime <System.currentTimeMillis()) {
+                yesNoWaitTime = System.currentTimeMillis() + 222;
                 yesNo = !yesNo;
             }
         }
+
+        // swing Icon
         canvas.drawBitmap((gInfo.swing)? swingOnMap:swingOffMap, xSwingPos, ySwingPos,null);
 
     }

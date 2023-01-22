@@ -21,26 +21,29 @@ public class GInfo {
     public final int blockFlyingGap;    // bigger size while moving
     public final int explodeGap;        // explode is a little larger
     public final int xOffset, yUpOffset, yDownOffset, xNextPosFixed;
-    public final int xNewPos, yNewPos, xQuitPos, yQuitPos, yNextPos;
-    public final int xNextNextPos, yNextNextPos, xSwingPos, ySwingPos, xSwapPos, ySwapPos;
-    public final int swingXPosLeft, swingXPosRight;
+    public final int xNewPos, yNewPos, xUndoPos, yUndoPos, xYesPos, yYesPos, xNopPos, yNopPos;
+    public final int xSwingPos, ySwingPos, xQuitPos, yQuitPos;
+    public final int xNextNextPos, yNextNextPos;
+    public final int xSwapPos, ySwapPos;
+
     public final int bonusLoopCount = 12;
     public final int piece; // small pixel size for calculation sizes
     public final Cell[][] cells;
+    public final List<Cell[][]> svCells;
     public final int CONTINUE_INDEX = 10;  // if achieved this index game can be continued
+
     public long scoreNow;
     public int score2Add;
     public List<HighMember> highMembers;
+    public String userName = "";
     public long highLowScore;
-
-    public int xNextPos;
+    public int undoCount;
+    public int xNextPos, yNextPos;
     public int bonusCount, bonusStacked = 0;
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean swingPressed = false, swing = false;
     public boolean swapPressed = false, swap = false;
-    public int swingXInc;
-    public long swingTime, swingDelay;
     public boolean is2048 = false, continueYes = false;
 
     public boolean showNextPressed = false, showNext = true;
@@ -64,6 +67,7 @@ public class GInfo {
     public int highTouchCount;
     public boolean highTouchPressed;
 
+
     public enum STATE {
         PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED, DESTROY
     }
@@ -83,7 +87,7 @@ public class GInfo {
         xOffset = (screenXSize - X_BLOCK_CNT * blockOutSize) / 2; // note20 110
         yUpOffset = screenYSize / 80;   // ~= 35;
         yDownOffset = yUpOffset + Y_BLOCK_CNT * blockOutSize + yUpOffset/3;  // next block top 1510
-        blockIconSize = (screenXSize - blockOutSize) / 3 / 2;   // note20 199
+        blockIconSize = blockOutSize * 3 / 4;   // note20 183
         explodeGap = blockInSize / 8;  // note20 48
         piece = screenXSize / 12;   // 120
 
@@ -95,20 +99,14 @@ public class GInfo {
 
         xNewPos = xNextPosFixed + blockOutSize - 8;    //  note20 834
         yNewPos = yNextPos + blockOutSize + 16;
-
-        xSwingPos = xNewPos;
-        ySwingPos = yNewPos + blockIconSize;
-        swingXInc = blockOutSize / 5;   // 48
-        swingXPosLeft = xOffset - 32;   // 78
-        swingXPosRight = screenXSize - xOffset -blockOutSize + 32;  // 1118
-
-        xQuitPos = screenXSize-xOffset-blockIconSize;
-        yQuitPos = yNewPos;
-
-        xSwapPos = screenXSize-xOffset-blockIconSize;
-        ySwapPos = ySwingPos;
-
+        xQuitPos = xNewPos + blockIconSize;         yQuitPos = yNewPos;
+        xUndoPos = xQuitPos + blockIconSize;        yUndoPos = yNewPos;
+        xSwingPos = xNewPos;                        ySwingPos = yNewPos + blockIconSize;
+        xSwapPos = xNewPos + blockIconSize;         ySwapPos = yNewPos + blockIconSize;
+        xYesPos = screenXSize/2 - blockIconSize;    xNopPos = screenXSize/2;
+        yYesPos = yDownOffset - blockOutSize*2;     yNopPos = yYesPos;
         cells = new Cell[X_BLOCK_CNT][Y_BLOCK_CNT];
+        svCells = new ArrayList<>();
         resetValues();
     }
 
@@ -122,32 +120,13 @@ public class GInfo {
         dumpCount = 0;
         swapCount = 3;
         showCount = 5;
+        undoCount = 4;
         xNextPos = xNextPosFixed;
         highTouchPressed = false;
         highTouchCount = 0;
         is2048 = false;
         continueYes = false;
-    }
-
-    public void resetSwing() {
-
-        xNextPos = xNextPosFixed;
-        swingDelay = 300 / (gameDifficulty+2);
-        swingXInc = blockOutSize / 6;
-        swingTime = System.currentTimeMillis() + swingDelay;
-    }
-
-    public void updateSwing() {
-        if (System.currentTimeMillis() > swingTime) {   // start swing left, right
-            xNextPos += swingXInc;
-            if (xNextPos > swingXPosRight) {
-                xNextPos = swingXPosRight;
-                swingXInc = -swingXInc;
-            } else if (xNextPos < swingXPosLeft) {
-                xNextPos = swingXPosLeft;
-                swingXInc = -swingXInc;
-            }
-            swingTime = System.currentTimeMillis() + swingDelay;
-        }
+        while (svCells.size() > 0)
+            svCells.remove(0);
     }
 }
