@@ -25,6 +25,7 @@ import com.urrecliner.merge2048.GamePlate.NextPlate;
 import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 import com.urrecliner.merge2048.Sub.TouchEvent;
+import com.urrecliner.merge2048.Sub.UserName;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -84,9 +85,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         yesNoPlate = new YesNoPlate(gInfo, context);
         touchEvent = new TouchEvent(gInfo);     // touchEvent should be after scorePlate
 
-        nextPlate.setNextBlock();
-        new NewGame(gInfo, messagePlate, highScore, context);
-        nextPlate.setNextBlock();
+        highScore.get();
+        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
+
+        new NewGame(gInfo, messagePlate, nextPlate, context);
     }
 
     @Override
@@ -103,9 +105,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gInfo.startNewGameYes) {
             gInfo.startNewGameYes = false;
-            highScore.put();
-            nextPlate.setNextBlock();
-            new NewGame(gInfo, messagePlate, highScore, context);
+            if (highScore.isHighRanked())
+                new UserName(context, gInfo);
+            new NewGame(gInfo, messagePlate, nextPlate, context);
             return;
         }
 
@@ -201,10 +203,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (gInfo.isGameOver) {
-            if (!gInfo.is2048)
-                highScore.put();
-        } else {
+            if (!gInfo.is2048 && highScore.isHighRanked())
+                new UserName(context, gInfo);
 
+        } else {
             if (gInfo.bonusCount > 0 && new CheckState().paused(gInfo))
                 new ShowBonus(gInfo, bonusX, bonusY, bonusPlate, messagePlate);
 
@@ -244,7 +246,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.undoCount--;
                     if (gInfo.undoCount > 0)
                         messagePlate.set("블럭 취소", "앞으로",
-                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 3000);
+                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 1500);
                     Gson gson = new Gson();
                     int idx = gInfo.svCells.size()-1;
                     String json = gInfo.svCells.get(idx);
@@ -266,14 +268,16 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (gInfo.quitGame) {
-            highScore.put();
+            if (highScore.isHighRanked())
+                new UserName(context, gInfo);
             exitApp();
         } else if (gInfo.highTouchPressed) {
             gInfo.highTouchPressed = false;
             gInfo.highTouchCount++;
-            if (gInfo.highTouchCount > 6) {
-                highScore.reset();
+            if (gInfo.highTouchCount > 5) {
+                highScore.resetHigh();
                 highScore.put();
+
             }
         }
     }

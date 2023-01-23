@@ -2,10 +2,7 @@ package com.urrecliner.merge2048.GamePlate;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
@@ -18,10 +15,10 @@ public class BasePlate {
 
     Context context;
     final GInfo gInfo;
-    final Paint backPaint, vPath1Paint, vPath2Paint, vPathAPaint, vPathBPaint, horizonPaint;
+    final Paint backPaint, vPath1Paint, vPath2Paint, vPathAPaint, vPathBPaint;
     private final int xBlockCnt, yBlockCnt;
     private final int blockOutSize, blockIconSize;
-    private final int xOffset, yUpOffset, xRight, yLinePos;
+    private final int xOffset, yUpOffset;
     private final int xLeft, yNextBottom;
     private final int xNewPos, yNewPos, xQuitPos, yQuitPos;
     private final int xUndoPos, yUndoPos, xSwingPos, ySwingPos;
@@ -54,18 +51,13 @@ public class BasePlate {
         vPathBPaint = new Paint();
         vPathBPaint.setColor(ContextCompat.getColor(context, R.color.boardB));
 
-        xLeft = xOffset-4;                  xRight = gInfo.screenXSize - xOffset;
+        xLeft = xOffset-4;
         xNewPos = gInfo.xNewPos;            yNewPos = gInfo.yNewPos;
         xQuitPos = gInfo.xQuitPos;          yQuitPos = gInfo.yQuitPos;
         xUndoPos = gInfo.xUndoPos;          yUndoPos = gInfo.yUndoPos;
         xSwingPos = gInfo.xSwingPos;        ySwingPos = gInfo.ySwingPos;
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
-        horizonPaint = new Paint();
-        horizonPaint.setColor(ContextCompat.getColor(context, R.color.horizon_line));
-        horizonPaint.setStrokeWidth(8);
-        horizonPaint.setPathEffect(new DashPathEffect(new float[] {40, 8}, 0));
-        yLinePos = (gInfo.yDownOffset + gInfo.yUpOffset + blockOutSize*yBlockCnt) / 2;
 
         newMap = new ScaleMap().build(context, R.drawable.a_new, blockIconSize);
         newSmallMap = new ScaleMap().blink(newMap, blockIconSize);
@@ -95,14 +87,11 @@ public class BasePlate {
                     (x%2 == 0) ? vPathAPaint:vPathBPaint);
         }
 
-        // horizon line at shoot
-//        canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
-
         // new Icon
 
         if (gInfo.newGamePressed) {
             if (newWaitTime < System.currentTimeMillis()) {
-                newWaitTime = System.currentTimeMillis() + 111;
+                newWaitTime = System.currentTimeMillis() + 333;
                 newNo = !newNo;
             }
             canvas.drawBitmap((newNo) ? newMap : newSmallMap, xNewPos, yNewPos,null);
@@ -113,7 +102,7 @@ public class BasePlate {
 
         if (gInfo.quitGamePressed) {
             if (quitWaitTime < System.currentTimeMillis()) {
-                quitWaitTime = System.currentTimeMillis() + 111;
+                quitWaitTime = System.currentTimeMillis() + 333;
                 quitNo = !quitNo;
             }
             canvas.drawBitmap((quitNo) ? quitMap : quitSmallMap, xQuitPos, yQuitPos,null);

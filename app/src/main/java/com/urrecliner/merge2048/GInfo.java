@@ -106,30 +106,29 @@ public class GInfo {
         xUndoPos = xQuitPos + blockIconSize;        yUndoPos = yNewPos;
         xSwingPos = xNewPos;                        ySwingPos = yNewPos + blockIconSize;
         xSwapPos = xNewPos + blockIconSize;         ySwapPos = yNewPos + blockIconSize;
-        xYesPos = screenXSize/2 - blockIconSize;    xNopPos = screenXSize/2;
+        xYesPos = screenXSize/2 - blockOutSize;    xNopPos = screenXSize/2;
         yYesPos = yDownOffset - blockOutSize*2;     yNopPos = yYesPos;
         cells = new Cell[X_BLOCK_CNT][Y_BLOCK_CNT];
         resetValues();
     }
 
     public void resetValues() {
+        isGameOver = false;
         aniStacks = new ArrayList<>();
         svCells = new ArrayList<>();
         svNext = new ArrayList<>();
         svNextNext = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
+        xNextPos = xNextPosFixed;
         bonusCount = 0;
-        bonusStacked = 0;
-        isGameOver = false;
         dumpCount = 0;
         swapCount = 3;
         showCount = 6;
-        undoCount = 3;
-        xNextPos = xNextPosFixed;
+        undoCount = 4;
         highTouchCount = 0;
+        bonusStacked = 0;
         is2048 = false;
         continueYes = false;
-
     }
 }

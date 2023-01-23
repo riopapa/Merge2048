@@ -25,7 +25,7 @@ public class HighScore {
         sharedEditor = sharedPref.edit();
     }
 
-    void get() {
+    public void get() {
         gInfo.highMembers = new ArrayList<>();
         Gson gson = new Gson();
         String json = sharedPref.getString(highMember+gInfo.X_BLOCK_CNT +gInfo.Y_BLOCK_CNT, "");
@@ -34,7 +34,7 @@ public class HighScore {
             }.getType();
             gInfo.highMembers = gson.fromJson(json, type);
         } else {
-            reset();
+            resetHigh();
         }
         gInfo.userName = sharedPref.getString("userName","Me");
 
@@ -42,14 +42,21 @@ public class HighScore {
 
     final String highHeart = "♥♥";
 
-    void put() {
+    public boolean isHighRanked() {
+        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+            HighMember hm = gInfo.highMembers.get(i);
+            if (hm.who.equals(highHeart))
+                return true;
+        }
+        return false;
+    }
+
+    public void put() {
+
         for (int i = 0; i < gInfo.highMembers.size(); i++) {
             HighMember hm = gInfo.highMembers.get(i);
             if (hm.who.equals(highHeart)) {
-                if (gInfo.userName.equals(""))
-                    hm.who = "Me";
-                else
-                    hm.who = gInfo.userName;
+                hm.who = gInfo.userName;
                 gInfo.highMembers.set(i, hm);
             }
         }
@@ -60,13 +67,13 @@ public class HighScore {
         sharedEditor.apply();
     }
 
-    void reset() {
+    void resetHigh() {
         gInfo.highMembers = new ArrayList<>();
-        gInfo.highMembers.add(new HighMember(888888, "riopapa",
+        gInfo.highMembers.add(new HighMember(88888, "riopapa",
                 System.currentTimeMillis()-960000));
-        gInfo.highMembers.add(new HighMember( 444444, "riopapa",
+        gInfo.highMembers.add(new HighMember( 44444, "riopapa",
                 System.currentTimeMillis()-480000));
-        gInfo.highMembers.add(new HighMember(222222, "riopapa",
+        gInfo.highMembers.add(new HighMember(2222, "riopapa",
                 System.currentTimeMillis()-120000));
     }
 }

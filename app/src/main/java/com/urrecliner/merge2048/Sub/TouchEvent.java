@@ -9,7 +9,9 @@ public class TouchEvent {
     final GInfo gInfo;
     private final int xBlockCnt;
     private int xTouchPos, yTouchPos;
-    private final int xOffset, yDownOffset, yNextBottom, blockOutSize, blockIconSize;
+    private final int xOffset;
+    private final int yNextBottom;
+    private final int blockOutSize;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
@@ -22,9 +24,10 @@ public class TouchEvent {
 
     public TouchEvent (GInfo gInfo) {
         this.gInfo = gInfo;
-        xOffset = gInfo.xOffset; yDownOffset = gInfo.yDownOffset;
+        int blockIconSize = gInfo.blockIconSize;
+
+        xOffset = gInfo.xOffset;
         blockOutSize = gInfo.blockOutSize;
-        blockIconSize = gInfo.blockIconSize;
         xBlockCnt = gInfo.X_BLOCK_CNT;
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
@@ -39,8 +42,8 @@ public class TouchEvent {
 
         xNextNextPosS = gInfo.xNextNextPos;
         yNextNextPosS = gInfo.yNextNextPos;
-        xNextNextPosE = xNextNextPosS + blockIconSize/2;
-        yNextNextPosE = yNextNextPosS + blockIconSize/2;
+        xNextNextPosE = xNextNextPosS + blockIconSize /2;
+        yNextNextPosE = yNextNextPosS + blockIconSize /2;
 
         xSwingPosS = gInfo.xNewPos;
         ySwingPosS = gInfo.yNewPos + blockIconSize;
@@ -57,12 +60,11 @@ public class TouchEvent {
         xHighPosS = gInfo.xHighPosS;    xHighPosE = gInfo.xHighPosE;
         yHighPosS = gInfo.yHighPosS;    yHighPosE = gInfo.yHighPosE;
 
-        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + blockIconSize;
-        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + blockIconSize;
+        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + blockOutSize;
+        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + blockOutSize;
 
-        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + blockIconSize;
-        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + blockIconSize;
-
+        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + blockOutSize;
+        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + blockOutSize;
 
     }
     

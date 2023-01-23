@@ -9,10 +9,11 @@ import android.text.InputType;
 import android.widget.EditText;
 
 import com.urrecliner.merge2048.GInfo;
+import com.urrecliner.merge2048.HighScore;
 
 public class UserName {
 
-    public void get(Context context, GInfo gInfo) {
+    public UserName(Context context, GInfo gInfo) {
 
         Activity activity = (Activity) context;
         activity.runOnUiThread(() -> {
@@ -31,6 +32,7 @@ public class UserName {
                     gInfo.userName = input.getText().toString();
                     dialog.cancel();
                     dialog.dismiss();
+                    new HighScore(gInfo, context).put();
                 }
             });
             builder.setNegativeButton("수정 안 할래요", new DialogInterface.OnClickListener() {
@@ -38,6 +40,7 @@ public class UserName {
                 public void onClick(DialogInterface dialog, int i) {
                     dialog.cancel();
                     dialog.dismiss();
+                    new HighScore(gInfo, context).put();
                 }
             });
             builder.show();

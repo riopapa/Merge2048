@@ -65,14 +65,13 @@ public class NextPlate {
         swapMap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(),
                         R.drawable.a_swap), gInfo.blockIconSize, gInfo.blockIconSize, false);
-
     }
 
     public void setNextBlock() {
         nextIndex = nextNextIndex;
         nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
         if (new Random().nextInt(10) == 0)
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 2;
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty-1) + 2;
     }
 
     public void swapNextBlock() {
