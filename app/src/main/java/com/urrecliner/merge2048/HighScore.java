@@ -42,15 +42,6 @@ public class HighScore {
 
     final String highHeart = "♥♥";
 
-    public boolean isHighRanked() {
-        for (int i = 0; i < gInfo.highMembers.size(); i++) {
-            HighMember hm = gInfo.highMembers.get(i);
-            if (hm.who.equals(highHeart))
-                return true;
-        }
-        return false;
-    }
-
     public void put() {
 
         for (int i = 0; i < gInfo.highMembers.size(); i++) {
@@ -75,5 +66,6 @@ public class HighScore {
                 System.currentTimeMillis()-480000));
         gInfo.highMembers.add(new HighMember(2222, "riopapa",
                 System.currentTimeMillis()-120000));
+        gInfo.highLowScore = 2222;
     }
 }

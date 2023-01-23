@@ -153,7 +153,8 @@ public class ScorePlate {
                 gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
                 if (gInfo.highMembers.size()>3)
                     gInfo.highMembers.remove(3);
-                gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
+                gInfo.highLowScore = gInfo.scoreNow;
+                gInfo.isRanked = true;
             }
         } else {
             delay = 40;

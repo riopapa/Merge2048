@@ -105,8 +105,10 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gInfo.startNewGameYes) {
             gInfo.startNewGameYes = false;
-            if (highScore.isHighRanked())
+            if (gInfo.isRanked) {
+                gInfo.isRanked = false;
                 new UserName(context, gInfo);
+            }
             new NewGame(gInfo, messagePlate, nextPlate, context);
             return;
         }
@@ -197,15 +199,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.aniStacks.size() > 0)
             return;
 
-        if (gInfo.isGameOver && gInfo.continueYes) {
-            checkGameOver.destroy();
-            return;
-        }
-
         if (gInfo.isGameOver) {
-            if (!gInfo.is2048 && highScore.isHighRanked())
-                new UserName(context, gInfo);
-
+            if (gInfo.continueYes) {
+                checkGameOver.destroy();
+                return;
+            }
+            if (!gInfo.is2048) {
+                if (gInfo.isRanked) {
+                    gInfo.isRanked = false;
+                    new UserName(context, gInfo);
+                }
+            }
         } else {
             if (gInfo.bonusCount > 0 && new CheckState().paused(gInfo))
                 new ShowBonus(gInfo, bonusX, bonusY, bonusPlate, messagePlate);
@@ -268,16 +272,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (gInfo.quitGame) {
-            if (highScore.isHighRanked())
-                new UserName(context, gInfo);
-            exitApp();
+            exitApp();      // no update high score
+
         } else if (gInfo.highTouchPressed) {
             gInfo.highTouchPressed = false;
             gInfo.highTouchCount++;
             if (gInfo.highTouchCount > 5) {
                 highScore.resetHigh();
                 highScore.put();
-
             }
         }
     }

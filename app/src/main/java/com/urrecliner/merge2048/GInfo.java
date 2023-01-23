@@ -47,7 +47,7 @@ public class GInfo {
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean swingPressed = false, swing = false;
     public boolean swapPressed = false, swap = false, undoPressed = false;
-    public boolean is2048 = false, continueYes = false;
+    public boolean is2048 = false, continueYes = false, userUpdated = false, isRanked = false;
 
     public boolean showNextPressed = false, showNext = true;
     public int showCount;
@@ -129,6 +129,8 @@ public class GInfo {
         highTouchCount = 0;
         bonusStacked = 0;
         is2048 = false;
+        isRanked = false;
         continueYes = false;
+        userUpdated = false;
     }
 }
