@@ -280,6 +280,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             if (gInfo.highTouchCount > 5) {
                 highScore.resetHigh();
                 highScore.put();
+                gInfo.highTouchCount = 0;
             }
         }
     }

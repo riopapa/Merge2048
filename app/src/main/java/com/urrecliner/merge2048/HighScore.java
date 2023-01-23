@@ -60,7 +60,7 @@ public class HighScore {
 
     void resetHigh() {
         gInfo.highMembers = new ArrayList<>();
-        gInfo.highMembers.add(new HighMember(88888, "riopapa",
+        gInfo.highMembers.add(new HighMember(888888, "riopapa",
                 System.currentTimeMillis()-960000));
         gInfo.highMembers.add(new HighMember( 44444, "riopapa",
                 System.currentTimeMillis()-480000));

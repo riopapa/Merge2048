@@ -162,27 +162,23 @@ public class ScorePlate {
 
         for (int i = 0; i < gInfo.highMembers.size(); i++) {
             HighMember highMember = gInfo.highMembers.get(i);
-            if (gInfo.scoreNow == highMember.score) {
+            if (highMember.who.equals(highHeart)) {
                 xorCount++;
-                if (xor && xorCount > 60) {
+                if (xorCount > 30) {
                     xorCount = 0;
-                    board0Paint.setColor(board_color0);
-                    board1Paint.setColor(board_color1);
-                    xor = !xor;
-                } else if (!xor && xorCount > 20) {
-                    board0Paint.setColor(board_color1);
-                    board1Paint.setColor(board_color0);
                     xor = !xor;
                 }
+                board0Paint.setColor((xor)? board_color0:board_color1);
+                board1Paint.setColor((xor)? board_color1:board_color0);
             } else {
-                board0Paint.setColor(board_color1);
-                board1Paint.setColor(board_color0);
+                board0Paint.setColor(board_color0);
+                board1Paint.setColor(board_color1);
             }
             int y = yBoardPosTop + i*yBoardSize;
             canvas.drawRoundRect(xBoardPosLeft, y,
                     xBoardPosRight, y+yBoardSize-4, 16,16, board1Paint);
             canvas.drawRoundRect(xBoardPosLeft+4, y+4,
-                    xBoardPosRight-8, y+yBoardSize-12, 16,16, board0Paint);
+                    xBoardPosRight-8, y+yBoardSize-16, 16,16, board0Paint);
             String when = sdf.format(highMember.when);
             hTextPaint.setTextAlign(Paint.Align.RIGHT);
             canvas.drawText(highMember.who, xBoardPosWho, y+yBoardSize-24, hTextPaint);
