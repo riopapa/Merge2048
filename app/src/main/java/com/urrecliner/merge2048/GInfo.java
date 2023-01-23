@@ -28,8 +28,11 @@ public class GInfo {
 
     public final int bonusLoopCount = 12;
     public final int piece; // small pixel size for calculation sizes
-    public final Cell[][] cells;
-    public final List<Cell[][]> svCells;
+    public Cell[][] cells;
+    public List<String> svCells;
+    public List<Integer> svNext;
+    public List<Integer> svNextNext;
+
     public final int CONTINUE_INDEX = 10;  // if achieved this index game can be continued
 
     public long scoreNow;
@@ -43,7 +46,7 @@ public class GInfo {
     public boolean isGameOver = false, quitGamePressed = false, quitGame = false;
     public boolean newGamePressed = false, startNewGameYes = false;
     public boolean swingPressed = false, swing = false;
-    public boolean swapPressed = false, swap = false;
+    public boolean swapPressed = false, swap = false, undoPressed = false;
     public boolean is2048 = false, continueYes = false;
 
     public boolean showNextPressed = false, showNext = true;
@@ -106,12 +109,14 @@ public class GInfo {
         xYesPos = screenXSize/2 - blockIconSize;    xNopPos = screenXSize/2;
         yYesPos = yDownOffset - blockOutSize*2;     yNopPos = yYesPos;
         cells = new Cell[X_BLOCK_CNT][Y_BLOCK_CNT];
-        svCells = new ArrayList<>();
         resetValues();
     }
 
     public void resetValues() {
         aniStacks = new ArrayList<>();
+        svCells = new ArrayList<>();
+        svNext = new ArrayList<>();
+        svNextNext = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
         bonusCount = 0;
@@ -119,14 +124,12 @@ public class GInfo {
         isGameOver = false;
         dumpCount = 0;
         swapCount = 3;
-        showCount = 5;
-        undoCount = 4;
+        showCount = 6;
+        undoCount = 3;
         xNextPos = xNextPosFixed;
-        highTouchPressed = false;
         highTouchCount = 0;
         is2048 = false;
         continueYes = false;
-        while (svCells.size() > 0)
-            svCells.remove(0);
+
     }
 }

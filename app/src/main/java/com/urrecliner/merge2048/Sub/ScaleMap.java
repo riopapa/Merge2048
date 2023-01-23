@@ -15,8 +15,8 @@ public class ScaleMap {
     public Bitmap blink(Bitmap bitmap, int blockIconSize) {
         Bitmap bMap = Bitmap.createBitmap(blockIconSize, blockIconSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bMap);
-        Bitmap sMap = Bitmap.createScaledBitmap(bitmap, blockIconSize-8, blockIconSize-8, false);
-        canvas.drawBitmap(sMap, 4, 4, null);
+        Bitmap sMap = Bitmap.createScaledBitmap(bitmap, blockIconSize*7/8, blockIconSize*7/8, false);
+        canvas.drawBitmap(sMap, blockIconSize/16f, blockIconSize/16f, null);
         return bMap;
     }
 

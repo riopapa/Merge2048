@@ -56,6 +56,7 @@ public class HighScore {
         Gson gson = new Gson();
         String json = gson.toJson(gInfo.highMembers);
         sharedEditor.putString(highMember+gInfo.X_BLOCK_CNT +gInfo.Y_BLOCK_CNT, json);
+        sharedEditor.putString("userName", gInfo.userName);
         sharedEditor.apply();
     }
 
@@ -65,7 +66,7 @@ public class HighScore {
                 System.currentTimeMillis()-960000));
         gInfo.highMembers.add(new HighMember( 444444, "riopapa",
                 System.currentTimeMillis()-480000));
-        gInfo.highMembers.add(new HighMember(22222, "riopapa",
+        gInfo.highMembers.add(new HighMember(222222, "riopapa",
                 System.currentTimeMillis()-120000));
     }
 }

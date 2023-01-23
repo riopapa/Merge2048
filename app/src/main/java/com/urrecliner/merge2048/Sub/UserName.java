@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.EditText;
 
@@ -16,12 +17,15 @@ public class UserName {
         Activity activity = (Activity) context;
         activity.runOnUiThread(() -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Enter Your ID");
+            builder.setTitle("ID를 변경할 수 있습니다");
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
+            if (gInfo.userName.length() == 0)
+                gInfo.userName = "YourID";
             input.setText(gInfo.userName);
+            input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
             builder.setView(input);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("이 ID를 씁니다", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
                     gInfo.userName = input.getText().toString();
@@ -29,7 +33,7 @@ public class UserName {
                     dialog.dismiss();
                 }
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("수정 안 할래요", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
                     dialog.cancel();

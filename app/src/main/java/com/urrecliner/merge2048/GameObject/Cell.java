@@ -12,5 +12,4 @@ public class Cell {
         this.index = index;
         this.state = state;
     }
-
 }

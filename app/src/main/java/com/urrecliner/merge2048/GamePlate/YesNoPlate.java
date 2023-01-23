@@ -32,10 +32,9 @@ public class YesNoPlate {
         noMap = new ScaleMap().build(context, R.drawable.a_no, blockIconSize);
         noSmallMap = new ScaleMap().blink(noMap, blockIconSize);
         yesNoPaint = new Paint();
-        yesNoPaint.setColor(Color.BLUE);
+        yesNoPaint.setColor(Color.WHITE);
         yesNoPaint.setStrokeWidth(6);
         yesNoPaint.setStyle(Paint.Style.STROKE);
-
 
     }
 

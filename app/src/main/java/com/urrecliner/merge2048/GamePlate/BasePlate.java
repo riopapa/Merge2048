@@ -18,7 +18,7 @@ public class BasePlate {
 
     Context context;
     final GInfo gInfo;
-    final Paint backPaint, vPath1Paint, vPath2Paint, horizonPaint;
+    final Paint backPaint, vPath1Paint, vPath2Paint, vPathAPaint, vPathBPaint, horizonPaint;
     private final int xBlockCnt, yBlockCnt;
     private final int blockOutSize, blockIconSize;
     private final int xOffset, yUpOffset, xRight, yLinePos;
@@ -49,6 +49,10 @@ public class BasePlate {
         vPath2Paint = new Paint();
         vPath2Paint.setColor(ContextCompat.getColor(context, R.color.board1));
         vPath2Paint.setAlpha(230);
+        vPathAPaint = new Paint();
+        vPathAPaint.setColor(ContextCompat.getColor(context, R.color.boardA));
+        vPathBPaint = new Paint();
+        vPathBPaint.setColor(ContextCompat.getColor(context, R.color.boardB));
 
         xLeft = xOffset-4;                  xRight = gInfo.screenXSize - xOffset;
         xNewPos = gInfo.xNewPos;            yNewPos = gInfo.yNewPos;
@@ -88,11 +92,11 @@ public class BasePlate {
             }
             canvas.drawRect(xLeft + blockOutSize * x + 16, gInfo.yNextPos,
                     xOffset + blockOutSize * (x + 1) - 16, yNextBottom,
-                    (x%2 == 0) ? vPath1Paint:vPath2Paint);
+                    (x%2 == 0) ? vPathAPaint:vPathBPaint);
         }
 
         // horizon line at shoot
-        canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
+//        canvas.drawLine(xLeft, yLinePos, xRight, yLinePos, horizonPaint);
 
         // new Icon
 
@@ -118,7 +122,8 @@ public class BasePlate {
 
         // undo Icon
 
-        canvas.drawBitmap(undoMap, xUndoPos, yUndoPos,null);
+        if (gInfo.undoCount > 0)
+            canvas.drawBitmap(undoMap, xUndoPos, yUndoPos,null);
 
         // swing Icon
         canvas.drawBitmap((gInfo.swing)? swingOnMap:swingOffMap, xSwingPos, ySwingPos,null);

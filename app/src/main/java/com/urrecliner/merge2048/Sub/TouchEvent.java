@@ -9,7 +9,7 @@ public class TouchEvent {
     final GInfo gInfo;
     private final int xBlockCnt;
     private int xTouchPos, yTouchPos;
-    private final int xOffset, yDownOffset, yNextBottom, blockOutSize;
+    private final int xOffset, yDownOffset, yNextBottom, blockOutSize, blockIconSize;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
@@ -18,11 +18,13 @@ public class TouchEvent {
     private final int xHighPosS, xHighPosE, yHighPosS, yHighPosE;
     private final int xYesPosS, xYesPosE, xNopPosS, xNopPosE;
     private final int yYesPosS, yYesPosE, yNopPosS, yNopPosE;
+    private final int xUndoPosS, xUndoPosE, yUndoPosS, yUndoPosE;
 
     public TouchEvent (GInfo gInfo) {
         this.gInfo = gInfo;
         xOffset = gInfo.xOffset; yDownOffset = gInfo.yDownOffset;
         blockOutSize = gInfo.blockOutSize;
+        blockIconSize = gInfo.blockIconSize;
         xBlockCnt = gInfo.X_BLOCK_CNT;
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
@@ -37,26 +39,30 @@ public class TouchEvent {
 
         xNextNextPosS = gInfo.xNextNextPos;
         yNextNextPosS = gInfo.yNextNextPos;
-        xNextNextPosE = xNextNextPosS + gInfo.blockIconSize/2;
-        yNextNextPosE = yNextNextPosS + gInfo.blockIconSize/2;
+        xNextNextPosE = xNextNextPosS + blockIconSize/2;
+        yNextNextPosE = yNextNextPosS + blockIconSize/2;
 
         xSwingPosS = gInfo.xNewPos;
-        ySwingPosS = gInfo.yNewPos + gInfo.blockIconSize;
-        xSwingPosE = xSwingPosS + gInfo.blockIconSize;
-        ySwingPosE = ySwingPosS + gInfo.blockIconSize;
+        ySwingPosS = gInfo.yNewPos + blockIconSize;
+        xSwingPosE = xSwingPosS + blockIconSize;
+        ySwingPosE = ySwingPosS + blockIconSize;
 
         xSwapPosS = gInfo.xSwapPos;     ySwapPosS = gInfo.ySwapPos;
-        xSwapPosE = xSwapPosS + gInfo.blockIconSize;
-        ySwapPosE = ySwapPosS + gInfo.blockIconSize;
+        xSwapPosE = xSwapPosS + blockIconSize;
+        ySwapPosE = ySwapPosS + blockIconSize;
+
+        xUndoPosS = gInfo.xUndoPos;     xUndoPosE = xUndoPosS + blockIconSize;
+        yUndoPosS = gInfo.yUndoPos;     yUndoPosE = yUndoPosS + blockIconSize;
 
         xHighPosS = gInfo.xHighPosS;    xHighPosE = gInfo.xHighPosE;
         yHighPosS = gInfo.yHighPosS;    yHighPosE = gInfo.yHighPosE;
 
-        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + gInfo.blockIconSize;
-        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + gInfo.blockIconSize;
+        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + blockIconSize;
+        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + blockIconSize;
 
-        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + gInfo.blockIconSize;
-        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + gInfo.blockIconSize;
+        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + blockIconSize;
+        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + blockIconSize;
+
 
     }
     
@@ -127,6 +133,8 @@ public class TouchEvent {
                     }
                 } else if (isSwingPressed()) {
                     gInfo.swingPressed = true;
+                } else if (isUndoPressed()) {
+                    gInfo.undoPressed = true;
                 }
                 break;
 
@@ -183,6 +191,12 @@ public class TouchEvent {
         return  (!gInfo.isGameOver) &&
                 (xTouchPos >= xSwapPosS  && xTouchPos <= xSwapPosE &&
                         yTouchPos >= ySwapPosS && yTouchPos <= ySwapPosE);
+    }
+
+    boolean isUndoPressed() {
+        return  (!gInfo.isGameOver) &&
+                (xTouchPos >= xUndoPosS  && xTouchPos <= xUndoPosE &&
+                        yTouchPos >= yUndoPosS && yTouchPos <= yUndoPosE);
     }
 
     boolean isShootPressed() {

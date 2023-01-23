@@ -10,6 +10,9 @@
 
     <color name="board0">#78A7C4</color>
     <color name="board1">#86AEBB</color>
+    <color name="boardA">#466E87</color>
+    <color name="boardB">#618997</color>
+
     <color name="score">#FF4443</color>
     <color name="hi_score">#831414</color>
     <color name="hi_board0">#4D758E</color>

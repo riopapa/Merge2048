@@ -10,15 +10,14 @@ import com.urrecliner.merge2048.Sub.UserName;
 public class NewGame {
     public NewGame(GInfo gInfo, MessagePlate messagePlate, HighScore highScore, Context context) {
 
-        messagePlate.set("Welcome", "게임을", "시작합니다",
-                System.currentTimeMillis(), 2000);
-
+        new ClearCells(gInfo);
         gInfo.resetValues();
         highScore.get();
         gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
 
-        new ClearCells(gInfo);
         new UserName().get(context, gInfo);
+        messagePlate.set("Welcome", "게임을", "시작합니다",
+                System.currentTimeMillis(), 2000);
 
     }
 }

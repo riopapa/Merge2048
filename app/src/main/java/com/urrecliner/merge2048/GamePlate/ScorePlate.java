@@ -145,15 +145,15 @@ public class ScorePlate {
                     if (hm.who.equals(highHeart)) {
                         hm.score = gInfo.scoreNow;
                         gInfo.highMembers.set(i, hm);
-                        gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
                         updated = true;
                     }
                 }
-                if (!updated) {
+                if (!updated)
                     gInfo.highMembers.add(new HighMember(gInfo.scoreNow, highHeart));
-                    gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
+                gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
+                if (gInfo.highMembers.size()>3)
                     gInfo.highMembers.remove(3);
-                }
+                gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
             }
         } else {
             delay = 40;

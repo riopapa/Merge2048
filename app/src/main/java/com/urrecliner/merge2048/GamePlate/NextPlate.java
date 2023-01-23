@@ -68,21 +68,17 @@ public class NextPlate {
 
     }
 
-    public void generateNextBlock(boolean newIndex) {
-        if (newIndex) {
-            nextIndex = nextNextIndex;
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty - 1) + 1;
-            if (new Random().nextInt(10) < 4)
-                return;
-            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
-            if (new Random().nextInt(10) == 0) {
-                nextNextIndex = new Random().nextInt(gInfo.gameDifficulty + 1) + 1;
-            }
-        } else {
-            int sv = nextIndex;
-            nextIndex = nextNextIndex;
-            nextNextIndex = sv;
-        }
+    public void setNextBlock() {
+        nextIndex = nextNextIndex;
+        nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 1;
+        if (new Random().nextInt(10) == 0)
+            nextNextIndex = new Random().nextInt(gInfo.gameDifficulty) + 2;
+    }
+
+    public void swapNextBlock() {
+        int sv = nextIndex;
+        nextIndex = nextNextIndex;
+        nextNextIndex = sv;
     }
 
     public void draw(Canvas canvas) {

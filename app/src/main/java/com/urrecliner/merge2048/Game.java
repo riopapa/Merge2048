@@ -10,6 +10,8 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.urrecliner.merge2048.GamePlate.YesNoPlate;
 import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameImage.BlockImage;
@@ -24,6 +26,7 @@ import com.urrecliner.merge2048.GamePlate.RotatePlate;
 import com.urrecliner.merge2048.GamePlate.ScorePlate;
 import com.urrecliner.merge2048.Sub.TouchEvent;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
@@ -81,9 +84,9 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         yesNoPlate = new YesNoPlate(gInfo, context);
         touchEvent = new TouchEvent(gInfo);     // touchEvent should be after scorePlate
 
-        nextPlate.generateNextBlock(true);
+        nextPlate.setNextBlock();
         new NewGame(gInfo, messagePlate, highScore, context);
-        nextPlate.generateNextBlock(true);
+        nextPlate.setNextBlock();
     }
 
     @Override
@@ -101,7 +104,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.startNewGameYes) {
             gInfo.startNewGameYes = false;
             highScore.put();
-            nextPlate.generateNextBlock(true);
+            nextPlate.setNextBlock();
             new NewGame(gInfo, messagePlate, highScore, context);
             return;
         }
@@ -109,7 +112,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gInfo.dumpClicked) {
             gInfo.dumpClicked = false;
             if (gInfo.dumpCount > 3) {
-                new DumpCells(gInfo, nextPlate, "Dump Old");
+                new DumpCells(gInfo, gInfo.cells, nextPlate, "Dump Old");
             }
         }
         if (gInfo.aniStacks.size() > 0)
@@ -225,7 +228,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 gInfo.swapPressed = false;
                 if (gInfo.swapCount > 0) {
                     gInfo.swapCount--;
-                    nextPlate.generateNextBlock(false);
+                    nextPlate.swapNextBlock();
                     if (gInfo.swapCount > 0)
                         messagePlate.set("블럭 바꾸기", "앞으로",
                         gInfo.swapCount+" 번 더 가능",System.currentTimeMillis(), 2000);
@@ -233,10 +236,31 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
             } else if (gInfo.shoutClicked) {
                 new Start2Move(gInfo, nextPlate, checkNearItem);
+
+            } else if (gInfo.undoPressed && gInfo.svCells.size() > 2) {
+                gInfo.undoPressed = false;
+
+                if (gInfo.undoCount > 0) {
+                    gInfo.undoCount--;
+                    if (gInfo.undoCount > 0)
+                        messagePlate.set("블럭 취소", "앞으로",
+                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 3000);
+                    Gson gson = new Gson();
+                    int idx = gInfo.svCells.size()-1;
+                    String json = gInfo.svCells.get(idx);
+                    Type type = new TypeToken<Cell[][]>() {
+                    }.getType();
+                    gInfo.cells = gson.fromJson(json, type);
+                    nextPlate.nextIndex = gInfo.svNext.get(idx);
+                    nextPlate.nextNextIndex = gInfo.svNextNext.get(idx);
+                    gInfo.svCells.remove(idx);
+                    gInfo.svNext.remove(idx);
+                    gInfo.svNextNext.remove(idx);
+                }
             }
 
             if (nextPlate.nextIndex == -1)
-                nextPlate.generateNextBlock(true);
+                nextPlate.setNextBlock();
             if (gInfo.aniStacks.size() == 0)
                 gInfo.isGameOver = checkGameOver.isOver(nextPlate.nextIndex);
         }
