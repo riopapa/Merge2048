@@ -24,7 +24,8 @@ public class UserName {
             if (gInfo.userName.length() == 0)
                 gInfo.userName = "YourID";
             input.setText(gInfo.userName);
-            input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
+            InputFilter[] filters = new InputFilter[] {new ByteLengthFilter(10,"KS5601")};
+            input.setFilters(filters);
             builder.setView(input);
             builder.setPositiveButton("이 ID를 씁니다", new DialogInterface.OnClickListener() {
                 @Override

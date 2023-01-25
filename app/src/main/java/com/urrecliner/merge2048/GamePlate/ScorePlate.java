@@ -26,7 +26,7 @@ public class ScorePlate {
     final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.US);
 
     long scoreTimeStamp = 0;
-    Paint scoreOPaint, scoreIPaint, hTextPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
+    Paint scoreOPaint, scoreIPaint, whoPaint, hScoreOPaint, hScoreIPaint, board0Paint, board1Paint;
     boolean xor;
     int xorCount, delay;
     final String highHeart = "♥♥";
@@ -66,26 +66,27 @@ public class ScorePlate {
         board1Paint.setStrokeWidth(3);
 
         int width, height, scoreSize = gInfo.piece + gInfo.piece;
-        hTextPaint = new Paint();
-        hTextPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
-        hTextPaint.setColor(Color.WHITE);
+        whoPaint = new Paint();
+        whoPaint.setTypeface(ResourcesCompat.getFont(context, R.font.steelfish_rg));
+        whoPaint.setColor(Color.WHITE);
         while (true) {
-            hTextPaint.setTextSize(scoreSize);
+            whoPaint.setTextSize(scoreSize);
             Rect rect = new Rect();
-            hTextPaint.getTextBounds("RioPaPa", 0, 5, rect);
+            String text = "네글짜도";
+            whoPaint.getTextBounds(text, 0, text.length(), rect);
             height = rect.height();
             width = rect.width();
-            if (height > calcPercentPixel(40)) {
-                scoreSize -=2;
+            if (width > (xBoardPosRight - xBoardPosLeft) * 25/ 100) {
+//            if (width > calcPercentPixel(100)) {
+                scoreSize -= 2;
             } else
                 break;
         }
-//        xBoardPosWho = gInfo.xOffset + calcPercentPixel(80);
-        xBoardPosWho = gInfo.xOffset + width + 36;
+        xBoardPosWho = gInfo.xOffset + width;
         xBoardPosTime = xBoardPosWho + 16;
         yBoardSize = height + 48;
 
-        xBoardPosScore = xBoardPosRight - (xBoardPosRight - xBoardPosTime - (int) hTextPaint.measureText("22-12-31 24:31"))/2;
+        xBoardPosScore = xBoardPosRight - (xBoardPosRight - xBoardPosTime - (int) whoPaint.measureText("22-12-31 24:31"))/2;
 
         hScoreOPaint = new Paint();
         hScoreOPaint.setTypeface(ResourcesCompat.getFont(context, R.font.ticking_regular));
@@ -180,12 +181,12 @@ public class ScorePlate {
             canvas.drawRoundRect(xBoardPosLeft+4, y+4,
                     xBoardPosRight-8, y+yBoardSize-16, 16,16, board0Paint);
             String when = sdf.format(highMember.when);
-            hTextPaint.setTextAlign(Paint.Align.RIGHT);
-            canvas.drawText(highMember.who, xBoardPosWho, y+yBoardSize-24, hTextPaint);
-            hTextPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, hTextPaint);
+            whoPaint.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawText(highMember.who, xBoardPosWho, y+yBoardSize-28, whoPaint);
+            whoPaint.setTextAlign(Paint.Align.LEFT);
+            canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, whoPaint);
             canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScoreOPaint);
-            canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, hTextPaint);
+            canvas.drawText(when, xBoardPosTime, y+yBoardSize-24, whoPaint);
             canvas.drawText(""+highMember.score, xBoardPosScore, y+yBoardSize-28, hScoreIPaint);
         }
     }

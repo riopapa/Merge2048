@@ -35,11 +35,11 @@ public class Start2Move {
         Cell cell = gInfo.cells[x][gInfo.Y_BLOCK_CNT -1];
         if (cell.index == 0) {  // empty cell, so start to move
             gInfo.cells[x][gInfo.Y_BLOCK_CNT -1] = new Cell(nextPlate.nextIndex, GInfo.STATE.GO_UP);
-            nextPlate.nextIndex = -1;   // wait while all moved;
         } else if (cell.index == nextPlate.nextIndex) {    // bottom but same index
             gInfo.cells[x][gInfo.Y_BLOCK_CNT -1].index = cell.index + 1;
             gInfo.cells[x][gInfo.Y_BLOCK_CNT -1].state = GInfo.STATE.STOP;
         }
+        nextPlate.nextIndex = -1;   // wait while all moved
     }
 
 }

@@ -8,10 +8,10 @@ public class ShowBonus {
 
     public ShowBonus(GInfo gInfo, int x, int y, BonusPlate bonusPlate, MessagePlate messagePlate) {
 
-        if (gInfo.bonusCount > 2) {
-            bonusPlate.addBonus(x, y, gInfo.bonusCount - 2,
+        if (gInfo.bonusCount > 3) {
+            bonusPlate.addBonus(x, y, gInfo.bonusCount - 3,
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
-            if (gInfo.bonusCount > 4) {
+            if (gInfo.bonusCount > 4 && gInfo.gameDifficulty < 9) {
                 gInfo.gameDifficulty++;
                 messagePlate.set("!연속 블럭 깨기!",
                         "큰 블럭("+new PowerIndex().power(gInfo.gameDifficulty+1)+")이",
