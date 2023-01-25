@@ -50,9 +50,9 @@ public class AniStack {
         this.yS = yS;
         this.timeStamp = timeStamp;
         this.index = index;
-        delay = 40;
+        delay = 30;
         count = 0;
-        maxCount = 7;   // refer to BlockImage explode[n]
+        maxCount = 7;
     }
 
     // state MERGE

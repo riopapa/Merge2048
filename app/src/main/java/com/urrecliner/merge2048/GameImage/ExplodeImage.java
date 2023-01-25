@@ -22,21 +22,17 @@ public class ExplodeImage {
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.a_explosion_e, options),
                 gInfo.blockOutSize+gInfo.explodeGap, gInfo.blockOutSize+gInfo.explodeGap, false);
 
-        Bitmap expMap = makeExplode(bitmap, gInfo.explodeGap, explode);
-        explodeMaps[0] = makeExplodeMap(bitmap, gInfo, 80);
-        explodeMaps[1] = makeExplodeMap(expMap, gInfo, 76);
-        explodeMaps[2] = makeExplodeMap(bitmap, gInfo, 77);
-        explodeMaps[3] = makeExplodeMap(bitmap, gInfo, 70);
-        explodeMaps[4] = makeExplodeMap(expMap, gInfo, 65);
-        explodeMaps[5] = makeExplodeMap(bitmap, gInfo, 65);
+        Bitmap expMap = mixExplode(bitmap, gInfo.explodeGap, explode);
+        explodeMaps[0] = makeExplode(bitmap, gInfo, 80);
+        explodeMaps[1] = makeExplode(expMap, gInfo, 76);
+        explodeMaps[2] = makeExplode(bitmap, gInfo, 77);
+        explodeMaps[3] = makeExplode(bitmap, gInfo, 70);
+        explodeMaps[4] = makeExplode(expMap, gInfo, 65);
+        explodeMaps[5] = makeExplode(bitmap, gInfo, 65);
         return explodeMaps;
     }
 
-    public Bitmap makeDestroy(Bitmap bitmap, int gap, Bitmap destroyMap) {
-        return makeExplode(bitmap, gap, destroyMap);
-    }
-
-    private Bitmap makeExplodeMap(Bitmap bitmap, GInfo gInfo, int pct) {
+    private Bitmap makeExplode(Bitmap bitmap, GInfo gInfo, int pct) {
         int scale = (gInfo.blockInSize + gInfo.blockFlyingGap*2); // 120 %
         Bitmap bigMap = Bitmap.createBitmap(scale, scale, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bigMap);
@@ -46,12 +42,11 @@ public class ExplodeImage {
         return bigMap;
     }
 
-    private Bitmap makeExplode(Bitmap bitmap, int gap, Bitmap explode) {
+    public Bitmap mixExplode(Bitmap bitmap, int gap, Bitmap explode) {
 
         int full = bitmap.getHeight();
         int half = full / 2;
-        Bitmap tmpMap = Bitmap.createBitmap(full, full,
-                Bitmap.Config.ARGB_8888);
+        Bitmap tmpMap = Bitmap.createBitmap(full, full, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tmpMap);
         canvas.drawBitmap(bitmap, new Rect(0, 0, half, half), new Rect(0, 0, half - gap, half - gap),null);
         canvas.drawBitmap(bitmap, new Rect(half, 0, full, half), new Rect(half + gap, 0, full, half-gap),null);

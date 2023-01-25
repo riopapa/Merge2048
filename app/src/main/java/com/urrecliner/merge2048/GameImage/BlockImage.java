@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 
 import com.urrecliner.merge2048.GInfo;
 import com.urrecliner.merge2048.R;
@@ -38,8 +37,8 @@ public class BlockImage {
 
         destroyMap = Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.destroy, options),
-                gInfo.blockOutSize+gInfo.explodeGap, gInfo.blockOutSize+gInfo.explodeGap, false);
-        destroyMap = new ExplodeImage().makeDestroy(bitmap, gInfo.explodeGap, destroyMap);
+                gInfo.blockOutSize+gInfo.explodeGap+gInfo.explodeGap, gInfo.blockOutSize+gInfo.explodeGap+gInfo.explodeGap, false);
+        destroyMap = new ExplodeImage().mixExplode(bitmap, gInfo.explodeGap, destroyMap);
     }
 
 }
