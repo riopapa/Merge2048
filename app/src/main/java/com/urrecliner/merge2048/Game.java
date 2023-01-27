@@ -85,10 +85,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         yesNoPlate = new YesNoPlate(gInfo, context);
         touchEvent = new TouchEvent(gInfo);     // touchEvent should be after scorePlate
 
-        highScore.get();
-        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
-
         new NewGame(gInfo, messagePlate, nextPlate, context);
+        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
     }
 
     @Override
@@ -110,6 +108,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 new UserName(context, gInfo);
             }
             new NewGame(gInfo, messagePlate, nextPlate, context);
+            gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
             return;
         }
 
@@ -255,8 +254,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 if (gInfo.undoCount > 0) {
                     gInfo.undoCount--;
                     if (gInfo.undoCount > 0)
-                        messagePlate.set("블럭 취소", "앞으로",
-                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 1000);
+                        messagePlate.set("블럭 취소", "앞으로 "+ gInfo.undoCount+" 번 더 가능","Score는 1/4 깎습니다",System.currentTimeMillis(), 1000);
                     Gson gson = new Gson();
                     int idx = gInfo.svCells.size()-1;
                     String json = gInfo.svCells.get(idx);
@@ -268,6 +266,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.svCells.remove(idx);
                     gInfo.svNext.remove(idx);
                     gInfo.svNextNext.remove(idx);
+                    gInfo.scoreNow = gInfo.scoreNow * 3/4;
+                    highScore.undoScore();
                 }
             }
 

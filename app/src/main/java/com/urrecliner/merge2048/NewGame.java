@@ -12,6 +12,7 @@ public class NewGame {
 
         new ClearCells(gInfo);
         gInfo.resetValues();
+        new HighScore(gInfo, context).get();
         nextPlate.setNextBlock();
         nextPlate.setNextBlock();
         messagePlate.set(gInfo.userName +" 님", "게임을", "시작합니다",

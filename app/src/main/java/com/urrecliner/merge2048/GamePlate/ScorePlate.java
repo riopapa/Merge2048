@@ -30,6 +30,7 @@ public class ScorePlate {
     boolean xor;
     int xorCount, delay;
     final String highHeart = "♥♥";
+    final int FOUR = 4; // highscore size;
 
     public ScorePlate(GInfo gInfo, Context context) {
         this.gInfo = gInfo;
@@ -115,10 +116,6 @@ public class ScorePlate {
 
     }
 
-    private int calcPercentPixel(int milliPercent) {
-        return gInfo.screenXSize * milliPercent / 1000;
-    }
-
     public void draw(Canvas canvas) {
         int score;
         canvas.drawText(""+ gInfo.scoreNow, gameScoreXPos, gameScoreYPos, scoreOPaint);
@@ -141,7 +138,7 @@ public class ScorePlate {
             gInfo.scoreNow += score;
             if (gInfo.score2Add == 0 && gInfo.scoreNow > gInfo.highLowScore) {
                 boolean updated = false;
-                for (int i = 0; i < gInfo.highMembers.size(); i++) {
+                for (int i = 0; i < FOUR; i++) {
                     HighMember hm = gInfo.highMembers.get(i);
                     if (hm.who.equals(highHeart)) {
                         hm.score = gInfo.scoreNow;
@@ -152,8 +149,8 @@ public class ScorePlate {
                 if (!updated)
                     gInfo.highMembers.add(new HighMember(gInfo.scoreNow, highHeart));
                 gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
-                if (gInfo.highMembers.size()>3)
-                    gInfo.highMembers.remove(3);
+                if (gInfo.highMembers.size() > FOUR)
+                    gInfo.highMembers.remove(FOUR);
                 gInfo.highLowScore = gInfo.scoreNow;
                 gInfo.isRanked = true;
             }
@@ -161,7 +158,7 @@ public class ScorePlate {
             delay = 40;
         }
 
-        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+        for (int i = 0; i < FOUR - 1; i++) {    // show only three
             HighMember highMember = gInfo.highMembers.get(i);
             if (highMember.who.equals(highHeart)) {
                 xorCount++;

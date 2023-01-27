@@ -11,8 +11,12 @@ import com.urrecliner.merge2048.GameObject.HighMember;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+/*
+ *  HighScore table has 4 items but show only three
+ */
 public class HighScore {
     final GInfo gInfo;
     final SharedPreferences sharedPref;
@@ -36,6 +40,17 @@ public class HighScore {
         } else {
             resetHigh();
         }
+        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+            HighMember hm = gInfo.highMembers.get(i);
+            if (hm.who.equals(highHeart)) {
+                hm.who = "riopapa";
+                gInfo.highMembers.set(i, hm);
+                break;
+            }
+        }
+        if (gInfo.highMembers.size() < 4)
+            gInfo.highMembers.add(new HighMember(1111, "riopapa",
+                    System.currentTimeMillis()));
         gInfo.userName = sharedPref.getString("userName","Me");
 
     }
@@ -49,6 +64,7 @@ public class HighScore {
             if (hm.who.equals(highHeart)) {
                 hm.who = gInfo.userName;
                 gInfo.highMembers.set(i, hm);
+                break;
             }
         }
         Gson gson = new Gson();
@@ -58,14 +74,27 @@ public class HighScore {
         sharedEditor.apply();
     }
 
+    void undoScore() {
+        for (int i = 0; i < gInfo.highMembers.size(); i++) {
+            HighMember hm = gInfo.highMembers.get(i);
+            if (hm.who.equals(highHeart)) {
+                hm.score = gInfo.scoreNow;
+            }
+        }
+        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
+        gInfo.highMembers.sort(Comparator.comparingLong(HighMember::getScore).reversed());
+    }
+
     void resetHigh() {
         gInfo.highMembers = new ArrayList<>();
         gInfo.highMembers.add(new HighMember(888888, "riopapa",
                 System.currentTimeMillis()-960000));
         gInfo.highMembers.add(new HighMember( 44444, "riopapa",
                 System.currentTimeMillis()-480000));
-        gInfo.highMembers.add(new HighMember(22222, "riopapa",
+        gInfo.highMembers.add(new HighMember(2222, "riopapa",
                 System.currentTimeMillis()-120000));
-        gInfo.highLowScore = 22222;
+        gInfo.highMembers.add(new HighMember(1111, "riopapa",
+                System.currentTimeMillis()));
+        gInfo.highLowScore = gInfo.highMembers.get(gInfo.highMembers.size()-1).score;
     }
 }
