@@ -1,6 +1,6 @@
 package com.urrecliner.merge2048;
 
-public class CheckState {
+public class CheckAllState {
 
     public boolean paused(GInfo gInfo) {
 

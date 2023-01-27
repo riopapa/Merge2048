@@ -11,8 +11,8 @@ public class AniStack {
     public long delay;   // redraw at every delay
     public long timeStamp;
 
-    // state MOVING
-    public AniStack(GInfo.STATE state, int xS, int yS, int xF, int yF,
+    // state MOVING, PULL
+     public AniStack(GInfo.STATE state, int xS, int yS, int xF, int yF,
                     int xInc, int yInc, int maxCount, long timeStamp, int index) {
 
         this.state = state;
@@ -26,7 +26,7 @@ public class AniStack {
         this.timeStamp = timeStamp;
         this.index = index;
         count = 0;
-        delay = 0;  // move with no delay
+        delay = (state == GInfo.STATE.MOVING) ? 0: 80;  // move with no delay
     }
 
     // state EXPLODE
@@ -52,7 +52,7 @@ public class AniStack {
         this.index = index;
         delay = 30;
         count = 0;
-        maxCount = 7;
+        maxCount = 12;
     }
 
     // state MERGE

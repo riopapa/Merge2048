@@ -31,6 +31,8 @@ public class BonusPlate {
 
     public void addBonus(int xS, int yS, int idx, int loopCount) {
 
+        if (loopCount > 10)
+            loopCount = 10;
         bonuses.add(new BonusRotate(xS, yS, idx, loopCount,
                 gInfo.blockOutSize * (- xS) / loopCount,
                 gInfo.blockOutSize * (gInfo.Y_BLOCK_CNT - yS + 1)/ loopCount, 40));

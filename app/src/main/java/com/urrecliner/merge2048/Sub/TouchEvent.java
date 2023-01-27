@@ -11,7 +11,7 @@ public class TouchEvent {
     private int xTouchPos, yTouchPos;
     private final int xOffset;
     private final int yNextBottom;
-    private final int blockOutSize;
+    private final int blockOutSize, blockInSize;
     private final int xNewPosS, yNewPosS, xNewPosE, yNewPosE;
     private final int xNextNextPosS, yNextNextPosS, xNextNextPosE, yNextNextPosE;
     private final int xQuitPosS, yQuitPosS, xQuitPosE, yQuitPosE;
@@ -28,6 +28,7 @@ public class TouchEvent {
 
         xOffset = gInfo.xOffset;
         blockOutSize = gInfo.blockOutSize;
+        blockInSize = gInfo.blockInSize;
         xBlockCnt = gInfo.X_BLOCK_CNT;
 
         yNextBottom = gInfo.yNextPos + blockOutSize + 4;
@@ -60,11 +61,11 @@ public class TouchEvent {
         xHighPosS = gInfo.xHighPosS;    xHighPosE = gInfo.xHighPosE;
         yHighPosS = gInfo.yHighPosS;    yHighPosE = gInfo.yHighPosE;
 
-        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + blockOutSize;
-        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + blockOutSize;
+        xYesPosS = gInfo.xYesPos;       xYesPosE = xYesPosS + blockInSize + blockInSize;
+        yYesPosS = gInfo.yYesPos;       yYesPosE = yYesPosS + blockInSize + blockInSize;
 
-        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + blockOutSize;
-        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + blockOutSize;
+        xNopPosS = gInfo.xNopPos;         xNopPosE = xNopPosS + blockInSize + blockInSize;
+        yNopPosS = gInfo.yNopPos;         yNopPosE = yNopPosS + blockInSize + blockInSize;
 
     }
     

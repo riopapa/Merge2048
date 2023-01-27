@@ -8,13 +8,13 @@ public class ShowBonus {
 
     public ShowBonus(GInfo gInfo, int x, int y, BonusPlate bonusPlate, MessagePlate messagePlate) {
 
-        if (gInfo.bonusCount > 3) {
+        if (gInfo.bonusCount > 3 && !gInfo.continueYes) {
             bonusPlate.addBonus(x, y, gInfo.bonusCount - 3,
                     gInfo.bonusLoopCount + gInfo.bonusCount + gInfo.bonusCount);
             if (gInfo.bonusCount > 4 && gInfo.gameDifficulty < 9) {
                 gInfo.gameDifficulty++;
                 messagePlate.set("!연속 블럭 깨기!",
-                        "큰 블럭("+new PowerIndex().power(gInfo.gameDifficulty+1)+")이",
+                        "큰 블럭("+new PowerIndex().power(gInfo.gameDifficulty)+")이",
                         "나올 수 있어요",
                         System.currentTimeMillis() + 1500, 2500);
             }

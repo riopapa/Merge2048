@@ -91,7 +91,7 @@ public class BasePlate {
 
         if (gInfo.newGamePressed) {
             if (newWaitTime < System.currentTimeMillis()) {
-                newWaitTime = System.currentTimeMillis() + 333;
+                newWaitTime = System.currentTimeMillis() + 67;
                 newNo = !newNo;
             }
             canvas.drawBitmap((newNo) ? newMap : newSmallMap, xNewPos, yNewPos,null);
@@ -102,7 +102,7 @@ public class BasePlate {
 
         if (gInfo.quitGamePressed) {
             if (quitWaitTime < System.currentTimeMillis()) {
-                quitWaitTime = System.currentTimeMillis() + 333;
+                quitWaitTime = System.currentTimeMillis() + 67;
                 quitNo = !quitNo;
             }
             canvas.drawBitmap((quitNo) ? quitMap : quitSmallMap, xQuitPos, yQuitPos,null);

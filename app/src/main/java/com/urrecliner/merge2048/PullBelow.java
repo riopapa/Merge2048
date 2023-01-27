@@ -13,14 +13,19 @@ public class PullBelow {
         yBlockCnt = gInfo.Y_BLOCK_CNT;
     }
 
-    public void check(int x, int y) {
+    public void check(int x, int y, boolean rotate) {
 
         if (y == yBlockCnt - 1 || gInfo.cells[x][y+1].index == 0)
             return;
         for (int yy = y+1; yy < yBlockCnt; yy++) {
             if (gInfo.cells[x][yy].index > 0) {
-                gInfo.cells[x][yy].state = GInfo.STATE.MOVING;
-                animationAdd.addMove(x, yy, x, yy-1, gInfo.cells[x][yy].index);
+                if (rotate) {
+                    gInfo.cells[x][yy].state = GInfo.STATE.PULL;
+                    animationAdd.addPull(x, yy, x, yy-1, gInfo.cells[x][yy].index);
+                } else {
+                    gInfo.cells[x][yy].state = GInfo.STATE.MOVING;
+                    animationAdd.addMove(x, yy, x, yy-1, gInfo.cells[x][yy].index);
+                }
             } else
                 break;
         }

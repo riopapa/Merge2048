@@ -120,7 +120,8 @@ public class CheckNearItem {
     }
 
     private void mergeToHere(int x, int y, int index) {
-        gInfo.bonusCount++;
+        if (!gInfo.continueYes)
+            gInfo.bonusCount++;
         gInfo.cells[x][y].state = GInfo.STATE.MERGE;
         animationAdd.addMerge(x,y, index);
     }

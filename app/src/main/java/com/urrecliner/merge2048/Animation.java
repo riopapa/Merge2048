@@ -6,6 +6,7 @@ package com.urrecliner.merge2048;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.util.Log;
 
 import com.urrecliner.merge2048.GameImage.BlockImage;
@@ -128,18 +129,29 @@ public class Animation {
             case DESTROY:
                 if (ani.timeStamp < System.currentTimeMillis() ) {
                     if (ani.count >= ani.maxCount) {
-                        gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.EXPLODED;
+                        gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.DESTROYED;
                         gInfo.aniStacks.remove(i);
                     } else {    // 0~4 : lower block, 5~7 merged block
-                        Bitmap explodeMap = (ani.count % 2 == 0)?
+                        Matrix matrix = new Matrix();
+                        int angle =  30 * ani.count;
+                        matrix.postRotate(angle);
+                        Bitmap blockMap = (ani.count % 2 == 0)?
                                 blockImages.get(ani.index).destroyMap :
-                                blockImages.get(ani.index).bitmap; // .explodeMaps[ani.count];
-                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize - gInfo.explodeGap;
-                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize - gInfo.explodeGap;
-                        canvas.drawBitmap(explodeMap, xPos, yPos, null);
+                                blockImages.get(ani.index).bitmap;
+
+                        blockMap = Bitmap.createBitmap(blockMap, 0, 0,
+                                blockMap.getWidth(), blockMap.getHeight()
+                                , matrix, true);
+                        int w = blockMap.getWidth(); int h = blockMap.getHeight();
+                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
+                                + gInfo.blockOutSize/2 - w/2;
+                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
+                                + gInfo.blockOutSize/2 - h/2;
+                        canvas.drawBitmap(blockMap, xPos, yPos, null);
                         ani.count++;
                         ani.timeStamp = System.currentTimeMillis() + ani.delay;
                         gInfo.aniStacks.set(i, ani);
+
                     }
                 }
                 break;
@@ -160,6 +172,36 @@ public class Animation {
 
             case EXPLODED:
             case GO_UP:
+                break;
+
+            case PULL:
+                if (ani.timeStamp < System.currentTimeMillis() ) {
+                    if (ani.count >= ani.maxCount) {    // smooth factor
+                        gInfo.cells[ani.xS][ani.yS].index = 0;
+                        gInfo.cells[ani.xS][ani.yS].state = GInfo.STATE.PAUSED;
+                        gInfo.cells[ani.xF][ani.yF].index = ani.index;
+                        gInfo.cells[ani.xF][ani.yF].state = GInfo.STATE.STOP;
+                        ani.count = 111;    // 111 means this ani should be removed soon
+                        gInfo.aniStacks.set(i, ani);
+                    } else {
+                        Matrix matrix = new Matrix();
+                        int angle =  (((ani.yS) % 2 == 0)? 40: -40) * ani.count;
+                        matrix.postRotate(angle);
+                        Bitmap blockMap = blockImages.get(ani.index).flyMaps[ani.count/2];
+                        blockMap = Bitmap.createBitmap(blockMap, 0, 0,
+                                blockMap.getWidth(), blockMap.getHeight()
+                                , matrix, true);
+                        int w = blockMap.getWidth(); int h = blockMap.getHeight();
+                        int xPos = gInfo.xOffset + ani.xS * gInfo.blockOutSize
+                                + gInfo.blockOutSize/2 - w/2;
+                        int yPos = gInfo.yUpOffset + ani.yS * gInfo.blockOutSize
+                                + gInfo.blockOutSize/2 - h/2;
+                        canvas.drawBitmap(blockMap, xPos, yPos, null);
+                        ani.count++;
+                        ani.timeStamp = System.currentTimeMillis() + ani.delay;
+                        gInfo.aniStacks.set(i, ani);
+                    }
+                }
                 break;
 
             default:

@@ -64,8 +64,8 @@ public class HighScore {
                 System.currentTimeMillis()-960000));
         gInfo.highMembers.add(new HighMember( 44444, "riopapa",
                 System.currentTimeMillis()-480000));
-        gInfo.highMembers.add(new HighMember(2222, "riopapa",
+        gInfo.highMembers.add(new HighMember(22222, "riopapa",
                 System.currentTimeMillis()-120000));
-        gInfo.highLowScore = 2222;
+        gInfo.highLowScore = 22222;
     }
 }

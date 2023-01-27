@@ -33,7 +33,7 @@ public class GInfo {
     public List<Integer> svNext;
     public List<Integer> svNextNext;
 
-    public final int CONTINUE_INDEX = 10;  // if achieved this index game can be continued
+    public final int CONTINUE_INDEX = 10;  // 10 if achieved this index game can be continued
 
     public long scoreNow;
     public int score2Add;
@@ -72,7 +72,7 @@ public class GInfo {
 
 
     public enum STATE {
-        PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED, DESTROY
+        PAUSED, MOVING, STOP, GO_UP, MERGE, MERGED, EXPLODE, EXPLODED, DESTROY, DESTROYED, PULL
     }
 
     public GInfo(Context context) {
@@ -106,8 +106,10 @@ public class GInfo {
         xUndoPos = xQuitPos + blockIconSize;        yUndoPos = yNewPos;
         xSwingPos = xNewPos;                        ySwingPos = yNewPos + blockIconSize;
         xSwapPos = xNewPos + blockIconSize;         ySwapPos = yNewPos + blockIconSize;
-        xYesPos = screenXSize/2 - blockOutSize;    xNopPos = screenXSize/2;
-        yYesPos = yDownOffset - blockOutSize*2;     yNopPos = yYesPos;
+        xYesPos = screenXSize/2 - blockInSize - blockInSize;
+        xNopPos = screenXSize/2;
+        yYesPos = yDownOffset - blockOutSize*3;
+        yNopPos = yYesPos;
         cells = new Cell[X_BLOCK_CNT][Y_BLOCK_CNT];
         resetValues();
     }

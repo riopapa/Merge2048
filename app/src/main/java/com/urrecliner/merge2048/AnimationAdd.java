@@ -25,6 +25,13 @@ public class AnimationAdd {
                 maxCount, getNextTime() + new Random().nextInt(20), block));
     }
 
+    public void addPull(int xS, int yS, int xF, int yF, int block) {
+        gInfo.aniStacks.add(new AniStack(GInfo.STATE.PULL, xS, yS, xF, yF,
+                gInfo.blockOutSize * (xF - xS) / 8,
+                gInfo.blockOutSize * (yF - yS)/ 8,
+                8, getNextTime() + new Random().nextInt(20), block));
+    }
+
     public void addMerge(int x, int y, int index) {
 
         gInfo.aniStacks.add(new AniStack(GInfo.STATE.MERGE, x, y, index, getNextTime()));

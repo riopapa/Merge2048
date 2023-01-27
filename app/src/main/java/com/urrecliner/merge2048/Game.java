@@ -132,11 +132,17 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     case MERGE:
                     case DESTROY:
                     case EXPLODE:
+                    case PULL:
                         break;
 
                     case EXPLODED:
                         gInfo.cells[x][y] = new Cell(0, GInfo.STATE.PAUSED);
-                        pullBelow.check(x, y);
+                        pullBelow.check(x, y, false);
+                        break;
+
+                    case DESTROYED:
+                        gInfo.cells[x][y] = new Cell(0, GInfo.STATE.PAUSED);
+                        pullBelow.check(x, y, true);
                         break;
 
                     case GO_UP:
@@ -211,7 +217,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         } else {
-            if (gInfo.bonusCount > 0 && new CheckState().paused(gInfo))
+            if (gInfo.bonusCount > 0 && new CheckAllState().paused(gInfo))
                 new ShowBonus(gInfo, bonusX, bonusY, bonusPlate, messagePlate);
 
             if (gInfo.showNextPressed) {
@@ -221,13 +227,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.showNext = !gInfo.showNext;
                     messagePlate.set("다음 블럭 "+((gInfo.showNext) ? "보이기":" 안 보이기"),
                             "("+gInfo.showCount+") 회 전환가능",
-                            (gInfo.showNext) ? "" : "점수는 2배로", System.currentTimeMillis(), 2300);
+                            (gInfo.showNext) ? "" : "점수는 두배로", System.currentTimeMillis(), 2300);
                 }
             } else if (gInfo.swingPressed) {
                 gInfo.swingPressed = false;
                 gInfo.swing = !gInfo.swing;
                 messagePlate.set("블럭 움직이기", (gInfo.swing) ? "움직이니까" : "고정됩니다",
-                        (gInfo.swing) ? "점수는 2배로":"",System.currentTimeMillis(), 2300);
+                        (gInfo.swing) ? "점수는 두배로":"",System.currentTimeMillis(), 2300);
                 nextPlate.resetSwing();
 
             } else if (gInfo.swapPressed) {
@@ -237,7 +243,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     nextPlate.swapNextBlock();
                     if (gInfo.swapCount > 0)
                         messagePlate.set("블럭 바꾸기", "앞으로",
-                        gInfo.swapCount+" 번 더 가능",System.currentTimeMillis(), 2000);
+                        gInfo.swapCount+" 번 더 가능",System.currentTimeMillis(), 1500);
                 }
 
             } else if (gInfo.shoutClicked) {
@@ -250,7 +256,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.undoCount--;
                     if (gInfo.undoCount > 0)
                         messagePlate.set("블럭 취소", "앞으로",
-                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 1500);
+                                gInfo.undoCount+" 번 더 가능",System.currentTimeMillis(), 1000);
                     Gson gson = new Gson();
                     int idx = gInfo.svCells.size()-1;
                     String json = gInfo.svCells.get(idx);
