@@ -32,6 +32,7 @@ public class GInfo {
     public List<String> svCells;
     public List<Integer> svNext;
     public List<Integer> svNextNext;
+    public List<Long> svScore;
 
     public final int CONTINUE_INDEX = 10;  // 10 if achieved this index game can be continued
 
@@ -120,6 +121,7 @@ public class GInfo {
         svCells = new ArrayList<>();
         svNext = new ArrayList<>();
         svNextNext = new ArrayList<>();
+        svScore = new ArrayList<>();
         scoreNow = 0;
         gameDifficulty = 5;
         xNextPos = xNextPosFixed;

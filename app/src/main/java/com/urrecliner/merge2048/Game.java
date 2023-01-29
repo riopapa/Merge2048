@@ -254,7 +254,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                 if (gInfo.undoCount > 0) {
                     gInfo.undoCount--;
                     if (gInfo.undoCount > 0)
-                        messagePlate.set("블럭 취소", "앞으로 "+ gInfo.undoCount+" 번 더 가능","Score는 1/4 깎습니다",System.currentTimeMillis(), 1000);
+                        messagePlate.set("블럭 취소", "취소는 앞으로 ",
+                                gInfo.undoCount+" 번 더 가능해요",System.currentTimeMillis(), 1000);
                     Gson gson = new Gson();
                     int idx = gInfo.svCells.size()-1;
                     String json = gInfo.svCells.get(idx);
@@ -263,10 +264,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     gInfo.cells = gson.fromJson(json, type);
                     nextPlate.nextIndex = gInfo.svNext.get(idx);
                     nextPlate.nextNextIndex = gInfo.svNextNext.get(idx);
+                    gInfo.scoreNow = gInfo.svScore.get(idx);
                     gInfo.svCells.remove(idx);
                     gInfo.svNext.remove(idx);
                     gInfo.svNextNext.remove(idx);
-                    gInfo.scoreNow = gInfo.scoreNow * 3/4;
+                    gInfo.svScore.remove(idx);
                     highScore.undoScore();
                 }
             }

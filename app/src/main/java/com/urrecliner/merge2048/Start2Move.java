@@ -23,6 +23,7 @@ public class Start2Move {
         gInfo.svCells.add(json);
         gInfo.svNext.add(nextPlate.nextIndex);
         gInfo.svNextNext.add(nextPlate.nextNextIndex);
+        gInfo.svScore.add(gInfo.scoreNow);
         if (gInfo.svCells.size() > 6) {   // max undo control
             gInfo.svCells.remove(0);
             gInfo.svNext.remove(0);
