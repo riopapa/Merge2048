@@ -133,7 +133,9 @@ public class Animation {
                         gInfo.aniStacks.remove(i);
                     } else {    // 0~4 : lower block, 5~7 merged block
                         Matrix matrix = new Matrix();
-                        int angle =  30 * ani.count;
+                        int angle =  45 * ani.count;
+                        if (ani.xS%2 == 0)
+                            angle = -angle;
                         matrix.postRotate(angle);
                         Bitmap blockMap = (ani.count % 2 == 0)?
                                 blockImages.get(ani.index).destroyMap :

@@ -18,13 +18,13 @@ public class UserName {
         Activity activity = (Activity) context;
         activity.runOnUiThread(() -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("ID를 변경할 수 있습니다");
+            builder.setTitle("최대 10자의 ID가 가능합니다");
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             if (gInfo.userName.length() == 0)
                 gInfo.userName = "YourID";
             input.setText(gInfo.userName);
-            InputFilter[] filters = new InputFilter[] {new ByteLengthFilter(10,"KS5601")};
+            InputFilter[] filters = new InputFilter[] {new ByteLengthFilter(10,"euc-kr")};   // "KS5601")};
             input.setFilters(filters);
             builder.setView(input);
             builder.setPositiveButton("이 ID를 씁니다", new DialogInterface.OnClickListener() {
