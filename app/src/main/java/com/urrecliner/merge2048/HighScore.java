@@ -32,7 +32,7 @@ public class HighScore {
     public void get() {
         gInfo.highMembers = new ArrayList<>();
         Gson gson = new Gson();
-        String json = sharedPref.getString(highMember+gInfo.X_BLOCK_CNT +gInfo.Y_BLOCK_CNT, "");
+        String json = sharedPref.getString(highMember+gInfo.X_BLOCK_CNT + gInfo.Y_BLOCK_CNT, "");
         if (!json.isEmpty()) {
             Type type = new TypeToken<List<HighMember>>() {
             }.getType();
