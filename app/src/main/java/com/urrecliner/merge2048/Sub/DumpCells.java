@@ -28,7 +28,6 @@ public class DumpCells {
         sb.append(" block=").append(new PowerIndex().power(nextPlate.nextIndex));
         sb.append(" nxtblock=").append(new PowerIndex().power(nextPlate.nextNextIndex));
         sb.append(" bonus=").append(gInfo.bonusCount);
-        sb.append(" svCells=").append(gInfo.svCells.size());
 
         Log.w("dump "+gInfo.aniStacks.size(), "<<< " + msg + " >>>");
         Log.w("dump "+gInfo.aniStacks.size(), sb.toString());

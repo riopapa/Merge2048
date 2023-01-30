@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.urrecliner.merge2048.GameObject.Saved;
 import com.urrecliner.merge2048.GamePlate.YesNoPlate;
 import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameImage.BlockImage;
@@ -248,7 +249,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
             } else if (gInfo.shoutClicked) {
                 new Start2Move(gInfo, nextPlate, checkNearItem);
 
-            } else if (gInfo.undoPressed && gInfo.svCells.size() > 2) {
+            } else if (gInfo.undoPressed && gInfo.sv.size() > 2) {
                 gInfo.undoPressed = false;
 
                 if (gInfo.undoCount > 0) {
@@ -256,19 +257,15 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
                     if (gInfo.undoCount > 0)
                         messagePlate.set("블럭 취소", "취소는 앞으로 ",
                                 gInfo.undoCount+" 번 더 가능해요",System.currentTimeMillis(), 1000);
+                    Saved saved = gInfo.sv.get(gInfo.sv.size()-1);
                     Gson gson = new Gson();
-                    int idx = gInfo.svCells.size()-1;
-                    String json = gInfo.svCells.get(idx);
-                    Type type = new TypeToken<Cell[][]>() {
-                    }.getType();
+                    String json = saved.cell;
+                    Type type = new TypeToken<Cell[][]>() {}.getType();
                     gInfo.cells = gson.fromJson(json, type);
-                    nextPlate.nextIndex = gInfo.svNext.get(idx);
-                    nextPlate.nextNextIndex = gInfo.svNextNext.get(idx);
-                    gInfo.scoreNow = gInfo.svScore.get(idx);
-                    gInfo.svCells.remove(idx);
-                    gInfo.svNext.remove(idx);
-                    gInfo.svNextNext.remove(idx);
-                    gInfo.svScore.remove(idx);
+                    nextPlate.nextIndex = saved.next;
+                    nextPlate.nextNextIndex = saved.nextNext;
+                    gInfo.scoreNow = saved.score;
+                    gInfo.sv.remove(gInfo.sv.size()-1);
                     highScore.undoScore();
                 }
             }
@@ -309,9 +306,14 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-//        performClick();
+        performClick();
         touchEvent.check(event);
         return super.onTouchEvent(event);
+    }
+    @Override
+    public boolean performClick() {
+        super.performClick();
+        return true;
     }
 
     @Override

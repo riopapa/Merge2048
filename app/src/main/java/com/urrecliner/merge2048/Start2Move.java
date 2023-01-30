@@ -3,6 +3,7 @@ package com.urrecliner.merge2048;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.urrecliner.merge2048.GameObject.Saved;
 import com.urrecliner.merge2048.Sub.DumpCells;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GamePlate.NextPlate;
@@ -18,16 +19,10 @@ public class Start2Move {
         if (nextPlate.nextIndex == -1)
             return;
         Gson gson = new Gson();
-        String json = gson.toJson(gInfo.cells);
-
-        gInfo.svCells.add(json);
-        gInfo.svNext.add(nextPlate.nextIndex);
-        gInfo.svNextNext.add(nextPlate.nextNextIndex);
-        gInfo.svScore.add(gInfo.scoreNow);
-        if (gInfo.svCells.size() > 6) {   // max undo control
-            gInfo.svCells.remove(0);
-            gInfo.svNext.remove(0);
-            gInfo.svNextNext.remove(0);
+        String jCell = gson.toJson(gInfo.cells);
+        gInfo.sv.add(new Saved(jCell, nextPlate.nextIndex, nextPlate.nextNextIndex, gInfo.scoreNow));
+        if (gInfo.sv.size() > 6) {   // max undo control
+            gInfo.sv.remove(0);
         }
 
         if (gInfo.dumpCount > 4)

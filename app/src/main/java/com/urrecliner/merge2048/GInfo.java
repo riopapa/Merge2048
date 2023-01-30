@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import com.urrecliner.merge2048.GameObject.AniStack;
 import com.urrecliner.merge2048.GameObject.Cell;
 import com.urrecliner.merge2048.GameObject.HighMember;
+import com.urrecliner.merge2048.GameObject.Saved;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,7 @@ public class GInfo {
     public final int bonusLoopCount = 12;
     public final int piece; // small pixel size for calculation sizes
     public Cell[][] cells;
-    public List<String> svCells;
-    public List<Integer> svNext;
-    public List<Integer> svNextNext;
-    public List<Long> svScore;
+    public ArrayList<Saved> sv;
 
     public final int CONTINUE_INDEX = 10;  // 10 if achieved this index game can be continued
 
@@ -118,10 +116,8 @@ public class GInfo {
     public void resetValues() {
         isGameOver = false;
         aniStacks = new ArrayList<>();
-        svCells = new ArrayList<>();
-        svNext = new ArrayList<>();
-        svNextNext = new ArrayList<>();
-        svScore = new ArrayList<>();
+        sv = new ArrayList<Saved>();
+
         scoreNow = 0;
         gameDifficulty = 5;
         xNextPos = xNextPosFixed;
